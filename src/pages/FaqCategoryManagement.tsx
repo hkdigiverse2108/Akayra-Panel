@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { faqCategoryAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
 import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, FolderTree } from 'lucide-react';
-import { useManagementData } from '../hooks/useManagementData';
-import TableToolbar from '../components/TableToolbar';
-import TableFooter from '../components/TableFooter';
-import ConfirmModal from '../components/ConfirmModal';
-import { getSrNo } from '../utils/tableUtils';
-import { cn } from '../utils/cn';
+import { useManagementData } from '../Utils/Hooks/useManagementData';
+import TableToolbar from '../Components/TableToolbar';
+import TableFooter from '../Components/TableFooter';
+import ConfirmModal from '../Components/ConfirmModal';
+import { getSrNo } from '../Utils/tableUtils';
+import { cn } from '../Utils/cn';
 import { Tooltip } from 'antd';
+import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
-const FaqCategoryManagement: React.FC = () => {
+const FAQCategoryManagement: React.FC = () => {
     const navigate = useNavigate();
     const [viewType, setViewType] = useState<'grid' | 'list'>('list');
 
@@ -28,7 +28,6 @@ const FaqCategoryManagement: React.FC = () => {
         setCurrentPage,
         setPageSize,
         setActiveFilter,
-        // New hook functions
         handleDeleteClick,
         confirmDelete,
         handleToggleStatus,
@@ -38,22 +37,20 @@ const FaqCategoryManagement: React.FC = () => {
         toggleSort,
         getSortIcon
     } = useManagementData({
-        apiMethod: faqCategoryAPI.getAll,
-        deleteMethod: faqCategoryAPI.delete,
-        toggleMethod: faqCategoryAPI.edit,
+        resourceKey: KEYS.FAQ_CATEGORY.ALL,
+        resourceUrl: URL_KEYS.FAQ_CATEGORY.ALL,
         idField: 'faqCategoryId',
         dataKey: 'faq_category_data',
-        resourceName: 'FAQ Category'
     });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                <div className="text-left">
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">FAQ Categories</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Organize help content and common questions into logical sections.</p>
                 </div>
-                <Button onClick={() => navigate('/faq-categories/add')} className="h-12 px-6 rounded-2xl flex items-center gap-2">
+                <Button onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
                     <Plus size={20} /> Add New Category
                 </Button>
             </div>
@@ -87,8 +84,8 @@ const FaqCategoryManagement: React.FC = () => {
                                     <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                                {loading ? (
+                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
+                                {loading && categories.length === 0 ? (
                                     <tr>
                                         <td colSpan={3} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading categories...</td>
                                     </tr>
@@ -97,14 +94,14 @@ const FaqCategoryManagement: React.FC = () => {
                                         <td colSpan={3} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No categories found.</td>
                                     </tr>
                                 ) : (
-                                    categories.map((category, index) => (
+                                    categories.map((category: any, index: number) => (
                                         <tr key={category._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                                             <td className="px-8 py-5 font-black text-slate-400 text-sm">
                                                 {getSrNo(currentPage, pageSize, index)}
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 font-black text-xs text-slate-400 shadow-sm transition-transform group-hover:scale-110">
+                                                <div className="flex items-center gap-4 text-left">
+                                                    <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 font-black text-xs text-slate-400 shadow-sm transition-transform group-hover:scale-110 shrink-0">
                                                         <FolderTree className="text-slate-400" size={18} />
                                                     </div>
                                                     <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize">{category.name}</p>
@@ -115,6 +112,7 @@ const FaqCategoryManagement: React.FC = () => {
                                                     <Tooltip title={category.isActive ? "Deactivate" : "Activate"}>
                                                         <button 
                                                             onClick={() => handleToggleStatus(category)} 
+                                                            disabled={isActionLoading}
                                                             className={cn(
                                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                                 category.isActive 
@@ -127,7 +125,7 @@ const FaqCategoryManagement: React.FC = () => {
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
                                                         <button 
-                                                            onClick={() => navigate(`/faq-categories/edit/${category._id}`)} 
+                                                            onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`)} 
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Edit size={20} />
@@ -151,14 +149,14 @@ const FaqCategoryManagement: React.FC = () => {
                     </div>
                 ) : (
                     <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-                        {loading ? (
+                        {loading && categories.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading categories...</div>
                         ) : categories.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider">No categories found.</div>
                         ) : (
-                            categories.map((category) => (
+                            categories.map((category: any) => (
                                 <div key={category._id} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-[32px] border border-gray-100 dark:border-slate-800 p-8 flex flex-col items-center text-center transition-all hover:border-primary-500/30 shadow-sm hover:shadow-md h-full">
-                                    <div className="h-16 w-16 mb-4 rounded-2xl bg-white dark:bg-slate-900 border border-gray-50 dark:border-slate-800 flex items-center justify-center text-primary-500 shadow-sm transition-transform group-hover:scale-110">
+                                    <div className="h-16 w-16 mb-4 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 flex items-center justify-center text-primary-500 shadow-sm transition-transform group-hover:scale-110">
                                         <FolderTree size={24} />
                                     </div>
                                     <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tighter mb-6">{category.name}</h3>
@@ -166,6 +164,7 @@ const FaqCategoryManagement: React.FC = () => {
                                     <div className="mt-auto flex items-center gap-2">
                                         <button 
                                             onClick={() => handleToggleStatus(category)} 
+                                            disabled={isActionLoading}
                                             className={cn(
                                                 "h-10 w-10 rounded-xl flex items-center justify-center transition-all shadow-sm",
                                                 category.isActive ? "bg-emerald-50 text-emerald-500 shadow-emerald-500/10" : "bg-white dark:bg-slate-900 text-slate-300"
@@ -173,7 +172,7 @@ const FaqCategoryManagement: React.FC = () => {
                                         >
                                             {category.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                                         </button>
-                                        <button onClick={() => navigate(`/faq-categories/edit/${category._id}`)} className="h-10 w-10 bg-white dark:bg-slate-900 text-primary-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
+                                        <button onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`)} className="h-10 w-10 bg-white dark:bg-slate-900 text-primary-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
                                         <button onClick={() => handleDeleteClick(category._id)} className="h-10 w-10 bg-white dark:bg-slate-900 text-red-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-red-600 hover:text-white transition-all"><Trash2 size={16} /></button>
                                     </div>
                                 </div>
@@ -203,4 +202,4 @@ const FaqCategoryManagement: React.FC = () => {
     );
 };
 
-export default FaqCategoryManagement;
+export default FAQCategoryManagement;

@@ -1,0 +1,52 @@
+export const KEYS = {
+  USER: {
+    ALL: 'USER_ALL',
+    BASE: 'USER_BASE',
+    DROPDOWN: 'USER_DROPDOWN',
+  },
+  CATEGORY: {
+    ALL: 'CATEGORY_ALL',
+    BASE: 'CATEGORY_BASE',
+    DROPDOWN: 'CATEGORY_DROPDOWN',
+  },
+  BRAND: {
+    ALL: 'BRAND_ALL',
+    BASE: 'BRAND_BASE',
+    DROPDOWN: 'BRAND_DROPDOWN',
+  },
+  SIZE: {
+    ALL: 'SIZE_ALL',
+    BASE: 'SIZE_BASE',
+    DROPDOWN: 'SIZE_DROPDOWN',
+  },
+  COLOR: {
+    ALL: 'COLOR_ALL',
+    BASE: 'COLOR_BASE',
+    DROPDOWN: 'COLOR_DROPDOWN',
+  },
+  PRODUCT: {
+    ALL: 'PRODUCT_ALL',
+    BASE: 'PRODUCT_BASE',
+    DROPDOWN: 'PRODUCT_DROPDOWN',
+  },
+  REVIEW: {
+    ALL: 'REVIEW_ALL',
+    BASE: 'REVIEW_BASE',
+  },
+  BANNER: {
+    ALL: 'BANNER_ALL',
+    BASE: 'BANNER_BASE',
+  },
+  BLOG: {
+    ALL: 'BLOG_ALL',
+    BASE: 'BLOG_BASE',
+  },
+  FAQ_CATEGORY: {
+    ALL: 'FAQ_CATEGORY_ALL',
+    BASE: 'FAQ_CATEGORY_BASE',
+  },
+  FAQ: {
+    ALL: 'FAQ_ALL',
+    BASE: 'FAQ_BASE',
+  },
+};

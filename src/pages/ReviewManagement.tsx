@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { reviewAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
-import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, User } from 'lucide-react';
-import { useManagementData } from '../hooks/useManagementData';
-import TableToolbar from '../components/TableToolbar';
-import TableFooter from '../components/TableFooter';
-import ConfirmModal from '../components/ConfirmModal';
-import { getSrNo } from '../utils/tableUtils';
-import { cn } from '../utils/cn';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, User as UserIcon } from 'lucide-react';
+import { useManagementData } from '../Utils/Hooks/useManagementData';
+import TableToolbar from '../Components/TableToolbar';
+import TableFooter from '../Components/TableFooter';
+import ConfirmModal from '../Components/ConfirmModal';
+import { getSrNo } from '../Utils/tableUtils';
+import { cn } from '../Utils/cn';
 import { Rate, Avatar, Tooltip } from 'antd';
+import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const ReviewManagement: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +28,6 @@ const ReviewManagement: React.FC = () => {
         setCurrentPage,
         setPageSize,
         setActiveFilter,
-        // New hook functions
         handleDeleteClick,
         confirmDelete,
         handleToggleStatus,
@@ -38,22 +37,20 @@ const ReviewManagement: React.FC = () => {
         toggleSort,
         getSortIcon
     } = useManagementData({
-        apiMethod: reviewAPI.getAll,
-        deleteMethod: reviewAPI.delete,
-        toggleMethod: reviewAPI.edit,
+        resourceKey: KEYS.REVIEW.ALL,
+        resourceUrl: URL_KEYS.REVIEW.ALL,
         idField: 'reviewId',
         dataKey: 'review_data',
-        resourceName: 'Review'
     });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                <div className="text-left">
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Review Management</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Moderate user experience feedback and ratings.</p>
                 </div>
-                <Button onClick={() => navigate('/reviews/add')} className="h-12 px-6 rounded-2xl flex items-center gap-2">
+                <Button onClick={() => navigate(`${ROUTES.REVIEWS}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
                     <Plus size={20} /> Add Placeholder Review
                 </Button>
             </div>
@@ -77,10 +74,10 @@ const ReviewManagement: React.FC = () => {
                                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
                                     <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16">Sr. No.</th>
                                     <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
-                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('name')}>
+                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('userId.fullName')}>
                                             User
                                             <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
-                                                {getSortIcon('name')}
+                                                {getSortIcon('userId.fullName')}
                                             </div>
                                         </div>
                                     </th>
@@ -89,8 +86,8 @@ const ReviewManagement: React.FC = () => {
                                     <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                                {loading ? (
+                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
+                                {loading && reviews.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading reviews...</td>
                                     </tr>
@@ -99,14 +96,14 @@ const ReviewManagement: React.FC = () => {
                                         <td colSpan={5} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No reviews found.</td>
                                     </tr>
                                 ) : (
-                                    reviews.map((review, index) => (
+                                    reviews.map((review: any, index: number) => (
                                         <tr key={review._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                                             <td className="px-6 py-5 font-black text-slate-400 text-sm">
                                                 {getSrNo(currentPage, pageSize, index)}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <Avatar icon={<User size={14} />} className="bg-primary-50 dark:bg-primary-900/30 text-primary-600" />
+                                                <div className="flex items-center gap-3 text-left">
+                                                    <Avatar icon={<UserIcon size={14} />} className="bg-primary-50 dark:bg-primary-900/30 text-primary-600 shrink-0" />
                                                     <p className="text-sm font-black text-slate-900 dark:text-white capitalize">{review.userId?.fullName || 'Anonymous'}</p>
                                                 </div>
                                             </td>
@@ -117,6 +114,7 @@ const ReviewManagement: React.FC = () => {
                                                     <Tooltip title={review.isActive ? "Deactivate" : "Activate"}>
                                                         <button 
                                                             onClick={() => handleToggleStatus(review)} 
+                                                            disabled={isActionLoading}
                                                             className={cn(
                                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                                 review.isActive 
@@ -129,7 +127,7 @@ const ReviewManagement: React.FC = () => {
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
                                                         <button 
-                                                            onClick={() => navigate(`/reviews/edit/${review._id}`)} 
+                                                            onClick={() => navigate(`${ROUTES.REVIEWS}/edit/${review._id}`)} 
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Edit size={20} />
@@ -153,23 +151,24 @@ const ReviewManagement: React.FC = () => {
                     </div>
                 ) : (
                     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-                        {loading ? (
+                        {loading && reviews.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading reviews...</div>
                         ) : reviews.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider">No reviews found.</div>
                         ) : (
-                            reviews.map((review) => (
+                            reviews.map((review: any) => (
                                 <div key={review._id} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-[32px] border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col p-6 shadow-sm h-full">
-                                    <div className="flex items-start justify-between mb-6">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar size={48} icon={<User size={24} />} className="bg-white dark:bg-slate-900 text-primary-600 shadow-sm ring-4 ring-primary-500/5 text-xs text-xs font-black uppercase tracking-widest text-[10px]" />
-                                            <div>
+                                    <div className="flex items-start justify-between mb-6 text-left">
+                                        <div className="flex items-center gap-3 text-left">
+                                            <Avatar size={48} icon={<UserIcon size={24} />} className="bg-white dark:bg-slate-900 text-primary-600 shadow-sm ring-4 ring-primary-500/5 text-xs font-black uppercase tracking-widest text-[10px]" />
+                                            <div className="text-left">
                                                 <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize leading-tight">{review.userId?.fullName || 'Anonymous'}</h3>
                                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest line-clamp-1">{review.productId?.title || 'Verified Order'}</p>
                                             </div>
                                         </div>
                                         <button 
                                             onClick={() => handleToggleStatus(review)} 
+                                            disabled={isActionLoading}
                                             className={cn(
                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                 review.isActive 
@@ -181,18 +180,18 @@ const ReviewManagement: React.FC = () => {
                                         </button>
                                     </div>
 
-                                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-gray-50 dark:border-slate-700/50 flex flex-col flex-1">
+                                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-gray-50 dark:border-slate-700/50 flex flex-col flex-1 text-left">
                                         <div className="flex items-center gap-1 mb-3">
                                             <Rate disabled defaultValue={review.rating} className="text-yellow-500 scale-75 origin-left" />
                                             <span className="text-xs font-black text-slate-300 ml-1">/ 5.0</span>
                                         </div>
-                                        <p className="text-xs font-medium text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed italic flex-1">
+                                        <p className="text-xs font-medium text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed italic flex-1 text-left">
                                             "{review.comment || 'No textual feedback provided.'}"
                                         </p>
                                     </div>
 
                                     <div className="mt-6 flex items-center justify-end gap-2">
-                                        <button onClick={() => navigate(`/reviews/edit/${review._id}`)} className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-900 text-primary-600 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
+                                        <button onClick={() => navigate(`${ROUTES.REVIEWS}/edit/${review._id}`)} className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-900 text-primary-600 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
                                         <button onClick={() => handleDeleteClick(review._id)} className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-900 text-red-600 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-red-600 hover:text-white transition-all"><Trash2 size={16} /></button>
                                     </div>
                                 </div>

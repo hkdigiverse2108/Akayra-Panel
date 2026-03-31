@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from './Modal';
+import { Modal } from 'antd';
 import Button from './Button';
 import { AlertCircle } from 'lucide-react';
 
@@ -35,13 +35,23 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   const buttonVariant = variant === 'danger' ? 'danger' : variant === 'warning' ? 'secondary' : 'primary';
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
+    <Modal 
+      open={isOpen} 
+      onCancel={onClose} 
+      footer={null}
+      centered
+      title={null}
+      closable={false}
+      width={400}
+      className="custom-modal"
+    >
       <div className="flex flex-col items-center text-center space-y-6 py-4">
         <div className={`h-16 w-16 rounded-3xl flex items-center justify-center shadow-sm ${variantStyles[variant]}`}>
           <AlertCircle size={32} />
         </div>
         
-        <div className="space-y-2 px-4">
+        <div className="space-y-2 px-4 text-center">
+            <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{title}</h3>
           <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed italic">
             "{message}"
           </p>

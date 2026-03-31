@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Sun, Moon, Layout as LayoutIcon, Menu, Type, Maximize } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
-import { cn } from '../utils/cn';
+import { useTheme } from '../Context/ThemeContext';
+import { cn } from '../Utils/cn';
 
 interface SwitcherProps {
   isOpen: boolean;

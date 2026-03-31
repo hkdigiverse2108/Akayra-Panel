@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { colorAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
 import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, Palette } from 'lucide-react';
-import { useManagementData } from '../hooks/useManagementData';
-import TableToolbar from '../components/TableToolbar';
-import TableFooter from '../components/TableFooter';
-import ConfirmModal from '../components/ConfirmModal';
-import { getSrNo } from '../utils/tableUtils';
-import { cn } from '../utils/cn';
+import { useManagementData } from '../Utils/Hooks/useManagementData';
+import TableToolbar from '../Components/TableToolbar';
+import TableFooter from '../Components/TableFooter';
+import ConfirmModal from '../Components/ConfirmModal';
+import { getSrNo } from '../Utils/tableUtils';
+import { cn } from '../Utils/cn';
 import { Tooltip } from 'antd';
+import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const ColorManagement: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +28,6 @@ const ColorManagement: React.FC = () => {
         setCurrentPage,
         setPageSize,
         setActiveFilter,
-        // New hook functions
         handleDeleteClick,
         confirmDelete,
         handleToggleStatus,
@@ -38,22 +37,20 @@ const ColorManagement: React.FC = () => {
         toggleSort,
         getSortIcon
     } = useManagementData({
-        apiMethod: colorAPI.getAll,
-        deleteMethod: colorAPI.delete,
-        toggleMethod: colorAPI.edit,
+        resourceKey: KEYS.COLOR.ALL,
+        resourceUrl: URL_KEYS.COLOR.ALL,
         idField: 'colorId',
         dataKey: 'color_data',
-        resourceName: 'Color'
     });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                <div className="text-left">
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Color Palette</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Manage product color variations and HEX codes.</p>
                 </div>
-                <Button onClick={() => navigate('/colors/add')} className="h-12 px-6 rounded-2xl flex items-center gap-2">
+                <Button onClick={() => navigate(`${ROUTES.COLORS}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
                     <Plus size={20} /> Add New Color
                 </Button>
             </div>
@@ -88,8 +85,8 @@ const ColorManagement: React.FC = () => {
                                     <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                                {loading ? (
+                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
+                                {loading && colors.length === 0 ? (
                                     <tr>
                                         <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading colors...</td>
                                     </tr>
@@ -98,14 +95,14 @@ const ColorManagement: React.FC = () => {
                                         <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No colors found.</td>
                                     </tr>
                                 ) : (
-                                    colors.map((color, index) => (
+                                    colors.map((color: any, index: number) => (
                                         <tr key={color._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                                             <td className="px-8 py-5 font-black text-slate-400 text-sm">
                                                 {getSrNo(currentPage, pageSize, index)}
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 rounded-xl shadow-lg ring-4 ring-white dark:ring-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 transition-transform group-hover:scale-110" style={{ backgroundColor: color.hexCode }}>
+                                                <div className="flex items-center gap-4 text-left">
+                                                    <div className="h-10 w-10 rounded-xl shadow-lg ring-4 ring-white dark:ring-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 transition-transform group-hover:scale-110 shrink-0" style={{ backgroundColor: color.hexCode }}>
                                                         {!color.hexCode && <Palette size={16} className="text-slate-300" />}
                                                     </div>
                                                     <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize">{color.name}</p>
@@ -117,6 +114,7 @@ const ColorManagement: React.FC = () => {
                                                     <Tooltip title={color.isActive ? "Deactivate" : "Activate"}>
                                                         <button 
                                                             onClick={() => handleToggleStatus(color)} 
+                                                            disabled={isActionLoading}
                                                             className={cn(
                                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                                 color.isActive 
@@ -129,7 +127,7 @@ const ColorManagement: React.FC = () => {
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
                                                         <button 
-                                                            onClick={() => navigate(`/colors/edit/${color._id}`)} 
+                                                            onClick={() => navigate(`${ROUTES.COLORS}/edit/${color._id}`)} 
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Edit size={20} />
@@ -153,12 +151,12 @@ const ColorManagement: React.FC = () => {
                     </div>
                 ) : (
                     <div className="p-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-                        {loading ? (
+                        {loading && colors.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading colors...</div>
                         ) : colors.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider">No colors found.</div>
                         ) : (
-                            colors.map((color) => (
+                            colors.map((color: any) => (
                                 <div key={color._id} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-3xl border border-gray-100 dark:border-slate-800 hover:border-primary-500/30 transition-all flex flex-col items-center p-6 text-center shadow-sm">
                                     <div className="h-16 w-16 rounded-2xl shadow-xl mb-4 transition-transform group-hover:scale-110 border border-gray-50 dark:border-slate-700 ring-8 ring-white dark:ring-slate-900" style={{ backgroundColor: color.hexCode }}>
                                         {!color.hexCode && <Palette className="text-slate-200" size={32} />}
@@ -169,6 +167,7 @@ const ColorManagement: React.FC = () => {
                                      <div className="flex items-center gap-2">
                                         <button 
                                             onClick={() => handleToggleStatus(color)} 
+                                            disabled={isActionLoading}
                                             className={cn(
                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                 color.isActive 
@@ -178,7 +177,7 @@ const ColorManagement: React.FC = () => {
                                         >
                                             {color.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                                         </button>
-                                        <button onClick={() => navigate(`/colors/edit/${color._id}`)} className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"><Edit size={20} /></button>
+                                        <button onClick={() => navigate(`${ROUTES.COLORS}/edit/${color._id}`)} className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"><Edit size={20} /></button>
                                         <button onClick={() => handleDeleteClick(color._id)} className="p-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm"><Trash2 size={20} /></button>
                                     </div>
                                 </div>

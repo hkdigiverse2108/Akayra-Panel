@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { blogAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
 import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, Newspaper } from 'lucide-react';
-import { useManagementData } from '../hooks/useManagementData';
-import TableToolbar from '../components/TableToolbar';
-import TableFooter from '../components/TableFooter';
-import ConfirmModal from '../components/ConfirmModal';
-import { getSrNo } from '../utils/tableUtils';
-import { cn } from '../utils/cn';
+import { useManagementData } from '../Utils/Hooks/useManagementData';
+import TableToolbar from '../Components/TableToolbar';
+import TableFooter from '../Components/TableFooter';
+import ConfirmModal from '../Components/ConfirmModal';
+import { getSrNo } from '../Utils/tableUtils';
+import { cn } from '../Utils/cn';
 import { Image, Tooltip } from 'antd';
+import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const BlogManagement: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +28,6 @@ const BlogManagement: React.FC = () => {
         setCurrentPage,
         setPageSize,
         setActiveFilter,
-        // New hook functions
         handleDeleteClick,
         confirmDelete,
         handleToggleStatus,
@@ -38,22 +37,20 @@ const BlogManagement: React.FC = () => {
         toggleSort,
         getSortIcon
     } = useManagementData({
-        apiMethod: blogAPI.getAll,
-        deleteMethod: blogAPI.delete,
-        toggleMethod: blogAPI.edit,
+        resourceKey: KEYS.BLOG.ALL,
+        resourceUrl: URL_KEYS.BLOG.ALL,
         idField: 'blogId',
         dataKey: 'blog_data',
-        resourceName: 'Blog'
     });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                <div className="text-left">
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Blog Articles</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Manage your storefront's editorial content and news.</p>
                 </div>
-                <Button onClick={() => navigate('/blogs/add')} className="h-12 px-6 rounded-2xl flex items-center gap-2">
+                <Button onClick={() => navigate(`${ROUTES.BLOGS}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
                     <Plus size={20} /> Add New Article
                 </Button>
             </div>
@@ -77,18 +74,18 @@ const BlogManagement: React.FC = () => {
                                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
                                     <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16">Sr. No.</th>
                                     <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
-                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('name')}>
+                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('title')}>
                                             Article
                                             <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
-                                                {getSortIcon('name')}
+                                                {getSortIcon('title')}
                                             </div>
                                         </div>
                                     </th>
                                     <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                                {loading ? (
+                            <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
+                                {loading && blogs.length === 0 ? (
                                     <tr>
                                         <td colSpan={3} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading articles...</td>
                                     </tr>
@@ -97,21 +94,21 @@ const BlogManagement: React.FC = () => {
                                         <td colSpan={3} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No articles found.</td>
                                     </tr>
                                 ) : (
-                                    blogs.map((blog, index) => (
+                                    blogs.map((blog: any, index: number) => (
                                         <tr key={blog._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                                             <td className="px-8 py-5 font-black text-slate-400 text-sm">
                                                 {getSrNo(currentPage, pageSize, index)}
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-16 w-24 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-110">
+                                                <div className="flex items-center gap-4 text-left">
+                                                    <div className="h-16 w-24 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-110 shrink-0">
                                                         {blog.image ? (
                                                             <Image src={blog.image} alt={blog.title} className="h-full w-full object-cover" preview={false} />
                                                         ) : (
                                                             <Newspaper className="text-slate-300" size={24} />
                                                         )}
                                                     </div>
-                                                    <div>
+                                                    <div className="text-left">
                                                         <p className="text-sm font-black text-slate-900 dark:text-white leading-tight mb-1 truncate max-w-[300px]">{blog.title}</p>
                                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(blog.createdAt).toLocaleDateString()}</p>
                                                     </div>
@@ -122,6 +119,7 @@ const BlogManagement: React.FC = () => {
                                                     <Tooltip title={blog.isActive ? "Deactivate" : "Activate"}>
                                                         <button 
                                                             onClick={() => handleToggleStatus(blog)} 
+                                                            disabled={isActionLoading}
                                                             className={cn(
                                                                 "p-2 rounded-xl transition-all shadow-sm",
                                                                 blog.isActive 
@@ -134,7 +132,7 @@ const BlogManagement: React.FC = () => {
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
                                                         <button 
-                                                            onClick={() => navigate(`/blogs/edit/${blog._id}`)} 
+                                                            onClick={() => navigate(`${ROUTES.BLOGS}/edit/${blog._id}`)} 
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Edit size={20} />
@@ -158,12 +156,12 @@ const BlogManagement: React.FC = () => {
                     </div>
                 ) : (
                     <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in slide-in-from-bottom-4 duration-500">
-                        {loading ? (
+                        {loading && blogs.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading articles...</div>
                         ) : blogs.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider">No articles found.</div>
                         ) : (
-                            blogs.map((blog) => (
+                            blogs.map((blog: any) => (
                                 <div key={blog._id} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-[2rem] border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col h-full shadow-sm">
                                     <div className="aspect-[16/10] w-full bg-white dark:bg-slate-900 overflow-hidden border-b border-gray-50 dark:border-slate-800 relative">
                                         {blog.image ? (
@@ -172,15 +170,16 @@ const BlogManagement: React.FC = () => {
                                             <div className="h-full w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950"><Newspaper className="text-slate-200" size={48} /></div>
                                         )}
                                         <div className="absolute top-4 right-4 flex items-center gap-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                            <button onClick={() => navigate(`/blogs/edit/${blog._id}`)} className="h-10 w-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-primary-600 rounded-xl shadow-xl flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
+                                            <button onClick={() => navigate(`${ROUTES.BLOGS}/edit/${blog._id}`)} className="h-10 w-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-primary-600 rounded-xl shadow-xl flex items-center justify-center hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
                                             <button onClick={() => handleDeleteClick(blog._id)} className="h-10 w-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-red-600 rounded-xl shadow-xl flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><Trash2 size={16} /></button>
                                         </div>
                                     </div>
-                                    <div className="p-6 flex flex-col flex-1">
-                                        <div className="flex items-center justify-between mb-4">
+                                    <div className="p-6 flex flex-col flex-1 text-left">
+                                        <div className="flex items-center justify-between mb-4 text-left">
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{new Date(blog.createdAt).toLocaleDateString()}</p>
                                             <button 
-                                                onClick={() => handleToggleStatus(blog)} 
+                                                onClick={() => handleToggleStatus(blog)}
+                                                disabled={isActionLoading}
                                                 className={cn(
                                                     "h-10 w-10 rounded-xl flex items-center justify-center transition-all shadow-sm",
                                                     blog.isActive ? "bg-emerald-50 text-emerald-500 shadow-emerald-500/10" : "bg-white dark:bg-slate-900 text-slate-300"
@@ -189,7 +188,7 @@ const BlogManagement: React.FC = () => {
                                                 {blog.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                                             </button>
                                         </div>
-                                        <h3 className="text-base font-black text-slate-900 dark:text-white capitalize tracking-tight line-clamp-2 leading-tight">{blog.title}</h3>
+                                        <h3 className="text-base font-black text-slate-900 dark:text-white capitalize tracking-tight line-clamp-2 leading-tight text-left">{blog.title}</h3>
                                     </div>
                                 </div>
                             ))

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+import { STORAGE_KEYS } from '../Constants/StorageKeys';
+
 interface AuthContextType {
   user: any | null;
   token: string | null;
@@ -17,8 +19,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('akayra_user');
-    const savedToken = localStorage.getItem('akayra_token');
+    const savedUser = localStorage.getItem(STORAGE_KEYS.USER);
+    const savedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
 
     if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
@@ -30,17 +32,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = (userData: any, jwtToken: string) => {
     setUser(userData);
     setToken(jwtToken);
-    localStorage.setItem('akayra_user', JSON.stringify(userData));
-    localStorage.setItem('akayra_token', jwtToken);
-    localStorage.setItem('akayra_user_type', userData.type || '5');
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+    localStorage.setItem(STORAGE_KEYS.TOKEN, jwtToken);
+    localStorage.setItem(STORAGE_KEYS.USER_TYPE || 'Akayra_Admin_Panel_User_Type', userData.type || '5');
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('akayra_user');
-    localStorage.removeItem('akayra_token');
-    localStorage.removeItem('akayra_user_type');
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER_TYPE || 'Akayra_Admin_Panel_User_Type');
     window.location.href = '/login';
   };
 

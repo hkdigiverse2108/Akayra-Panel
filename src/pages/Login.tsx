@@ -1,46 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Button from '../components/Button';
-import { toast } from 'react-toastify';
+import { useAuth } from '../Context/AuthContext';
+import { useTheme } from '../Context/ThemeContext';
+import { cn } from '../Utils/cn';
+import Button from '../Components/Button';
 import { LogIn, Shield, Mail, Lock, User as UserIcon } from 'lucide-react';
 import { Input } from 'antd';
 import loginBg from '../assets/login-bg.png';
-import { authAPI } from '../services/apiService';
+import { Mutations } from '../Api/Mutations';
+import { ROUTES } from '../Constants';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    const loginMutation = Mutations.useLogin();
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email || !password) {
-            toast.error('Please fill in all fields');
-            return;
-        }
-
-        setLoading(true);
-        try {
-            // Updated to call the actual backend login API
-            const response = await authAPI.login({ email, password });
-            
-            if (response.data.status === 200) {
-                const { token } = response.data.data;
-                
-                // Store in AuthContext (this stores in localStorage via Context logic)
-                login(response.data.data, token);
-          
-                navigate('/dashboard');
+        
+        loginMutation.mutate({ email, password }, {
+            onSuccess: (response: any) => {
+                if (response.status === 200) {
+                    const { token } = response.data;
+                    login(response.data, token);
+                    navigate(ROUTES.DASHBOARD);
+                }
             }
-        } catch (error: any) {
-            // Note: Common handler in api.ts will handle error toasts
-            console.error('Login error:', error);
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     return (
@@ -89,7 +78,7 @@ const Login: React.FC = () => {
                             </div>
                         </div>
 
-                        <Button type="submit" isLoading={loading} className="w-full h-14 text-lg rounded-2xl font-black tracking-wide">
+                        <Button type="submit" isLoading={loginMutation.isPending} className="w-full h-14 text-lg rounded-2xl font-black tracking-wide">
                             <LogIn size={20} /> Sign In to Dashboard
                         </Button>
                     </form>
@@ -104,7 +93,7 @@ const Login: React.FC = () => {
                         <UserIcon size={32} />
                     </div>
                     <h2 className="text-5xl font-black text-white leading-tight">
-                        Powering the next generation of <span className="text-primary-300 italic">Retail.</span>
+                        Powering the next generation of <span className="text-primary-300 italic text-left">Retail.</span>
                     </h2>
                 </div>
             </div>

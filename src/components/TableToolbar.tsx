@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import { Switch, Tooltip } from 'antd';
-import { cn } from '../utils/cn';
+import { cn } from '../Utils/cn';
 
 interface TableToolbarProps {
     searchTerm: string;

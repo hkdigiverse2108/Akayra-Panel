@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Bell, Search, Settings, User, Menu } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
-import Switcher from '../components/Switcher';
+import { useAuth } from '../Context/AuthContext';
+import { useTheme } from '../Context/ThemeContext';
+import Switcher from '../Components/Switcher';
 
 const Header: React.FC = () => {
   const { user } = useAuth();

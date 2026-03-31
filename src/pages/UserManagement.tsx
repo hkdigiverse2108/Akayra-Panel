@@ -1,16 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
 import { UserPlus, Edit, Trash2, Phone, ToggleLeft, ToggleRight } from 'lucide-react';
-import { useManagementData } from '../hooks/useManagementData';
-import TableToolbar from '../components/TableToolbar';
-import TableFooter from '../components/TableFooter';
-import ConfirmModal from '../components/ConfirmModal';
-import { getSrNo } from '../utils/tableUtils';
-import { cn } from '../utils/cn';
+import { useManagementData } from '../Utils/Hooks/useManagementData';
+import TableToolbar from '../Components/TableToolbar';
+import TableFooter from '../Components/TableFooter';
+import ConfirmModal from '../Components/ConfirmModal';
+import { getSrNo } from '../Utils/tableUtils';
+import { cn } from '../Utils/cn';
 import { Avatar, Tooltip } from 'antd';
+import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const UserManagement: React.FC = () => {
     const navigate = useNavigate();
@@ -27,7 +27,6 @@ const UserManagement: React.FC = () => {
         setCurrentPage,
         setPageSize,
         setActiveFilter,
-        // New hook functions
         handleDeleteClick,
         confirmDelete,
         handleToggleStatus,
@@ -37,27 +36,25 @@ const UserManagement: React.FC = () => {
         toggleSort,
         getSortIcon
     } = useManagementData({
-        apiMethod: userAPI.getAll,
-        deleteMethod: userAPI.delete,
-        toggleMethod: userAPI.edit,
+        resourceKey: KEYS.USER.ALL,
+        resourceUrl: URL_KEYS.USER.ALL,
         idField: 'userId',
         dataKey: 'user_data',
-        resourceName: 'User'
     });
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                <div className="text-left">
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">User Management</h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Manage platform users, roles and permissions.</p>
                 </div>
-                <Button onClick={() => navigate('/users/add')} className="h-12 px-6 rounded-2xl flex items-center gap-2">
+                <Button onClick={() => navigate(`${ROUTES.USERS}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
                     <UserPlus size={20} /> Add New User
                 </Button>
             </div>
 
-            <Card className="!p-0 overflow-hidden rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
+            <Card className="!p-0 overflow-hidden rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900 text-left">
                 <TableToolbar
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
@@ -83,39 +80,39 @@ const UserManagement: React.FC = () => {
                                 <th className="px-8 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                            {loading ? (
+                        <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
+                            {loading && users.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading users...</td>
+                                    <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse font-black uppercase text-xs">Accessing User Database...</td>
                                 </tr>
                             ) : users.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No users found.</td>
                                 </tr>
                             ) : (
-                                users.map((user, index) => (
+                                users.map((user: any, index: number) => (
                                     <tr key={user._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                                         <td className="px-8 py-5 font-black text-slate-400 text-sm">
                                             {getSrNo(currentPage, pageSize, index)}
                                         </td>
                                         <td className="px-8 py-5">
-                                            <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-4 text-left">
                                                 <Avatar 
                                                     className="bg-primary-100 text-primary-700 font-black border-2 border-primary-200" 
                                                     size={48}
                                                     shape="square"
                                                     style={{ borderRadius: '14px' }}
                                                 >
-                                                    {user.firstName.charAt(0).toUpperCase()}
+                                                    {user.firstName?.charAt(0).toUpperCase()}
                                                 </Avatar>
-                                                <div>
-                                                    <p className="text-sm font-black text-slate-900 dark:text-white leading-none mb-1">{user.firstName} {user.lastName}</p>
-                                                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{user.email}</p>
+                                                <div className="text-left">
+                                                    <p className="text-sm font-black text-slate-900 dark:text-white leading-none mb-1 text-left">{user.firstName} {user.lastName}</p>
+                                                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 text-left">{user.email}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-8 py-5">
-                                            <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 text-left">
                                                 <Phone size={14} className="text-slate-400" />
                                                 {user.contact?.phoneNo || 'N/A'}
                                             </div>
@@ -125,6 +122,7 @@ const UserManagement: React.FC = () => {
                                                 <Tooltip title={user.isActive ? "Deactivate" : "Activate"}>
                                                     <button 
                                                         onClick={() => handleToggleStatus(user)} 
+                                                        disabled={isActionLoading}
                                                         className={cn(
                                                             "p-2 rounded-xl transition-all shadow-sm",
                                                             user.isActive 
@@ -137,7 +135,7 @@ const UserManagement: React.FC = () => {
                                                 </Tooltip>
                                                 <Tooltip title="Edit">
                                                     <button 
-                                                        onClick={() => navigate(`/users/edit/${user._id}`)} 
+                                                        onClick={() => navigate(`${ROUTES.USERS}/edit/${user._id}`)} 
                                                         className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                     >
                                                         <Edit size={20} />

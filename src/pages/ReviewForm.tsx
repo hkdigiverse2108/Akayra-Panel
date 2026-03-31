@@ -1,84 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Input, Select, Rate, Switch, message, Avatar } from 'antd';
-import { reviewAPI, productAPI, userAPI } from '../services/apiService';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import { Form, Input, Select, Rate, Switch, Avatar, Breadcrumb } from 'antd';
+import { Queries } from '../Api/Queries';
+import { Mutations } from '../Api/Mutations';
+import Card from '../Components/Card';
+import Button from '../Components/Button';
 import { ArrowLeft, Save, Star, User, ShoppingBag, MessageSquare } from 'lucide-react';
+import { ROUTES } from '../Constants';
+import { toast } from 'react-toastify';
+
 const { Option } = Select;
 const { TextArea } = Input;
 
 const ReviewForm: React.FC = () => {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
-    const [fetchingData, setFetchingData] = useState(true);
-    
-    // Dropdown data
-    const [products, setProducts] = useState<any[]>([]);
-    const [users, setUsers] = useState<any[]>([]);
+    const isEditMode = !!id;
 
     const ratingValue = Form.useWatch('rating', form);
 
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                setFetchingData(true);
-                const [productRes, userRes] = await Promise.all([
-                    productAPI.getAll(),
-                    userAPI.getAll()
-                ]);
-                
-                setProducts(productRes.data.data.product_data || []);
-                setUsers(userRes.data.data.user_data || []);
+    // Queries for Dropdowns
+    const { data: productRes } = Queries.useGetProduct({ limit: 'All' });
+    const { data: userRes } = Queries.useGetUser({ limit: 'All' });
+    
+    // Query for Edit Mode
+    const { data: reviewResponse, isLoading: fetching } = Queries.useGetSingleReview(id);
+    
+    // Mutations
+    const addReview = Mutations.useAddReview();
+    const editReview = Mutations.useEditReview();
 
-                if (id) {
-                    const reviewRes = await reviewAPI.getById(id);
-                    if (reviewRes.data.status === 200) {
-                        const review = reviewRes.data.data;
-                        form.setFieldsValue({
-                            ...review,
-                            productId: review.productId?._id || review.productId,
-                            userId: review.userId?._id || review.userId,
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error('Fetch initial data error:', error);
-                message.error('Failed to load review data');
-            } finally {
-                setFetchingData(false);
-            }
-        };
-        fetchInitialData();
-    }, [id, form]);
+    const products = productRes?.data?.product_data || [];
+    const users = userRes?.data?.user_data || [];
+
+    useEffect(() => {
+        if (isEditMode && reviewResponse?.data) {
+            const review = reviewResponse.data;
+            form.setFieldsValue({
+                ...review,
+                productId: review.productId?._id || review.productId,
+                userId: review.userId?._id || review.userId,
+            });
+        }
+    }, [isEditMode, reviewResponse, form]);
 
     const onFinish = async (values: any) => {
-        try {
-            setLoading(true);
-            const payload = {
-                ...values,
-                reviewId: id
-            };
+        const payload = isEditMode ? { ...values, reviewId: id } : values;
+        const mutation = isEditMode ? editReview : addReview;
 
-            const response = id 
-                ? await reviewAPI.edit(payload)
-                : await reviewAPI.add(payload);
-
-            if (response.data.status === 200) {
-                message.success(`Review ${id ? 'updated' : 'added'} successfully`);
-                navigate('/reviews');
+        mutation.mutate(payload, {
+            onSuccess: (res: any) => {
+                if (res.status === 200 || res.status === 201) {
+                    toast.success(`Review ${isEditMode ? 'updated' : 'added'} successfully`);
+                    navigate(ROUTES.REVIEWS);
+                }
+            },
+            onError: (err: any) => {
+                toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} review`);
             }
-        } catch (error: any) {
-            console.error('Submit error:', error);
-            message.error(error.response?.data?.message || 'Something went wrong');
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
-    if (fetchingData) {
+    if (isEditMode && fetching) {
         return (
             <div className="h-96 flex flex-col items-center justify-center gap-4">
                 <div className="h-10 w-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
@@ -89,18 +73,33 @@ const ReviewForm: React.FC = () => {
 
     return (
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center gap-4">
-                <button 
-                    onClick={() => navigate('/reviews')}
-                    className="h-12 w-12 flex items-center justify-center bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-50 transition-all text-slate-400 hover:text-slate-600"
-                >
-                    <ArrowLeft size={20} />
-                </button>
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                        {id ? 'Review Adjustment' : 'Administrative Feedback'}
-                    </h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Curate user experiences and verify feedback.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-20 bg-gray-50/80 dark:bg-slate-950/80 backdrop-blur-md py-4 -mt-4 border-b border-gray-100 dark:border-slate-800">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => navigate(ROUTES.REVIEWS)}
+                        className="h-12 w-12 flex items-center justify-center bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-50 transition-all text-slate-400 hover:text-slate-600"
+                    >
+                        <ArrowLeft size={20} />
+                    </button>
+                    <div>
+                        <Breadcrumb 
+                            className="mb-1"
+                            items={[
+                                { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.DASHBOARD)}>Dashboard</span> },
+                                { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.REVIEWS)}>Reviews</span> },
+                                { title: isEditMode ? 'Edit Review' : 'Add Review' }
+                            ]}
+                        />
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                            {isEditMode ? 'Review Adjustment' : 'Administrative Feedback'}
+                        </h1>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <Button onClick={() => navigate(ROUTES.REVIEWS)} className="h-12 px-6 rounded-2xl border-2 font-bold text-slate-600">Cancel</Button>
+                    <Button onClick={() => form.submit()} loading={addReview.isPending || editReview.isPending} className="h-12 px-8 rounded-2xl flex items-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black">
+                        <Save size={20} /> {isEditMode ? 'Save Adjustments' : 'Publish Feedback'}
+                    </Button>
                 </div>
             </div>
 
@@ -110,9 +109,10 @@ const ReviewForm: React.FC = () => {
                 onFinish={onFinish}
                 initialValues={{ isActive: true, rating: 5 }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                requiredMark={false}
             >
                 <div className="space-y-8">
-                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8">
+                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8 bg-white dark:bg-slate-900">
                         <div className="flex items-center gap-3 mb-8">
                             <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-600">
                                 <Star size={20} />
@@ -137,12 +137,12 @@ const ReviewForm: React.FC = () => {
                                 <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Approved Status</span>
                             </div>
                             <Form.Item name="isActive" valuePropName="checked" noStyle>
-                                <Switch className="custom-switch" />
+                                <Switch />
                             </Form.Item>
                         </div>
                     </Card>
 
-                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8">
+                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8 bg-white dark:bg-slate-900">
                         <div className="flex items-center gap-3 mb-8">
                             <div className="h-10 w-10 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600">
                                 <MessageSquare size={20} />
@@ -155,12 +155,8 @@ const ReviewForm: React.FC = () => {
                             label={<span className="text-xs font-black text-slate-400 uppercase tracking-widest">User Commentary</span>}
                             rules={[{ required: true, message: 'Comment is required' }]}
                         >
-                            <TextArea rows={5} placeholder="What did the user have to say?" className="bg-gray-50 dark:bg-slate-800 border-0 rounded-2xl px-5 py-4 font-medium italic" />
+                            <TextArea rows={5} placeholder="What did the user have to say?" className="bg-gray-50 dark:bg-slate-800 border-0 rounded-2xl px-5 py-4 font-medium italic focus:ring-primary-500" />
                         </Form.Item>
-
-                        <Button onClick={() => form.submit()} loading={loading} className="w-full h-14 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 mt-4">
-                            <Save size={20} /> {id ? 'Save Adjustments' : 'Publish Feedback'}
-                        </Button>
                     </Card>
                 </div>
 
@@ -181,17 +177,17 @@ const ReviewForm: React.FC = () => {
                             >
                                 <Select 
                                     placeholder="Select User" 
-                                    className="custom-select-dark h-12"
+                                    className="custom-select-dark h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-white/20"
                                     showSearch
                                     filterOption={(input, option) => 
                                         (option?.label as string || '').toLowerCase().includes(input.toLowerCase())
                                     }
                                 >
-                                    {users.map(user => (
+                                    {users.map((user: any) => (
                                         <Option key={user._id} value={user._id} label={user.fullName || user.firstName}>
                                             <div className="flex items-center gap-3">
                                                 <Avatar size="small" src={user.profilePicture} icon={<User size={12} />} />
-                                                {user.fullName}
+                                                <span className="font-bold">{user.fullName || `${user.firstName} ${user.lastName}`}</span>
                                             </div>
                                         </Option>
                                     ))}
@@ -205,15 +201,17 @@ const ReviewForm: React.FC = () => {
                             >
                                 <Select 
                                     placeholder="Select Product" 
-                                    className="custom-select-dark h-12"
+                                    className="custom-select-dark h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-white/20"
                                     showSearch
-                                    filterOption={(input, option) => (option?.children as any).props.children[2].toLowerCase().includes(input.toLowerCase())}
+                                    filterOption={(input, option) => 
+                                        (option?.label as string || '').toLowerCase().includes(input.toLowerCase())
+                                    }
                                 >
-                                    {products.map(product => (
+                                    {products.map((product: any) => (
                                         <Option key={product._id} value={product._id} label={product.title}>
                                             <div className="flex items-center gap-3">
                                                 <Avatar size="small" src={product.image} icon={<ShoppingBag size={12} />} />
-                                                {product.title}
+                                                <span className="font-bold">{product.title}</span>
                                             </div>
                                         </Option>
                                     ))}

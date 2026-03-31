@@ -5,9 +5,9 @@ import {
   MessageSquare, Image, HelpCircle, FileText, Info, LogOut, ChevronDown, TrendingUp,
   ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Instagram, Ticket, Send
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
-import { cn } from '../utils/cn';
+import { useAuth } from '../Context/AuthContext';
+import { useTheme } from '../Context/ThemeContext';
+import { cn } from '../Utils/cn';
 
 interface SubMenuItem {
   label: string;
