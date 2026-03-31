@@ -44,18 +44,18 @@ const ReviewManagement: React.FC = () => {
     });
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-4 sm:space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
-                <div className="text-left">
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Review Management</h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Moderate user experience feedback and ratings.</p>
+                <div className="text-left px-1">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Review Management</h1>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium mt-1 text-sm sm:text-base">Moderate user experience feedback and ratings.</p>
                 </div>
-                <Button onClick={() => navigate(`${ROUTES.REVIEWS}/add`)} className="h-12 px-6 rounded-2xl flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20">
-                    <Plus size={20} /> Add Placeholder Review
+                <Button onClick={() => navigate(`${ROUTES.REVIEWS}/add`)} className="h-10 sm:h-12 px-6 rounded-2xl flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-black shadow-lg shadow-primary-500/20 w-full md:w-auto">
+                    <Plus size={20} /> Add Review
                 </Button>
             </div>
 
-            <Card className="!p-0 overflow-hidden rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
+            <Card className="!p-0 overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
                 <TableToolbar
                     searchTerm={searchTerm}
                     onSearchChange={setSearchTerm}
@@ -68,12 +68,12 @@ const ReviewManagement: React.FC = () => {
                 />
 
                 {viewType === 'list' ? (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                    <div className="overflow-x-auto scrollbar-hide">
+                        <table className="w-full text-left border-collapse min-w-[600px] md:min-w-full">
                             <thead>
                                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
-                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16">Sr. No.</th>
-                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16 hidden sm:table-cell">Sr. No.</th>
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
                                         <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('userId.fullName')}>
                                             User
                                             <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
@@ -81,9 +81,9 @@ const ReviewManagement: React.FC = () => {
                                             </div>
                                         </div>
                                     </th>
-                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">Product</th>
-                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">Rating</th>
-                                    <th className="px-6 py-5 text-xs font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Product</th>
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden xs:table-cell">Rating</th>
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
@@ -98,19 +98,22 @@ const ReviewManagement: React.FC = () => {
                                 ) : (
                                     reviews.map((review: any, index: number) => (
                                         <tr key={review._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
-                                            <td className="px-6 py-5 font-black text-slate-400 text-sm">
+                                            <td className="px-4 sm:px-8 py-5 font-black text-slate-400 text-sm hidden sm:table-cell">
                                                 {getSrNo(currentPage, pageSize, index)}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 sm:px-8 py-5">
                                                 <div className="flex items-center gap-3 text-left">
                                                     <Avatar icon={<UserIcon size={14} />} className="bg-primary-50 dark:bg-primary-900/30 text-primary-600 shrink-0" />
-                                                    <p className="text-sm font-black text-slate-900 dark:text-white capitalize">{review.userId?.fullName || 'Anonymous'}</p>
+                                                    <div className="text-left overflow-hidden">
+                                                        <p className="text-sm font-black text-slate-900 dark:text-white capitalize truncate max-w-[120px] sm:max-w-none">{review.userId?.fullName || 'Anonymous'}</p>
+                                                        <p className="text-[10px] font-bold text-slate-400 md:hidden truncate max-w-[120px]">{review.productId?.title || 'Unknown Product'}</p>
+                                                    </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tighter truncate max-w-[150px]">{review.productId?.title || 'Unknown Product'}</td>
-                                            <td className="px-6 py-4"><Rate disabled defaultValue={review.rating} className="text-yellow-500 scale-75 origin-left" /></td>
-                                             <td className="px-6 py-4 text-right">
-                                                <div className="flex items-center justify-end gap-2">
+                                            <td className="px-4 sm:px-8 py-5 text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tighter truncate max-w-[150px] hidden md:table-cell">{review.productId?.title || 'Unknown Product'}</td>
+                                            <td className="px-4 sm:px-8 py-5 hidden xs:table-cell"><Rate disabled defaultValue={review.rating} className="text-yellow-500 scale-75 origin-left" /></td>
+                                             <td className="px-4 sm:px-8 py-5 text-right">
+                                                <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                                                     <Tooltip title={review.isActive ? "Deactivate" : "Activate"}>
                                                         <button 
                                                             onClick={() => handleToggleStatus(review)} 
@@ -122,7 +125,7 @@ const ReviewManagement: React.FC = () => {
                                                                     : "text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
                                                             )}
                                                         >
-                                                            {review.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
+                                                            {review.isActive ? <ToggleRight size={20} className="sm:w-6 sm:h-6" /> : <ToggleLeft size={20} className="sm:w-6 sm:h-6" />}
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
@@ -130,7 +133,7 @@ const ReviewManagement: React.FC = () => {
                                                             onClick={() => navigate(`${ROUTES.REVIEWS}/edit/${review._id}`)} 
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
-                                                            <Edit size={20} />
+                                                            <Edit size={18} className="sm:w-5 sm:h-5" />
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Delete">
@@ -138,7 +141,7 @@ const ReviewManagement: React.FC = () => {
                                                             onClick={() => handleDeleteClick(review._id)} 
                                                             className="p-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm"
                                                         >
-                                                            <Trash2 size={20} />
+                                                            <Trash2 size={18} className="sm:w-5 sm:h-5" />
                                                         </button>
                                                     </Tooltip>
                                                 </div>
@@ -150,7 +153,7 @@ const ReviewManagement: React.FC = () => {
                         </table>
                     </div>
                 ) : (
-                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+                    <div className="p-4 sm:p-6 grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 animate-in slide-in-from-bottom-4 duration-500">
                         {loading && reviews.length === 0 ? (
                             <div className="col-span-full py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading reviews...</div>
                         ) : reviews.length === 0 ? (

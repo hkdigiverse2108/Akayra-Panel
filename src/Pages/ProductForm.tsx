@@ -19,10 +19,10 @@ const ProductForm: React.FC = () => {
     const isEditMode = !!id;
 
     // Queries for Dropdowns
-    const { data: catRes } = Queries.useGetCategory({ limit: 'All' });
-    const { data: brandRes } = Queries.useGetBrand({ limit: 'All' });
-    const { data: sizeRes } = Queries.useGetSize({ limit: 'All' });
-    const { data: colorRes } = Queries.useGetColor({ limit: 'All' });
+    const { data: catRes } = Queries.useGetCategory();
+    const { data: brandRes } = Queries.useGetBrand();
+    const { data: sizeRes } = Queries.useGetSize();
+    const { data: colorRes } = Queries.useGetColor();
     
     // Query for Edit Mode
     const { data: productResponse, isLoading: fetching } = Queries.useGetProductById(id);
@@ -80,33 +80,33 @@ const ProductForm: React.FC = () => {
     }
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-20 bg-gray-50/80 dark:bg-slate-950/80 backdrop-blur-md py-4 -mt-4 border-b border-gray-100 dark:border-slate-800 text-left">
-                <div className="flex items-center gap-4 text-left">
+        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 sm:px-0 pb-12 sm:pb-0 text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20 bg-gray-50/90 dark:bg-slate-950/90 backdrop-blur-md py-4 -mx-4 px-4 sm:mx-0 sm:px-0 border-b border-gray-100 dark:border-slate-800 text-left">
+                <div className="flex items-center gap-3 sm:gap-4 text-left">
                     <button
                         onClick={() => navigate(ROUTES.PRODUCTS)}
-                        className="h-12 w-12 flex items-center justify-center bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-50 transition-all text-slate-400 hover:text-slate-600"
+                        className="p-2 sm:p-3 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl transition-all shadow-sm hover:shadow text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border border-gray-100 dark:border-slate-800"
                     >
-                        <ArrowLeft size={20} />
+                        <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                     </button>
-                    <div className="text-left">
+                    <div className="text-left overflow-hidden">
                         <Breadcrumb 
-                            className="mb-1 text-left"
+                            className="mb-0.5 text-left text-[10px] sm:text-xs"
                             items={[
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.DASHBOARD)}>Dashboard</span> },
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.PRODUCTS)}>Products</span> },
-                                { title: isEditMode ? 'Edit Product' : 'Add Product' }
+                                { title: isEditMode ? 'Edit' : 'Add' }
                             ]}
                         />
-                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">
-                            {isEditMode ? 'Edit Product' : 'Add New Product'}
+                        <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left truncate">
+                            {isEditMode ? 'Edit Product' : 'New Product'}
                         </h1>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    <Button onClick={() => navigate(ROUTES.PRODUCTS)} className="h-12 px-6 rounded-2xl border-2 font-bold text-slate-600">Cancel</Button>
-                    <Button onClick={() => form.submit()} loading={addProduct.isPending || editProduct.isPending} className="h-12 px-8 rounded-2xl flex items-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black">
-                        <Save size={20} /> {isEditMode ? 'Save Changes' : 'Publish Product'}
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <Button variant="ghost" onClick={() => navigate(ROUTES.PRODUCTS)} className="h-10 sm:h-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl border-2 font-bold text-slate-600 dark:text-slate-400 flex-1 sm:flex-none">Cancel</Button>
+                    <Button onClick={() => form.submit()} loading={addProduct.isPending || editProduct.isPending} className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black flex-1 sm:flex-none">
+                        <Save size={18} className="sm:w-5 sm:h-5" /> {isEditMode ? 'Update' : 'Publish'}
                     </Button>
                 </div>
             </div>
@@ -115,18 +115,18 @@ const ProductForm: React.FC = () => {
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
-                className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left"
+                className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 text-left"
                 initialValues={{ isActive: true, isTrending: false, isDealOfDay: false, stock: 0 }}
                 requiredMark={false}
             >
                 {/* Left Column: Main Info */}
-                <div className="lg:col-span-2 space-y-8 pb-10 text-left">
-                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8 text-left">
-                        <div className="flex items-center gap-3 mb-8 text-left">
+                <div className="lg:col-span-2 space-y-6 sm:space-y-8 pb-10 text-left">
+                    <Card className="rounded-2xl sm:rounded-[32px] border-0 shadow-xl overflow-hidden p-4 sm:p-8 text-left">
+                        <div className="flex items-center gap-3 mb-6 sm:mb-8 text-left">
                             <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-600">
                                 <ShoppingBag size={20} />
                             </div>
-                            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">General Information</h2>
+                            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">General Information</h2>
                         </div>
 
                         <div className="space-y-6 text-left">

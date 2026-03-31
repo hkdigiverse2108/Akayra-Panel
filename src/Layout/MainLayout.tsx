@@ -26,7 +26,7 @@ const MainLayout: React.FC = () => {
 
       <div className={cn('flex flex-col min-h-screen transition-all duration-300', getSidebarWidth())}>
         <Header />
-        <main className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full overflow-hidden">
+        <main className="flex-1 p-2 sm:p-6 md:p-8 max-w-[1600px] mx-auto w-full overflow-hidden">
           <React.Suspense fallback={
             <div className="h-full min-h-[400px] flex flex-col items-center justify-center gap-4 animate-in fade-in duration-500">
               <div className="relative">

@@ -19,7 +19,7 @@ const FaqForm: React.FC = () => {
     const isEditMode = !!id;
 
     // Queries for Dropdown
-    const { data: categoryRes } = Queries.useGetFaqCategory({ limit: 'All' });
+    const { data: categoryRes } = Queries.useGetFaqCategory();
     
     // Query for Edit Mode
     const { data: faqResponse, isLoading: fetching } = Queries.useGetSingleFaq(id);
@@ -67,38 +67,38 @@ const FaqForm: React.FC = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 z-20 bg-gray-50/80 dark:bg-slate-950/80 backdrop-blur-md py-4 -mt-4 border-b border-gray-100 dark:border-slate-800">
-                <div className="flex items-center gap-4">
+        <div className="max-w-3xl mx-auto space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 sm:px-0 pb-12 sm:pb-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20 bg-gray-50/90 dark:bg-slate-950/90 backdrop-blur-md py-4 -mx-4 px-4 sm:mx-0 sm:px-0 border-b border-gray-100 dark:border-slate-800 text-left">
+                <div className="flex items-center gap-3 sm:gap-4 text-left">
                     <button 
                         onClick={() => navigate(ROUTES.FAQS)}
-                        className="h-12 w-12 flex items-center justify-center bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-gray-50 transition-all text-slate-400 hover:text-slate-600"
+                        className="p-2 sm:p-3 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl transition-all shadow-sm hover:shadow text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border border-gray-100 dark:border-slate-800"
                     >
-                        <ArrowLeft size={20} />
+                        <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                     </button>
-                    <div>
+                    <div className="text-left overflow-hidden">
                         <Breadcrumb 
-                            className="mb-1"
+                            className="mb-0.5 text-left text-[10px] sm:text-xs"
                             items={[
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.DASHBOARD)}>Dashboard</span> },
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.FAQS)}>FAQs</span> },
-                                { title: isEditMode ? 'Edit FAQ' : 'Add FAQ' }
+                                { title: isEditMode ? 'Edit' : 'Add' }
                             ]}
                         />
-                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                            {isEditMode ? 'Knowledge Adjustment' : 'Author New Entry'}
+                        <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left truncate">
+                            {isEditMode ? 'Edit FAQ' : 'New Entry'}
                         </h1>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    <Button onClick={() => navigate(ROUTES.FAQS)} className="h-12 px-6 rounded-2xl border-2 font-bold text-slate-600">Cancel</Button>
-                    <Button onClick={() => form.submit()} loading={addFaq.isPending || editFaq.isPending} className="h-12 px-8 rounded-2xl flex items-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black">
-                        <Save size={20} /> {isEditMode ? 'Save Entry' : 'Publish Entry'}
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <Button variant="ghost" onClick={() => navigate(ROUTES.FAQS)} className="h-10 sm:h-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl border-2 font-bold text-slate-600 dark:text-slate-400 flex-1 sm:flex-none">Cancel</Button>
+                    <Button onClick={() => form.submit()} loading={addFaq.isPending || editFaq.isPending} className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black flex-1 sm:flex-none">
+                        <Save size={18} className="sm:w-5 sm:h-5" /> {isEditMode ? 'Save' : 'Publish'}
                     </Button>
                 </div>
             </div>
 
-            <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8 bg-white dark:bg-slate-900">
+            <Card className="rounded-[24px] sm:rounded-[32px] border-0 shadow-xl overflow-hidden p-6 sm:p-8 bg-white dark:bg-slate-900">
                 <Form
                     form={form}
                     layout="vertical"

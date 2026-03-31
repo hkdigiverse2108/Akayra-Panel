@@ -20,15 +20,15 @@ const TableFooter: React.FC<TableFooterProps> = ({
     resourceName = 'records'
 }) => {
     return (
-        <div className="p-6 border-t border-gray-100 dark:border-slate-800 bg-gray-50/30 dark:bg-slate-800/10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="p-4 sm:p-6 border-t border-gray-100 dark:border-slate-800 bg-gray-50/30 dark:bg-slate-800/10 flex flex-col sm:flex-row items-center justify-between gap-6">
             {/* Page Size Selector */}
-            <div className="flex items-center gap-4 order-2 md:order-1">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Show Records:</span>
+            <div className="flex items-center gap-3 sm:gap-4 order-2 sm:order-1">
+                <span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest">Show:</span>
                 <Select
                     value={pageSize}
                     onChange={onPageSizeChange}
-                    className="w-24 custom-select"
-                    size="large"
+                    className="w-20 sm:w-24 custom-select"
+                    size="middle"
                 >
                     <Option value={10}>10</Option>
                     <Option value={30}>30</Option>
@@ -39,7 +39,7 @@ const TableFooter: React.FC<TableFooterProps> = ({
             </div>
 
             {/* Pagination / Record Count */}
-            <div className="order-1 md:order-2">
+            <div className="order-1 sm:order-2 w-full sm:w-auto flex justify-center">
                 {pageSize !== 'All' ? (
                     <Pagination
                         current={currentPage}
@@ -48,10 +48,11 @@ const TableFooter: React.FC<TableFooterProps> = ({
                         onChange={onPageChange}
                         showSizeChanger={false}
                         className="custom-pagination"
+                        size="small"
                     />
                 ) : (
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-gray-100 dark:border-slate-800 shadow-sm transition-all animate-in fade-in zoom-in duration-300">
-                        Showing {total} of {total} {resourceName}
+                    <span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-gray-100 dark:border-slate-800 shadow-sm transition-all animate-in fade-in zoom-in duration-300">
+                        {total} {resourceName}
                     </span>
                 )}
             </div>

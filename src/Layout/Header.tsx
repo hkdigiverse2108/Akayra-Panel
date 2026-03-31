@@ -46,18 +46,18 @@ const Header: React.FC = () => {
 
         <button
           onClick={() => setIsSwitcherOpen(true)}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 transition-colors"
+          className="hidden sm:flex p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 transition-colors"
           title="Open Switcher"
         >
           <Settings size={20} />
         </button>
 
-        <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 relative transition-colors">
+        <button className="hidden xs:flex p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 relative transition-colors">
           <Bell size={20} />
           <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>
         </button>
 
-        <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-slate-800">
+        <div className="flex items-center gap-2 sm:gap-3 pl-2 border-l border-gray-200 dark:border-slate-800">
           <div className="hidden text-right md:block">
             <p className="text-sm font-semibold text-gray-900 dark:text-white leading-none capitalize">
               {user?.name || 'Admin User'}
