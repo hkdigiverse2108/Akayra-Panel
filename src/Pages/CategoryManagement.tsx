@@ -206,7 +206,7 @@ const CategoryManagement: React.FC = () => {
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
                 loading={isActionLoading}
-                message="Are you sure you want to delete this category? This action cannot be undone."
+                message="Are you sure you want to delete this category?"
             />
         </div>
     );

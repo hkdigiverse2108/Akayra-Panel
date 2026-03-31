@@ -218,7 +218,7 @@ const BannerManagement: React.FC = () => {
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
                 loading={isActionLoading}
-                message="Are you sure you want to delete this banner? This action cannot be undone."
+                message="Are you sure you want to delete this banner?"
             />
         </div>
     );

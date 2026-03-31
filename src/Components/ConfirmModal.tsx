@@ -20,7 +20,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onClose,
   onConfirm,
   title = "Are you sure?",
-  message = "You want to delete this record? This action cannot be undone.",
+  message = "You want to delete this record?",
   confirmLabel = "Yes",
   cancelLabel = "Cancel",
   variant = 'danger',

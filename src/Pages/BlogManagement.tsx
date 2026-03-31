@@ -211,7 +211,7 @@ const BlogManagement: React.FC = () => {
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
                 loading={isActionLoading}
-                message="Are you sure you want to delete this blog article? This action cannot be undone."
+                message="Are you sure you want to delete this blog article?"
             />
         </div>
     );
