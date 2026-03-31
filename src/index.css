@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark :root {
+  background-color: #0f172a;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Custom React-Toastify Styling */
+.Toastify__toast {
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  padding: 16px !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+.Toastify__toast--success {
+  border-left: 6px solid #10b981 !important;
+}
+
+.Toastify__close-button {
+  color: #64748b !important;
+  opacity: 0.7 !important;
+}
+
+.Toastify__toast-icon {
+  width: 24px !important;
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .glass-card {
+    @apply bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-slate-800/50;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+}
+
+/* Ant Design Table Premium Styling */
+.premium-table .ant-table {
+  background: transparent !important;
+}
+
+.premium-table .ant-table-thead > tr > th {
+  background: #f8fafc !important; /* Slate-50 */
+  border-bottom: 2px solid #f1f5f9 !important; /* Slate-100 */
+}
+
+.dark .premium-table .ant-table-thead > tr > th {
+  background: #1e293b !important; /* Slate-800 */
+  border-bottom: 2px solid #334155 !important; /* Slate-700 */
+}
+
+.premium-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.dark .premium-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #1e293b !important;
+}
+
+.premium-table .ant-pagination-item-active {
+  border-color: #0ea5e9 !important;
+  background: #0ea5e9 !important;
+}
+
+.premium-table .ant-pagination-item-active a {
+  color: white !important;
+}
+
+/* Custom Scrollbar for Dark Mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Custom Ant Design Select Styling */
+.custom-select .ant-select-selector {
+  border: 0 !important;
+  background-color: #f8fafc !important; /* slate-50 */
+  border-radius: 16px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.dark .custom-select .ant-select-selector {
+  background-color: #1e293b !important; /* slate-800 */
+  color: white !important;
+}
+
+.custom-select-dark .ant-select-selector {
+  border: 0 !important;
+  background-color: white !important;
+  border-radius: 16px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+/* Custom Ant Design Switch Styling */
+.custom-switch.ant-switch-checked {
+  background-color: #10b981 !important; /* emerald-500 */
+}
+
+.custom-switch-warning.ant-switch-checked {
+  background-color: #f59e0b !important; /* amber-500 */
+}
