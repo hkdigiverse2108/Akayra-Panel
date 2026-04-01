@@ -47,6 +47,10 @@ const FaqCategoryForm = lazy(() => import("../Pages/FaqCategoryForm"));
 //contact inquiry 
 const ContactManagement = lazy(() => import("../Pages/ContactManagement"));
 const NewsletterManagement = lazy(() => import("../Pages/NewsletterManagement"));
+const CouponManagement = lazy(() => import("../Pages/CouponManagement"));
+const CouponForm = lazy(() => import("../Pages/CouponForm"));
+const IgPostManagement = lazy(() => import("../Pages/IgPostManagement"));
+const IgPostForm = lazy(() => import("../Pages/IgPostForm"));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
@@ -123,14 +127,20 @@ const PageRoutes: React.FC = () => {
           {/*Contact Inquiries*/}
           <Route path={ROUTES.CONTACT} element={<ContactManagement />} />
           <Route path={ROUTES.NEWSLETTER} element={<NewsletterManagement />} />
+          <Route path={ROUTES.COUPONS} element={<CouponManagement />} />
+          <Route path={`${ROUTES.COUPONS}/add`} element={<CouponForm />} />
+          <Route path={`${ROUTES.COUPONS}/edit/:id`} element={<CouponForm />} />
+
+          {/* IG Posts */}
+          <Route path={ROUTES.IG_POSTS} element={<IgPostManagement />} />
+          <Route path={`${ROUTES.IG_POSTS}/add`} element={<IgPostForm />} />
+          <Route path={`${ROUTES.IG_POSTS}/edit/:id`} element={<IgPostForm />} />
           
 
           {/* General Management (Coming Soon placeholders) */}
           {[
-            { path: ROUTES.COUPONS, label: "Coupon Management" },
             { path: ROUTES.POLICIES, label: "Policy Management" },
             { path: ROUTES.ABOUT, label: "About Us Content" },
-            { path: ROUTES.IG_POSTS, label: "Instagram Posts" },
             { path: ROUTES.SETTINGS, label: "Account Settings" },
           ].map((item) => (
             <Route

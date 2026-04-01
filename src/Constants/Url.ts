@@ -102,4 +102,22 @@ export const URL_KEYS = {
     ALL: '/newsletter/all',
     DELETE: '/newsletter',
   },
+
+  //******************** Coupon *****************
+  COUPON: {
+    ALL: '/coupon/all',
+    BASE: '/coupon',
+    ADD: '/coupon/add',
+    DELETE: '/coupon',
+    EDIT: '/coupon/edit',
+  },
+
+  //******************** IG Post *****************
+  IG_POST: {
+    ALL: '/ig-post/all',
+    BASE: '/ig-post',
+    ADD: '/ig-post/add',
+    DELETE: '/ig-post',
+    EDIT: '/ig-post/edit',
+  },
 };

@@ -79,4 +79,16 @@ export const KEYS = {
     ALL: 'NEWSLETTER_ALL',
     BASE: 'NEWSLETTER_BASE',
   },
+
+  //******************** Coupon *****************
+  COUPON: {
+    ALL: 'COUPON_ALL',
+    BASE: 'COUPON_BASE',
+  },
+
+  //******************** IG Post *****************
+  IG_POST: {
+    ALL: 'IG_POST_ALL',
+    BASE: 'IG_POST_BASE',
+  },
 };

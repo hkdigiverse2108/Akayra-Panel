@@ -66,4 +66,14 @@ export const Mutations = {
 
   //************* Newsletter ***********
   useDeleteNewsletter: () => useMutations([KEYS.NEWSLETTER.BASE], (id: string) => Delete(`${URL_KEYS.NEWSLETTER.DELETE}/${id}`)),
+
+  //************* Coupon ***********
+  useDeleteCoupon: () => useMutations([KEYS.COUPON.BASE], (id: string) => Delete(`${URL_KEYS.COUPON.DELETE}/${id}`)),
+  useEditCoupon: () => useMutations([KEYS.COUPON.ALL, KEYS.COUPON.BASE], (input: any) => Put(URL_KEYS.COUPON.EDIT, input), { showSuccessToast: false }),
+  useAddCoupon: () => useMutations([KEYS.COUPON.ALL, KEYS.COUPON.BASE], (input: any) => Post(URL_KEYS.COUPON.ADD, input), { showSuccessToast: false }),
+
+  //************* IG Post ***********
+  useDeleteIgPost: () => useMutations([KEYS.IG_POST.BASE], (id: string) => Delete(`${URL_KEYS.IG_POST.DELETE}/${id}`)),
+  useEditIgPost: () => useMutations([KEYS.IG_POST.ALL, KEYS.IG_POST.BASE], (input: any) => Put(URL_KEYS.IG_POST.EDIT, input), { showSuccessToast: false }),
+  useAddIgPost: () => useMutations([KEYS.IG_POST.ALL, KEYS.IG_POST.BASE], (input: any) => Post(URL_KEYS.IG_POST.ADD, input), { showSuccessToast: false }),
 };

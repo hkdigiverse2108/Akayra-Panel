@@ -130,20 +130,20 @@ const BlogForm: React.FC = () => {
                 </div>
 
                 <div className="space-y-8 text-left">
-                    <Card className="rounded-[40px] border-0 shadow-xl overflow-hidden p-8 bg-slate-950 text-white text-left">
+                    <Card className="rounded-[40px] border shadow-xl overflow-hidden p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 text-left">
                         <div className="flex items-center gap-3 mb-8 text-left">
-                            <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
+                            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-white">
                                 <ImageIcon size={20} />
                             </div>
-                            <h2 className="text-xl font-black text-white tracking-tight text-left">Vantage Preview</h2>
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Vantage Preview</h2>
                         </div>
 
                         <div className="space-y-6 text-left">
-                            <div className="aspect-square rounded-[40px] overflow-hidden bg-white/5 border border-white/10 shadow-2xl relative group text-left">
+                            <div className="aspect-square rounded-[40px] overflow-hidden bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-2xl relative group text-left">
                                 {imageUrl ? (
                                     <img src={imageUrl} alt="Blog Cover" className="h-full w-full object-cover text-left" />
                                 ) : (
-                                    <div className="h-full w-full flex items-center justify-center text-white/10 text-left"><ImageIcon size={64} /></div>
+                                    <div className="h-full w-full flex items-center justify-center text-slate-300 dark:text-white/10 text-left"><ImageIcon size={64} /></div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                                 <div className="absolute bottom-6 left-8 right-8 text-left">
@@ -154,11 +154,11 @@ const BlogForm: React.FC = () => {
 
                             <Form.Item
                                 name="image"
-                                label={<span className="text-xs font-black text-white/40 uppercase tracking-widest text-left text-white/40">Cover Image Asset URL</span>}
+                                label={<span className="text-xs font-black text-slate-400 dark:text-white/40 uppercase tracking-widest text-left">Cover Image Asset URL</span>}
                                 rules={[{ required: true, message: 'Image URL is required' }]}
                                 className="text-left"
                             >
-                                <Input prefix={<ImageIcon size={14} className="text-white/20 mr-2" />} placeholder="Enter high-res image URL" className="h-12 bg-white/5 border-white/10 rounded-2xl px-4 text-white focus:bg-white/10 focus:border-white/20 transition-all font-bold text-left" />
+                                <Input prefix={<ImageIcon size={14} className="text-slate-400 mr-2 dark:text-white/20" />} placeholder="Enter high-res image URL" className="h-12 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-4 text-slate-700 dark:text-white focus:bg-white dark:focus:bg-white/10 focus:border-gray-200 dark:focus:border-white/20 transition-all font-bold text-left" />
                             </Form.Item>
                         </div>
                     </Card>

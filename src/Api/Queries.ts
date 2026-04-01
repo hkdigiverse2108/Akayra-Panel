@@ -43,5 +43,11 @@ export const Queries = {
 
   // ************ Contact Inquiries ***********
   useGetContactInquiries: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.CONTACT.ALL, params], () => Get(URL_KEYS.CONTACT.ALL, params)),
+
+  // ************ Coupon ***********
+  useGetCoupons: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.COUPON.ALL, params], () => Get(URL_KEYS.COUPON.ALL, params)),
+
+  // ************ IG Post ***********
+  useGetIgPosts: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.IG_POST.ALL, params], () => Get(URL_KEYS.IG_POST.ALL, params)),
 };
 
