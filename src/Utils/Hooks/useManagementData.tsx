@@ -14,6 +14,7 @@ interface UseManagementDataProps {
     initialPageSize?: number | 'All';
     initialSort?: string;
     initialActiveFilter?: boolean;
+    useActiveFilter?: boolean;
     extraParams?: any;
     resourceName?: string; // For notifications/logging
 }
@@ -26,6 +27,7 @@ export const useManagementData = ({
     initialPageSize = 10,
     initialSort = '',
     initialActiveFilter = true,
+    useActiveFilter = true,
     extraParams = {},
 }: UseManagementDataProps) => {
     const queryClient = useQueryClient();
@@ -50,10 +52,10 @@ export const useManagementData = ({
             search: debouncedSearch.trim() || undefined,
             page: pageSize === 'All' ? undefined : currentPage,
             limit: pageSize === 'All' ? undefined : pageSize,
-            activeFilter,
+            activeFilter: useActiveFilter ? activeFilter : undefined,
             sortFilter: sortFilter || undefined,
         });
-    }, [extraParams, debouncedSearch, currentPage, pageSize, activeFilter, sortFilter]);
+    }, [extraParams, debouncedSearch, currentPage, pageSize, activeFilter, sortFilter, useActiveFilter]);
 
     // --- Query ---
     const { data: response, isLoading: loading, refetch } = useQueries(

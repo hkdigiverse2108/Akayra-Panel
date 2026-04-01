@@ -44,6 +44,10 @@ const FaqForm = lazy(() => import("../Pages/FaqForm"));
 const FaqCategoryManagement = lazy(() => import("../Pages/FaqCategoryManagement"));
 const FaqCategoryForm = lazy(() => import("../Pages/FaqCategoryForm"));
 
+//contact inquiry 
+const ContactManagement = lazy(() => import("../Pages/ContactManagement"));
+const NewsletterManagement = lazy(() => import("../Pages/NewsletterManagement"));
+
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
     <div className="relative">
@@ -116,10 +120,13 @@ const PageRoutes: React.FC = () => {
           <Route path={`${ROUTES.COLORS}/add`} element={<ColorForm />} />
           <Route path={`${ROUTES.COLORS}/edit/:id`} element={<ColorForm />} />
 
+          {/*Contact Inquiries*/}
+          <Route path={ROUTES.CONTACT} element={<ContactManagement />} />
+          <Route path={ROUTES.NEWSLETTER} element={<NewsletterManagement />} />
+          
+
           {/* General Management (Coming Soon placeholders) */}
           {[
-            { path: ROUTES.NEWSLETTER, label: "Newsletter Management" },
-            { path: ROUTES.CONTACT, label: "Contact Inquiries" },
             { path: ROUTES.COUPONS, label: "Coupon Management" },
             { path: ROUTES.POLICIES, label: "Policy Management" },
             { path: ROUTES.ABOUT, label: "About Us Content" },

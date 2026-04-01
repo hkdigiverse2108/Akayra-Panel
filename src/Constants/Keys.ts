@@ -1,19 +1,27 @@
 export const KEYS = {
+
+  //******************** User ******************
   USER: {
     ALL: 'USER_ALL',
     BASE: 'USER_BASE',
     DROPDOWN: 'USER_DROPDOWN',
   },
+
+  //******************** Category ****************
   CATEGORY: {
     ALL: 'CATEGORY_ALL',
     BASE: 'CATEGORY_BASE',
     DROPDOWN: 'CATEGORY_DROPDOWN',
   },
+
+  //******************** Brand *****************
   BRAND: {
     ALL: 'BRAND_ALL',
     BASE: 'BRAND_BASE',
     DROPDOWN: 'BRAND_DROPDOWN',
   },
+
+  //******************** Size & Color Variations *****************
   SIZE: {
     ALL: 'SIZE_ALL',
     BASE: 'SIZE_BASE',
@@ -24,23 +32,33 @@ export const KEYS = {
     BASE: 'COLOR_BASE',
     DROPDOWN: 'COLOR_DROPDOWN',
   },
+
+  //******************** Product *****************
   PRODUCT: {
     ALL: 'PRODUCT_ALL',
     BASE: 'PRODUCT_BASE',
     DROPDOWN: 'PRODUCT_DROPDOWN',
   },
+
+  //******************** Review *****************
   REVIEW: {
     ALL: 'REVIEW_ALL',
     BASE: 'REVIEW_BASE',
   },
+
+  //******************** Banner *****************
   BANNER: {
     ALL: 'BANNER_ALL',
     BASE: 'BANNER_BASE',
   },
+
+  //******************** Blog *****************
   BLOG: {
     ALL: 'BLOG_ALL',
     BASE: 'BLOG_BASE',
   },
+
+  //******************** FAQ & FAQ Category *****************
   FAQ_CATEGORY: {
     ALL: 'FAQ_CATEGORY_ALL',
     BASE: 'FAQ_CATEGORY_BASE',
@@ -48,5 +66,17 @@ export const KEYS = {
   FAQ: {
     ALL: 'FAQ_ALL',
     BASE: 'FAQ_BASE',
+  },
+
+  //******************** Contact Inquiries *****************
+  CONTACT : {
+    ALL: 'CONTACT_ALL',
+    BASE: 'CONTACT_DROPDOWN',
+  },
+
+  //******************** Newsletter *****************
+  NEWSLETTER: {
+    ALL: 'NEWSLETTER_ALL',
+    BASE: 'NEWSLETTER_BASE',
   },
 };

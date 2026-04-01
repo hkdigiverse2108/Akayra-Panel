@@ -4,94 +4,66 @@ import { useMutations } from "./ReactQuery";
 
 export const Mutations = {
   // ************ Auth ***********
-  useLogin: () => 
-    useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
+  useLogin: () =>  useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
 
   // ************ User ***********
-  useAddUser: () => 
-    useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input)),
-  useEditUser: () => 
-    useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Put(URL_KEYS.USER.EDIT, input)),
-  useDeleteUser: () => 
-    useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (id: string) => Delete(`${URL_KEYS.USER.BASE}/${id}`)),
+  useAddUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input)),
+  useEditUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Put(URL_KEYS.USER.EDIT, input)),
+  useDeleteUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (id: string) => Delete(`${URL_KEYS.USER.BASE}/${id}`)),
 
   // ************ Category ***********
-  useAddCategory: () => 
-    useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Post(URL_KEYS.CATEGORY.ADD, input)),
-  useEditCategory: () => 
-    useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Put(URL_KEYS.CATEGORY.EDIT, input)),
-  useDeleteCategory: () => 
-    useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (id: string) => Delete(`${URL_KEYS.CATEGORY.BASE}/${id}`)),
+  useAddCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Post(URL_KEYS.CATEGORY.ADD, input)),
+  useEditCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Put(URL_KEYS.CATEGORY.EDIT, input)),
+  useDeleteCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (id: string) => Delete(`${URL_KEYS.CATEGORY.BASE}/${id}`)),
 
   // ************ Brand ***********
-  useAddBrand: () => 
-    useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Post(URL_KEYS.BRAND.ADD, input)),
-  useEditBrand: () => 
-    useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Put(URL_KEYS.BRAND.EDIT, input)),
-  useDeleteBrand: () => 
-    useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (id: string) => Delete(`${URL_KEYS.BRAND.BASE}/${id}`)),
+  useAddBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Post(URL_KEYS.BRAND.ADD, input)),
+  useEditBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Put(URL_KEYS.BRAND.EDIT, input)),
+  useDeleteBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (id: string) => Delete(`${URL_KEYS.BRAND.BASE}/${id}`)),
 
   // ************ Size ***********
-  useAddSize: () => 
-    useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Post(URL_KEYS.SIZE.ADD, input)),
-  useEditSize: () => 
-    useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Put(URL_KEYS.SIZE.EDIT, input)),
-  useDeleteSize: () => 
-    useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (id: string) => Delete(`${URL_KEYS.SIZE.BASE}/${id}`)),
+  useAddSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Post(URL_KEYS.SIZE.ADD, input)),
+  useEditSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Put(URL_KEYS.SIZE.EDIT, input)),
+  useDeleteSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (id: string) => Delete(`${URL_KEYS.SIZE.BASE}/${id}`)),
 
   // ************ Color ***********
-  useAddColor: () => 
-    useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Post(URL_KEYS.COLOR.ADD, input)),
-  useEditColor: () => 
-    useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Put(URL_KEYS.COLOR.EDIT, input)),
-  useDeleteColor: () => 
-    useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (id: string) => Delete(`${URL_KEYS.COLOR.BASE}/${id}`)),
+  useAddColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Post(URL_KEYS.COLOR.ADD, input)),
+  useEditColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Put(URL_KEYS.COLOR.EDIT, input)),
+  useDeleteColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (id: string) => Delete(`${URL_KEYS.COLOR.BASE}/${id}`)),
 
   // ************ Product ***********
-  useAddProduct: () => 
-    useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Post(URL_KEYS.PRODUCT.ADD, input)),
-  useEditProduct: () => 
-    useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Put(URL_KEYS.PRODUCT.EDIT, input)),
-  useDeleteProduct: () => 
-    useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (id: string) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
+  useAddProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Post(URL_KEYS.PRODUCT.ADD, input)),
+  useEditProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Put(URL_KEYS.PRODUCT.EDIT, input)),
+  useDeleteProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (id: string) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
   // ************ Review ***********
-  useAddReview: () => 
-    useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Post(URL_KEYS.REVIEW.ADD, input)),
-  useEditReview: () => 
-    useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Put(URL_KEYS.REVIEW.EDIT, input)),
-  useDeleteReview: () => 
-    useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (id: string) => Delete(`${URL_KEYS.REVIEW.BASE}/${id}`)),
+  useAddReview: () => useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Post(URL_KEYS.REVIEW.ADD, input)),
+  useEditReview: () => useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Put(URL_KEYS.REVIEW.EDIT, input)),
+  useDeleteReview: () =>  useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (id: string) => Delete(`${URL_KEYS.REVIEW.BASE}/${id}`)),
 
   // ************ Banner ***********
-  useAddBanner: () => 
-    useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input)),
-  useEditBanner: () => 
-    useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Put(URL_KEYS.BANNER.EDIT, input)),
-  useDeleteBanner: () => 
-    useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (id: string) => Delete(`${URL_KEYS.BANNER.BASE}/${id}`)),
+  useAddBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input)),
+  useEditBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Put(URL_KEYS.BANNER.EDIT, input)),
+  useDeleteBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (id: string) => Delete(`${URL_KEYS.BANNER.BASE}/${id}`)),
 
   // ************ Blog ***********
-  useAddBlog: () => 
-    useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Post(URL_KEYS.BLOG.ADD, input)),
-  useEditBlog: () => 
-    useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Put(URL_KEYS.BLOG.EDIT, input)),
-  useDeleteBlog: () => 
-    useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (id: string) => Delete(`${URL_KEYS.BLOG.BASE}/${id}`)),
+  useAddBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Post(URL_KEYS.BLOG.ADD, input)),
+  useEditBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Put(URL_KEYS.BLOG.EDIT, input)),
+  useDeleteBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (id: string) => Delete(`${URL_KEYS.BLOG.BASE}/${id}`)),
 
   // ************ FAQ Category ***********
-  useAddFaqCategory: () => 
-    useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Post(URL_KEYS.FAQ_CATEGORY.ADD, input)),
-  useEditFaqCategory: () => 
-    useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Put(URL_KEYS.FAQ_CATEGORY.EDIT, input)),
-  useDeleteFaqCategory: () => 
-    useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (id: string) => Delete(`${URL_KEYS.FAQ_CATEGORY.BASE}/${id}`)),
+  useAddFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Post(URL_KEYS.FAQ_CATEGORY.ADD, input)),
+  useEditFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Put(URL_KEYS.FAQ_CATEGORY.EDIT, input)),
+  useDeleteFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (id: string) => Delete(`${URL_KEYS.FAQ_CATEGORY.BASE}/${id}`)),
 
   // ************ FAQ ***********
-  useAddFaq: () => 
-    useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Post(URL_KEYS.FAQ.ADD, input)),
-  useEditFaq: () => 
-    useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Put(URL_KEYS.FAQ.EDIT, input)),
-  useDeleteFaq: () => 
-    useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (id: string) => Delete(`${URL_KEYS.FAQ.BASE}/${id}`)),
+  useAddFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Post(URL_KEYS.FAQ.ADD, input)),
+  useEditFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Put(URL_KEYS.FAQ.EDIT, input)),
+  useDeleteFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (id: string) => Delete(`${URL_KEYS.FAQ.BASE}/${id}`)),
+
+  //************* Contact Inquiries ***********
+  useDeleteContactInquiry: () => useMutations([KEYS.CONTACT.BASE], (id: string) => Delete(`${URL_KEYS.CONTACT.DELETE}/${id}`)),
+
+  //************* Newsletter ***********
+  useDeleteNewsletter: () => useMutations([KEYS.NEWSLETTER.BASE], (id: string) => Delete(`${URL_KEYS.NEWSLETTER.DELETE}/${id}`)),
 };

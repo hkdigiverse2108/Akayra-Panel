@@ -1,28 +1,37 @@
 export const URL_KEYS = {
+  //******************** Authentication *****************
   AUTH: {
     LOGIN: '/auth/login',
     VERIFY_OTP: '/auth/verify-otp',
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
   },
+
+  //******************** User ******************
   USER: {
     ALL: '/user/all',
     BASE: '/user',
     ADD: '/user/add',
     EDIT: '/user/edit',
   },
+
+  //******************** Category ****************
   CATEGORY: {
     ALL: '/category/all',
     BASE: '/category',
     ADD: '/category/add',
     EDIT: '/category/edit',
   },
+
+  //******************** Brand *****************
   BRAND: {
     ALL: '/brand/all',
     BASE: '/brand',
     ADD: '/brand/add',
     EDIT: '/brand/edit',
   },
+
+  //******************** Size & Color Variations *****************
   SIZE: {
     ALL: '/size/all',
     BASE: '/size',
@@ -35,30 +44,40 @@ export const URL_KEYS = {
     ADD: '/color/add',
     EDIT: '/color/edit',
   },
+
+  //******************** Product *****************
   PRODUCT: {
     ALL: '/product/all',
     BASE: '/product',
     ADD: '/product/add',
     EDIT: '/product/edit',
   },
+
+  //******************** Review *****************
   REVIEW: {
     ALL: '/review/all',
     BASE: '/review',
     ADD: '/review/add',
     EDIT: '/review/edit',
   },
+
+  //******************** Banner *****************
   BANNER: {
     ALL: '/banner/all',
     BASE: '/banner',
     ADD: '/banner/add',
     EDIT: '/banner/edit',
   },
+
+  //******************** Blog *****************
   BLOG: {
     ALL: '/blog/all',
     BASE: '/blog',
     ADD: '/blog/add',
     EDIT: '/blog/edit',
   },
+
+  //******************** FAQ & FAQ Category *****************
   FAQ_CATEGORY: {
     ALL: '/faq-category/all',
     BASE: '/faq-category',
@@ -70,5 +89,17 @@ export const URL_KEYS = {
     BASE: '/faq',
     ADD: '/faq/add',
     EDIT: '/faq/edit',
+  },
+
+  //******************** Contact Inquiries *****************
+  CONTACT: {
+    ALL: '/contact/all',
+    DELETE: '/contact',
+  },
+
+  //******************** Newsletter *****************
+  NEWSLETTER: {
+    ALL: '/newsletter/all',
+    DELETE: '/newsletter',
   },
 };
