@@ -120,4 +120,11 @@ export const URL_KEYS = {
     DELETE: '/ig-post',
     EDIT: '/ig-post/edit',
   },
+
+  //******************** Policy *****************
+  POLICY: {
+    ALL: '/policy/all',
+    ADD: '/policy/add',
+    EDIT: '/policy/edit',
+  },
 };

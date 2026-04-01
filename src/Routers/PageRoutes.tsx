@@ -47,10 +47,17 @@ const FaqCategoryForm = lazy(() => import("../Pages/FaqCategoryForm"));
 //contact inquiry 
 const ContactManagement = lazy(() => import("../Pages/ContactManagement"));
 const NewsletterManagement = lazy(() => import("../Pages/NewsletterManagement"));
+
+//Coupons
 const CouponManagement = lazy(() => import("../Pages/CouponManagement"));
 const CouponForm = lazy(() => import("../Pages/CouponForm"));
+
+// IG Posts
 const IgPostManagement = lazy(() => import("../Pages/IgPostManagement"));
 const IgPostForm = lazy(() => import("../Pages/IgPostForm"));
+
+//Policy Management
+const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
@@ -135,11 +142,13 @@ const PageRoutes: React.FC = () => {
           <Route path={ROUTES.IG_POSTS} element={<IgPostManagement />} />
           <Route path={`${ROUTES.IG_POSTS}/add`} element={<IgPostForm />} />
           <Route path={`${ROUTES.IG_POSTS}/edit/:id`} element={<IgPostForm />} />
-          
+
+          {/* Policy Management */}
+          <Route path={ROUTES.POLICIES} element={<PolicyMangement />} />
+          <Route path={`${ROUTES.POLICIES}/edit/:id`} element={<PolicyMangement />} />
 
           {/* General Management (Coming Soon placeholders) */}
           {[
-            { path: ROUTES.POLICIES, label: "Policy Management" },
             { path: ROUTES.ABOUT, label: "About Us Content" },
             { path: ROUTES.SETTINGS, label: "Account Settings" },
           ].map((item) => (

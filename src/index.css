@@ -186,3 +186,41 @@ body {
   max-height: 240px;
   overflow-y: auto;
 }
+
+/* React Quill Policy Editor Styling */
+.policy-quill .ql-toolbar {
+  @apply rounded-t-2xl border border-gray-200 bg-gray-50;
+}
+
+.policy-quill .ql-container {
+  @apply rounded-b-2xl border border-gray-200 bg-white;
+  min-height: 220px;
+}
+
+.policy-quill .ql-editor {
+  @apply min-h-[220px] text-slate-700;
+}
+
+.dark .policy-quill .ql-toolbar {
+  @apply border-slate-700 bg-slate-800;
+}
+
+.dark .policy-quill .ql-container {
+  @apply border-slate-700 bg-slate-900;
+}
+
+.dark .policy-quill .ql-editor {
+  @apply text-slate-200;
+}
+
+.dark .policy-quill .ql-stroke {
+  stroke: #cbd5f5;
+}
+
+.dark .policy-quill .ql-fill {
+  fill: #cbd5f5;
+}
+
+.dark .policy-quill .ql-picker {
+  color: #cbd5f5;
+}

@@ -91,4 +91,11 @@ export const KEYS = {
     ALL: 'IG_POST_ALL',
     BASE: 'IG_POST_BASE',
   },
+
+  //******************** Policy *****************
+  POLICY: {
+    ALL: 'POLICY_ALL',
+    BASE: 'POLICY_BASE',
+    BY_TYPE: 'POLICY_BY_TYPE',
+  },
 };
