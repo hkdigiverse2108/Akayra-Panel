@@ -121,6 +121,15 @@ export const URL_KEYS = {
     EDIT: '/ig-post/edit',
   },
 
+  //******************** About *****************
+  ABOUT: {
+    ALL: '/about/all',
+    BASE: '/about',
+    ADD: '/about/add',
+    DELETE: '/about',
+    EDIT: '/about/edit',
+  },
+
   //******************** Policy *****************
   POLICY: {
     ALL: '/policy/all',

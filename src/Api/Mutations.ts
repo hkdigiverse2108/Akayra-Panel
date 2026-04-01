@@ -77,6 +77,11 @@ export const Mutations = {
   useEditIgPost: () => useMutations([KEYS.IG_POST.ALL, KEYS.IG_POST.BASE], (input: any) => Put(URL_KEYS.IG_POST.EDIT, input), { showSuccessToast: false }),
   useAddIgPost: () => useMutations([KEYS.IG_POST.ALL, KEYS.IG_POST.BASE], (input: any) => Post(URL_KEYS.IG_POST.ADD, input), { showSuccessToast: false }),
 
+  //************* About ***********
+  useDeleteAboutSection: () => useMutations([KEYS.ABOUT.BASE], (id: string) => Delete(`${URL_KEYS.ABOUT.DELETE}/${id}`)),
+  useEditAboutSection: () => useMutations([KEYS.ABOUT.ALL, KEYS.ABOUT.BASE], (input: any) => Put(URL_KEYS.ABOUT.EDIT, input), { showSuccessToast: false }),
+  useAddAboutSection: () => useMutations([KEYS.ABOUT.ALL, KEYS.ABOUT.BASE], (input: any) => Post(URL_KEYS.ABOUT.ADD, input), { showSuccessToast: false }),
+
   //************* Policy ***********
   useAddPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Post(URL_KEYS.POLICY.ADD, input)),
   useEditPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Put(URL_KEYS.POLICY.EDIT, input)),

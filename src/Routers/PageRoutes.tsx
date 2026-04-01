@@ -56,6 +56,10 @@ const CouponForm = lazy(() => import("../Pages/CouponForm"));
 const IgPostManagement = lazy(() => import("../Pages/IgPostManagement"));
 const IgPostForm = lazy(() => import("../Pages/IgPostForm"));
 
+// About Management
+const AboutManagement = lazy(() => import("../Pages/AboutManagement"));
+const AboutForm = lazy(() => import("../Pages/AboutForm"));
+
 //Policy Management
 const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
 
@@ -143,13 +147,17 @@ const PageRoutes: React.FC = () => {
           <Route path={`${ROUTES.IG_POSTS}/add`} element={<IgPostForm />} />
           <Route path={`${ROUTES.IG_POSTS}/edit/:id`} element={<IgPostForm />} />
 
+          {/* About Management */}
+          <Route path={ROUTES.ABOUT} element={<AboutManagement />} />
+          <Route path={`${ROUTES.ABOUT}/add`} element={<AboutForm />} />
+          <Route path={`${ROUTES.ABOUT}/edit/:id`} element={<AboutForm />} />
+
           {/* Policy Management */}
           <Route path={ROUTES.POLICIES} element={<PolicyMangement />} />
           <Route path={`${ROUTES.POLICIES}/edit/:id`} element={<PolicyMangement />} />
 
           {/* General Management (Coming Soon placeholders) */}
           {[
-            { path: ROUTES.ABOUT, label: "About Us Content" },
             { path: ROUTES.SETTINGS, label: "Account Settings" },
           ].map((item) => (
             <Route

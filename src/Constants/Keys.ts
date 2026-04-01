@@ -92,6 +92,12 @@ export const KEYS = {
     BASE: 'IG_POST_BASE',
   },
 
+  //******************** About *****************
+  ABOUT: {
+    ALL: 'ABOUT_ALL',
+    BASE: 'ABOUT_BASE',
+  },
+
   //******************** Policy *****************
   POLICY: {
     ALL: 'POLICY_ALL',

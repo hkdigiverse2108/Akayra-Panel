@@ -50,6 +50,9 @@ export const Queries = {
   // ************ IG Post ***********
   useGetIgPosts: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.IG_POST.ALL, params], () => Get(URL_KEYS.IG_POST.ALL, params)),
 
+  // ************ About ***********
+  useGetAboutSections: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.ABOUT.ALL, params], () => Get(URL_KEYS.ABOUT.ALL, params)),
+
   // ************ Policy ***********
   useGetPolicyByType: (type?: string, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>( [KEYS.POLICY.BY_TYPE, type], () => Get(URL_KEYS.POLICY.ALL, { typeFilter: type }), { enabled: !!type, ...options } ),
 };
