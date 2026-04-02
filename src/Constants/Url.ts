@@ -136,4 +136,10 @@ export const URL_KEYS = {
     ADD: '/policy/add',
     EDIT: '/policy/edit',
   },
+
+  //******************** Settings *****************
+  SETTINGS: {
+    BASE: '/settings',
+    UPDATE: '/settings/update',
+  },
 };

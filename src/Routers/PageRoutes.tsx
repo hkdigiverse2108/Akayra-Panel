@@ -62,6 +62,7 @@ const AboutForm = lazy(() => import("../Pages/AboutForm"));
 
 //Policy Management
 const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
+const SettingsManagement = lazy(() => import("../Pages/SettingsManagement"));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
@@ -156,21 +157,8 @@ const PageRoutes: React.FC = () => {
           <Route path={ROUTES.POLICIES} element={<PolicyMangement />} />
           <Route path={`${ROUTES.POLICIES}/edit/:id`} element={<PolicyMangement />} />
 
-          {/* General Management (Coming Soon placeholders) */}
-          {[
-            { path: ROUTES.SETTINGS, label: "Account Settings" },
-          ].map((item) => (
-            <Route
-              key={item.path}
-              path={item.path}
-              element={
-                <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-3xl shadow-xl min-h-[400px] flex flex-col items-center justify-center">
-                  <h2 className="text-2xl font-black mb-2">{item.label}</h2>
-                  <p className="text-slate-500">Coming Soon: Standardizing this module with TanStack Query.</p>
-                </div>
-              }
-            />
-          ))}
+          {/* Settings */}
+          <Route path={ROUTES.SETTINGS} element={<SettingsManagement />} />
         </Route>
       </Route>
 

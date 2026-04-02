@@ -85,4 +85,7 @@ export const Mutations = {
   //************* Policy ***********
   useAddPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Post(URL_KEYS.POLICY.ADD, input)),
   useEditPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Put(URL_KEYS.POLICY.EDIT, input)),
+
+  //************* Settings ***********
+  useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input)),
 };

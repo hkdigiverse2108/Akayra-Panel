@@ -104,4 +104,9 @@ export const KEYS = {
     BASE: 'POLICY_BASE',
     BY_TYPE: 'POLICY_BY_TYPE',
   },
+
+  //******************** Settings *****************
+  SETTINGS: {
+    BASE: 'SETTINGS_BASE',
+  },
 };

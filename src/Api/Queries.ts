@@ -55,5 +55,8 @@ export const Queries = {
 
   // ************ Policy ***********
   useGetPolicyByType: (type?: string, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>( [KEYS.POLICY.BY_TYPE, type], () => Get(URL_KEYS.POLICY.ALL, { typeFilter: type }), { enabled: !!type, ...options } ),
+
+  // ************ Settings ***********
+  useGetSettings: (options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.SETTINGS.BASE], () => Get(URL_KEYS.SETTINGS.BASE), options),
 };
 
