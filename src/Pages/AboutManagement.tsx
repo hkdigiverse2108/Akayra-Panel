@@ -8,8 +8,8 @@ import TableFooter from '../Components/TableFooter';
 import ConfirmModal from '../Components/ConfirmModal';
 import { useManagementData } from '../Utils/Hooks/useManagementData';
 import { getSrNo } from '../Utils/tableUtils';
-import { Info, ImageIcon, Hash, Trash2, ToggleLeft, ToggleRight, Edit, Plus, CheckCircle, XCircle } from 'lucide-react';
-import { Tooltip, Image } from 'antd';
+import { Info, ImageIcon, Hash, Trash2, ToggleLeft, ToggleRight, Edit, Plus, CheckCircle, XCircle, X } from 'lucide-react';
+import { Tooltip, Image, Modal } from 'antd';
 import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 import { Mutations } from '../Api/Mutations';
 import { cn } from '../Utils/cn';
@@ -20,6 +20,10 @@ const AboutManagement: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [viewType, setViewType] = useState<'grid' | 'list'>('list');
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [activeTitle, setActiveTitle] = useState<string>('');
+  const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
   const { items: aboutSections, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, toggleSort, getSortIcon } = useManagementData({
     resourceKey: KEYS.ABOUT.ALL,
@@ -53,6 +57,17 @@ const AboutManagement: React.FC = () => {
     const sectionId = item?.sectionId || item?._id || item?.id;
     if (!sectionId) return;
     editMutation.mutate({ sectionId, isActive: !item?.isActive });
+  };
+
+  const handleImageError = (id: string | undefined) => {
+    if (!id) return;
+    setBrokenImages((prev) => ({ ...prev, [id]: true }));
+  };
+
+  const openImageModal = (imageUrl: string, title?: string) => {
+    setActiveImage(imageUrl);
+    setActiveTitle(title || 'About Section Image');
+    setIsImageModalOpen(true);
   };
 
   const getTitle = (item: any) => item?.title || 'Untitled Section';
@@ -132,16 +147,16 @@ const AboutManagement: React.FC = () => {
                         <td className="px-4 sm:px-8 py-5">
                           <div className="flex items-center gap-3 sm:gap-4 text-left">
                             <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-105 shrink-0">
-                              {section.image ? (
-                                <a href={section.image} target="_blank" rel="noopener noreferrer" className="relative block h-full w-full cursor-pointer group/thumb" title="Open image">
-                                  <Image src={section.image} alt={getTitle(section)} className="h-full w-full object-cover" preview={false} />
+                              {section.image && !brokenImages[sectionId] ? (
+                                <button type="button" onClick={() => openImageModal(section.image, getTitle(section))} className="relative block h-full w-full cursor-pointer group/thumb" title="View image" >
+                                  <Image src={section.image} alt={getTitle(section)} className="h-full w-full object-cover" preview={false} onError={() => handleImageError(sectionId)} />
                                   <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
                                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
                                     <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
                                       <ImageIcon size={14} />
                                     </div>
                                   </div>
-                                </a>
+                                </button>
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center">
                                   <ImageIcon className="text-slate-300" size={20} />
@@ -210,8 +225,16 @@ const AboutManagement: React.FC = () => {
                 return (
                   <div key={sectionId || index} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-3xl border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col p-4 shadow-sm">
                     <div className="aspect-[4/4] w-full rounded-2xl bg-white dark:bg-slate-900 overflow-hidden mb-4 border border-gray-100 dark:border-slate-800">
-                      {section.image ? (
-                        <Image src={section.image} alt={getTitle(section)} preview={false} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                      {section.image && !brokenImages[sectionId] ? (
+                        <button type="button" onClick={() => openImageModal(section.image, getTitle(section))} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
+                          <Image src={section.image} alt={getTitle(section)} preview={false} className="h-full w-full object-cover transition-transform group-hover:scale-105" onError={() => handleImageError(sectionId)} />
+                          <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                            <div className="h-8 w-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                              <ImageIcon size={16} />
+                            </div>
+                          </div>
+                        </button>
                       ) : (
                         <div className="h-full w-full flex items-center justify-center"><ImageIcon className="text-slate-200" size={32} /></div>
                       )}
@@ -264,6 +287,21 @@ const AboutManagement: React.FC = () => {
       </Card>
 
       <ConfirmModal  isOpen={isDeleteModalOpen}  onClose={() => setIsDeleteModalOpen(false)}  onConfirm={confirmDelete}  loading={deleteMutation.isPending}  message="Are you sure you want to delete this about section? This action cannot be undone." />
+
+      <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+        <div className="space-y-3">
+          <div className="text-base font-black text-slate-900 dark:text-white">{activeTitle}</div>
+          {activeImage ? (
+            <div className="flex justify-center">
+              <Image src={activeImage} alt={activeTitle} preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+            </div>
+          ) : (
+            <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+              No image available.
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };

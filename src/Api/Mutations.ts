@@ -17,8 +17,8 @@ export const Mutations = {
   useDeleteCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (id: string) => Delete(`${URL_KEYS.CATEGORY.BASE}/${id}`)),
 
   // ************ Brand ***********
-  useAddBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Post(URL_KEYS.BRAND.ADD, input)),
-  useEditBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Put(URL_KEYS.BRAND.EDIT, input)),
+  useAddBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Post(URL_KEYS.BRAND.ADD, input), { showSuccessToast: false }),
+  useEditBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (input: any) => Put(URL_KEYS.BRAND.EDIT, input), { showSuccessToast: false }),
   useDeleteBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (id: string) => Delete(`${URL_KEYS.BRAND.BASE}/${id}`)),
 
   // ************ Size ***********

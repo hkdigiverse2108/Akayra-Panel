@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Form, Input, InputNumber, Switch, Breadcrumb, Divider, Image } from 'antd';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Save, ArrowLeft, Info, ImageIcon, Hash, AlignLeft } from 'lucide-react';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
+import { Save, ArrowLeft, Info, ImageIcon, Hash, AlignLeft, X } from 'lucide-react';
 import { ROUTES } from '../Constants';
 import { Mutations } from '../Api/Mutations';
 import { toast } from 'react-toastify';
@@ -15,6 +17,7 @@ const AboutForm: React.FC = () => {
   const [form] = Form.useForm();
   const isEditMode = !!id;
   const aboutSectionFromState = (location.state as any)?.aboutSection;
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   const addAboutSection = Mutations.useAddAboutSection();
   const editAboutSection = Mutations.useEditAboutSection();
@@ -82,8 +85,8 @@ const AboutForm: React.FC = () => {
       </div>
 
       <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ isActive: true, priority: 0 }} requiredMark={false} className="text-left">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 sm:gap-8 text-left items-start">
-          <Card className="rounded-2xl sm:rounded-[32px] shadow-xl border-0 overflow-hidden bg-white dark:bg-slate-900 text-left p-4 sm:p-8 self-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 sm:gap-8 text-left items-start">
+          <Card className="min-w-0 rounded-2xl sm:rounded-[32px] shadow-xl border-0 overflow-hidden bg-white dark:bg-slate-900 text-left p-4 sm:p-8 self-start">
             <div className="text-left mb-6">
               <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 text-left">
                 <Info size={18} className="text-primary-500 sm:w-5 sm:h-5" /> About Section Details
@@ -128,8 +131,8 @@ const AboutForm: React.FC = () => {
             </div>
           </Card>
 
-          <div className="space-y-4 sm:space-y-6">
-            <Card className="rounded-[24px] sm:rounded-[32px] border shadow-xl overflow-hidden p-6 sm:p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 min-h-[320px] sm:min-h-[360px] flex flex-col text-left">
+          <div className="space-y-4 sm:space-y-6 min-w-0">
+            <Card className="min-w-0 rounded-[24px] sm:rounded-[32px] border shadow-xl overflow-hidden p-6 sm:p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 flex flex-col text-left h-fit w-full">
               <div className="flex items-center gap-3 mb-6 sm:mb-8 text-left">
                 <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-white">
                   <AlignLeft size={18} className="sm:w-5 sm:h-5" />
@@ -137,10 +140,10 @@ const AboutForm: React.FC = () => {
                 <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Vantage Preview</h2>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center text-left">
+              <div className="flex flex-col text-left">
                 {imageUrl ? (
                   <div className="space-y-4 sm:space-y-6 text-left">
-                    <div className="aspect-[4/4] rounded-[24px] sm:rounded-[32px] overflow-hidden border-2 sm:border-4 border-gray-100 dark:border-white/10 shadow-2xl relative group">
+                    <div className="h-56 sm:h-64 rounded-[24px] sm:rounded-[32px] overflow-hidden border-2 sm:border-4 border-gray-100 dark:border-white/10 shadow-2xl relative group w-full">
                       <Image src={imageUrl} alt={titleValue || 'About Section'} className="h-full w-full object-cover" preview={false} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       <div className="absolute bottom-4 sm:bottom-5 left-5 sm:left-6 text-left pr-4">
@@ -168,13 +171,37 @@ const AboutForm: React.FC = () => {
             </Card>
 
             <Card className="rounded-2xl sm:rounded-3xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-6 text-left space-y-4">
-              <Form.Item label={<span className="font-bold text-slate-600 dark:text-slate-400 text-left">Image URL</span>} name="image" rules={[{ type: 'url', message: 'Enter a valid URL' }]} className="text-left mb-0">
-                <Input size="large" placeholder="https://..." prefix={<ImageIcon size={14} className="text-slate-400" />} className="h-12 rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700" />
+              <Form.Item label={<span className="font-bold text-slate-600 dark:text-slate-400 text-left">Image URL</span>} name="image" className="text-left mb-0">
+                <div className="space-y-3">
+                  {imageUrl ? (
+                    <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img src={imageUrl} alt="About Section" className="h-12 w-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700"   />
+                        <span className="text-xs text-slate-600 dark:text-slate-300 truncate">
+                          {imageUrl}
+                        </span>
+                      </div>
+                      <button type="button" onClick={() => form.setFieldsValue({ image: '' })} className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600" >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-slate-400 uppercase tracking-widest font-black">
+                      No image selected
+                    </div>
+                  )}
+
+                  <Button type="button" onClick={() => setIsUploadOpen(true)} className="h-11 px-5 rounded-xl font-bold flex items-center gap-2" variant="secondary" >
+                    <ImageIcon size={16} /> Choose Image
+                  </Button>
+                </div>
               </Form.Item>
             </Card>
           </div>
         </div>
       </Form>
+
+      <UploadImage isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} multiple={false} onSelect={(items: UploadItem[]) => { const first = items[0]; if (first?.url || first?.path) {   form.setFieldsValue({ image: first.url || first.path }); } }} />
     </div>
   );
 };

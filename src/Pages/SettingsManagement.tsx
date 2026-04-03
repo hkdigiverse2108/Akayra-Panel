@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Form, Input, InputNumber, Switch, Divider, Image } from 'antd';
+import { Form, Input, InputNumber, Switch, Divider, Image, Modal } from 'antd';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
 import { Mutations } from '../Api/Mutations';
 import { Queries } from '../Api/Queries';
 import { Save, Settings, Mail, Phone, MapPin, Link as LinkIcon, IndianRupee, Truck, CreditCard, ShieldCheck, ImageIcon, Edit3, X, KeyRound, Lock, type LucideIcon } from 'lucide-react';
@@ -24,6 +26,9 @@ const SettingsManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState<SettingsTabId>('contact');
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const { data: settingsResponse, isLoading, isFetching } = Queries.useGetSettings();
   const updateSettings = Mutations.useUpdateSettings();
@@ -61,6 +66,11 @@ const SettingsManagement: React.FC = () => {
 
   const handleSubmit = () => {
     form.submit();
+  };
+
+  const openImageModal = (imageUrl: string) => {
+    setActiveImage(imageUrl);
+    setIsImageModalOpen(true);
   };
 
   const onFinish = (values: any) => {
@@ -281,27 +291,59 @@ const SettingsManagement: React.FC = () => {
 
                       {activeTab === 'secure' && (
                         <div className="space-y-4">
+
                           <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Title</span>} name="securePaymentTitle" className="text-left">
                             <Input size="large" placeholder="e.g. 100% Secure Payments" className="h-12 rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700" />
                           </Form.Item>
 
-                          <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Badge Image URLs</span>} name="securePaymentImages" className="text-left" extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">One URL per line.</span>} >
-                            <TextArea rows={4} placeholder="https://.../visa.png" className="rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700" />
-                          </Form.Item>
+                          <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Badge Images</span>} name="securePaymentImages" className="text-left" extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">Select multiple images.</span>} >
+                            <div className="space-y-3">
+                              <Button  type="button"  onClick={() => setIsUploadOpen(true)}  className="h-11 px-5 rounded-xl font-bold flex items-center gap-2"  variant="secondary"  disabled={!isEditing}   >
+                                <ImageIcon size={16} /> Choose Images
+                              </Button>
 
-                          {paymentImages.length > 0 && (
-                            <>
-                              <Divider className="my-3 sm:my-4 border-slate-100 dark:border-slate-800" />
-                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                {paymentImages.map((imageUrl, index) => (
-                                  <div key={`${imageUrl}-${index}`} className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800 p-3 flex items-center justify-center">
-                                    <Image src={imageUrl} alt="Secure payment badge" preview={false} className="max-h-10 object-contain" fallback="" />
-                                    {!imageUrl && <ImageIcon size={18} className="text-slate-300" />}
+                              <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4 overflow-visible">
+                                {paymentImages.length > 0 ? (
+                                  <div className="flex flex-wrap gap-4">
+                                    {paymentImages.map((imageUrl, index) => (
+                                      <div key={`${imageUrl}-${index}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden relative group/badge">
+                                        {imageUrl ? (
+                                          <button type="button" onClick={() => openImageModal(imageUrl)} className="relative h-full w-full cursor-pointer" title="View image" >
+                                            <Image src={imageUrl} alt="Secure payment badge" preview={false} className="h-full w-full object-contain" fallback="" />
+                                            <div className="absolute inset-0 bg-black/0 group-hover/badge:bg-black/30 transition-colors" />
+                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/badge:opacity-100 transition-opacity">
+                                              <div className="h-9 w-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                <ImageIcon size={18} />
+                                              </div>
+                                            </div>
+                                          </button>
+                                        ) : (
+                                          <ImageIcon size={22} className="text-slate-300" />
+                                        )}
+                                        {isEditing && (
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const next = paymentImages.filter((_, i) => i !== index);
+                                              form.setFieldsValue({ securePaymentImages: next.join('\n') });
+                                            }}
+                                            className="absolute -top-0 -right-0 h-7 w-7 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-red-600 flex items-center justify-center shadow-md"
+                                            aria-label="Remove badge"
+                                          >
+                                            <X size={16} />
+                                          </button>
+                                        )}
+                                      </div>
+                                    ))}
                                   </div>
-                                ))}
+                                ) : (
+                                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    No badges selected
+                                  </div>
+                                )}
                               </div>
-                            </>
-                          )}
+                            </div>
+                          </Form.Item>
                         </div>
                       )}
                     </>
@@ -316,6 +358,23 @@ const SettingsManagement: React.FC = () => {
           </div>
         </Card>
       </Form>
+
+      <UploadImage isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} multiple={true} onSelect={(items: UploadItem[]) => { const urls = items.map((item) => item?.url || item?.path).filter(Boolean) as string[]; if (urls.length === 0) return; const merged = Array.from(new Set([...paymentImages, ...urls])); form.setFieldsValue({ securePaymentImages: merged.join('\n') }); }} />
+
+      <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+        <div className="space-y-3">
+          <div className="text-base font-black text-slate-900 dark:text-white">Secure Badge</div>
+          {activeImage ? (
+            <div className="flex justify-center">
+              <Image src={activeImage} alt="Secure badge" preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+            </div>
+          ) : (
+            <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+              No image available.
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
