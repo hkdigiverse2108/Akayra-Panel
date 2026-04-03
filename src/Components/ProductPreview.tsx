@@ -4,7 +4,7 @@ import { ShoppingCart, Heart, ArrowRightCircle, ArrowLeftCircle } from 'lucide-r
 import { PreviewProps } from '../Types';
 
 
-const ProductPreview: React.FC<PreviewProps> = ({ title, thumbnail, images, mrp, sellingPrice, sku, categoryName, brandName, sizes, colors, longDescription, additionalInformation, isTrending, isDealOfDay, isActive,}) => {
+const ProductPreview: React.FC<PreviewProps> = ({ title, thumbnail, images, mrp, sellingPrice, sku, categoryName, brandName, sizes, colors, longDescription, isTrending, isDealOfDay, isActive,}) => {
   const allImages = useMemo(() => { const list = [thumbnail, ...(images || [])].filter(Boolean) as string[]; return Array.from(new Set(list)); }, [thumbnail, images]);
   const [activeImage, setActiveImage] = useState<string | undefined>(allImages[0]);
   const [activeTab, setActiveTab] = useState<'description' | 'additional'>('description');
@@ -28,8 +28,9 @@ const ProductPreview: React.FC<PreviewProps> = ({ title, thumbnail, images, mrp,
   };
 
   return (
-   <div className="sticky top-20 space-y-6 mt-0 lg:mt-[60px]">
+   <div className="sticky top-20 mt-0 lg:mt-[60px]">
       <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden">
+        <div className="max-h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide">
         <div className="relative aspect-[4/5] bg-slate-50 dark:bg-slate-950">
           {heroImage ? (
             <Image src={heroImage} alt={title || 'Product'} preview={false} className="h-full w-full object-cover" />
@@ -132,30 +133,47 @@ const ProductPreview: React.FC<PreviewProps> = ({ title, thumbnail, images, mrp,
             </button>
           </div>
         </div>
-      </div>
+        <div className="border-t border-slate-200 dark:border-slate-800 p-5 space-y-4">
+          <div className="flex items-center gap-6 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-black uppercase tracking-widest">
+            <button type="button" onClick={() => setActiveTab('description')} className={activeTab === 'description' ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 pb-2' : 'text-slate-400'} >
+              Description
+            </button>
+            <button type="button" onClick={() => setActiveTab('additional')} className={activeTab === 'additional' ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 pb-2' : 'text-slate-400'} >
+              Additional Information
+            </button>
+          </div>
 
-      <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl p-5 space-y-4">
-        <div className="flex items-center gap-6 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-black uppercase tracking-widest">
-          <button type="button" onClick={() => setActiveTab('description')} className={activeTab === 'description' ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 pb-2' : 'text-slate-400'} >
-            Description
-          </button>
-          <button type="button" onClick={() => setActiveTab('additional')} className={activeTab === 'additional' ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 pb-2' : 'text-slate-400'} >
-            Additional Information
-          </button>
-        </div>
-
-        <div className="prose prose-sm max-w-none text-slate-600 dark:text-slate-300">
-          {activeTab === 'description' ? (
-            longDescription ? (
-              <div dangerouslySetInnerHTML={{ __html: longDescription }} />
+          <div className="prose prose-sm max-w-none text-slate-600 dark:text-slate-300">
+            {activeTab === 'description' ? (
+              longDescription ? (
+                <div dangerouslySetInnerHTML={{ __html: longDescription }} />
+              ) : (
+                <p>No description yet.</p>
+              )
             ) : (
-              <p>No description yet.</p>
-            )
-          ) : additionalInformation ? (
-            <div dangerouslySetInnerHTML={{ __html: additionalInformation }} />
-          ) : (
-            <p>No additional information.</p>
-          )}
+              <div className="not-prose">
+                <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+                  <table className="w-full text-left text-sm">
+                    <tbody>
+                      <tr className="border-b border-slate-200 dark:border-slate-800">
+                        <th className="px-4 py-3 text-[11px] font-black text-slate-400 uppercase tracking-widest w-32">SKU</th>
+                        <td className="px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-200">{sku || '—'}</td>
+                      </tr>
+                      <tr className="border-b border-slate-200 dark:border-slate-800">
+                        <th className="px-4 py-3 text-[11px] font-black text-slate-400 uppercase tracking-widest">Color</th>
+                        <td className="px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-200">{colors && colors.length > 0 ? colors.map((color) => color.name).join(', ') : '—'}</td>
+                      </tr>
+                      <tr>
+                        <th className="px-4 py-3 text-[11px] font-black text-slate-400 uppercase tracking-widest">Size</th>
+                        <td className="px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-200">{sizes && sizes.length > 0 ? sizes.join(', ') : '—'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
         </div>
       </div>
     </div>

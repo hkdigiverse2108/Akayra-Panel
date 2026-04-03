@@ -10,7 +10,6 @@ export type PreviewProps = {
   sizes?: string[];
   colors?: { name: string; hexCode?: string }[];
   longDescription?: string;
-  additionalInformation?: string;
   isTrending?: boolean;
   isDealOfDay?: boolean;
   isActive?: boolean;

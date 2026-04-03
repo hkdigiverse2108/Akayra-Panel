@@ -52,7 +52,6 @@ const ProductForm: React.FC = () => {
     const watchedSizeIds = Form.useWatch('sizeIds', form);
     const watchedColorIds = Form.useWatch('colorIds', form);
     const watchedLongDescription = Form.useWatch('longDescription', form);
-    const watchedAdditionalInformation = Form.useWatch('additionalInformation', form);
     const watchedIsTrending = Form.useWatch('isTrending', form);
     const watchedIsDealOfDay = Form.useWatch('isDealOfDay', form);
     const watchedIsActive = Form.useWatch('isActive', form);
@@ -97,9 +96,6 @@ const ProductForm: React.FC = () => {
                     <ReactQuill className="policy-quill" theme="snow" modules={toolbarModules} placeholder="Describe your product in deta" />
                 </Form.Item>
 
-                <Form.Item name="additionalInformation" label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">ADDITIONAL INFORMATION</span>} className="text-left" >
-                    <TextArea rows={4} placeholder="Materials, care, warranty, etc." className="rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700" />
-                </Form.Item>
             </div>
         </Card>
     );
@@ -411,7 +407,7 @@ const ProductForm: React.FC = () => {
 
                 {/* Right Column: Preview */}
                 <div className="space-y-8 text-left">
-                    <ProductPreview title={watchedTitle} thumbnail={watchedThumbnail} images={watchedImages} mrp={watchedMrp} sellingPrice={watchedSellingPrice} sku={watchedSku} categoryName={categoryName} brandName={brandName} sizes={sizeNames} colors={colorMeta} longDescription={watchedLongDescription} additionalInformation={watchedAdditionalInformation} isTrending={watchedIsTrending} isDealOfDay={watchedIsDealOfDay} isActive={watchedIsActive} />
+                    <ProductPreview title={watchedTitle} thumbnail={watchedThumbnail} images={watchedImages} mrp={watchedMrp} sellingPrice={watchedSellingPrice} sku={watchedSku} categoryName={categoryName} brandName={brandName} sizes={sizeNames} colors={colorMeta} longDescription={watchedLongDescription} isTrending={watchedIsTrending} isDealOfDay={watchedIsDealOfDay} isActive={watchedIsActive} />
                 </div>
             </Form>
         </div>
@@ -419,4 +415,3 @@ const ProductForm: React.FC = () => {
 };
 
 export default ProductForm;
-

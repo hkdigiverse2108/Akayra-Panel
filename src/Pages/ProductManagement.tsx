@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ShoppingCart, TrendingUp, Zap, ImageIcon, X } from 'lucide-react';
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ShoppingCart, TrendingUp, Zap, ImageIcon, X, ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import { useManagementData } from '../Utils/Hooks/useManagementData';
 import TableToolbar from '../Components/TableToolbar';
 import TableFooter from '../Components/TableFooter';
@@ -18,6 +18,8 @@ const ProductManagement: React.FC = () => {
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [activeImage, setActiveImage] = useState<string | null>(null);
     const [activeTitle, setActiveTitle] = useState<string>('');
+    const [activeImages, setActiveImages] = useState<string[]>([]);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
     const { items: products, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, handleDeleteClick, confirmDelete, handleToggleStatus, isDeleteModalOpen, setIsDeleteModalOpen, isActionLoading, toggleSort, getSortIcon } = useManagementData({
@@ -34,10 +36,33 @@ const ProductManagement: React.FC = () => {
         setBrokenImages((prev) => ({ ...prev, [id]: true }));
     };
 
-    const openImageModal = (imageUrl: string, title?: string) => {
-        setActiveImage(imageUrl);
+    const openImageModal = (imageUrl: string, title?: string, images?: string[]) => {
+        const list = images && images.length > 0 ? images : (imageUrl ? [imageUrl] : []);
+        const startIndex = Math.max(0, list.indexOf(imageUrl));
+        setActiveImages(list);
+        setActiveImageIndex(startIndex);
+        setActiveImage(imageUrl || list[0] || null);
         setActiveTitle(title || 'Product Image');
         setIsImageModalOpen(true);
+    };
+
+    const handleThumbClick = (index: number) => {
+        const next = activeImages[index];
+        if (!next) return;
+        setActiveImage(next);
+        setActiveImageIndex(index);
+    };
+
+    const handlePrevImage = () => {
+        if (!activeImages.length) return;
+        const nextIndex = (activeImageIndex - 1 + activeImages.length) % activeImages.length;
+        handleThumbClick(nextIndex);
+    };
+
+    const handleNextImage = () => {
+        if (!activeImages.length) return;
+        const nextIndex = (activeImageIndex + 1) % activeImages.length;
+        handleThumbClick(nextIndex);
     };
 
     return (
@@ -101,7 +126,7 @@ const ProductManagement: React.FC = () => {
                                                 <div className="flex items-center gap-3 sm:gap-4 text-left">
                                                     <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shrink-0">
                                                         {getCoverImage(product) && !brokenImages[product._id] ? (
-                                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title)} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
+                                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title, [getCoverImage(product), ...(product.images || [])].filter(Boolean))} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
                                                                 <Image src={getCoverImage(product)} alt={product.title} className="h-full w-full object-cover" preview={false} onError={() => handleImageError(product._id)} />
                                                                 <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
                                                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
@@ -171,7 +196,7 @@ const ProductManagement: React.FC = () => {
                                 <div key={product._id} className="group bg-gray-50/50 dark:bg-slate-800/30 rounded-[32px] border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col h-full shadow-sm">
                                     <div className="relative aspect-square overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
                                         {getCoverImage(product) && !brokenImages[product._id] ? (
-                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title)} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
+                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title, [getCoverImage(product), ...(product.images || [])].filter(Boolean))} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
                                                 <Image src={getCoverImage(product)} alt={product.title} className="h-full w-full object-cover transition-transform group-hover:scale-110" preview={false} onError={() => handleImageError(product._id)} />
                                                 <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
                                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
@@ -227,10 +252,29 @@ const ProductManagement: React.FC = () => {
 
             <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
                 <div className="space-y-3">
-                    <div className="text-base font-black text-slate-900">{activeTitle}</div>
+                    <div className="text-base font-black text-slate-900 dark:text-white">{activeTitle}</div>
                     {activeImage ? (
-                        <div className="flex justify-center">
-                            <Image  src={activeImage}  alt={activeTitle}  preview={false}  className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        <div className="space-y-3">
+                            <div className="flex justify-center">
+                                <Image  src={activeImage}  alt={activeTitle}  preview={false}  className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                            </div>
+                            {activeImages.length > 1 && (
+                                <div className="relative px-4">
+                                    <button type="button" onClick={handlePrevImage} className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full bg-red-500 text-white shadow-md flex items-center justify-center" style={{ width: 34, height: 34, fontSize: 20, lineHeight: 1 }} >
+                                        <ArrowLeftCircle />
+                                    </button>
+                                    <div className="mx-auto flex w-full flex-nowrap gap-2 overflow-x-auto pb-2 pr-2 scrollbar-hide scroll-smooth" style={{ maxWidth: 320 }} >
+                                        {activeImages.map((img, index) => (
+                                            <button key={`${img}-${index}`} type="button" onClick={() => handleThumbClick(index)} className={`h-16 w-16 shrink-0 rounded-xl overflow-hidden border ${img === activeImage ? 'border-primary-500' : 'border-slate-200 dark:border-slate-800'}`} >
+                                                <img src={img} alt="thumb" className="h-full w-full object-cover" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <button type="button" onClick={handleNextImage} className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-red-500 text-white shadow-md flex items-center justify-center" style={{ width: 34, height: 34, fontSize: 20, lineHeight: 1 }} >
+                                        <ArrowRightCircle />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
