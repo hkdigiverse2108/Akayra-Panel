@@ -142,4 +142,10 @@ export const URL_KEYS = {
     BASE: '/settings',
     UPDATE: '/settings/update',
   },
+
+  //******************** Upload *****************
+  UPLOAD: {
+    IMAGE: '/upload/image',
+    IMAGES: '/upload/images',
+  },
 };

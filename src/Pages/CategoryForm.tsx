@@ -1,19 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Input, Divider, Breadcrumb } from 'antd';
 import { Queries } from '../Api/Queries';
 import { Mutations } from '../Api/Mutations';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Layers, Camera, Save, ArrowLeft } from 'lucide-react';
-import { ROUTES } from '../Constants';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
+import { Layers, ImageIcon, Save, ArrowLeft, X } from 'lucide-react';
+import { KEYS, ROUTES } from '../Constants';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CategoryForm: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const isEditMode = !!id;
+    const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const watchedImage = Form.useWatch('image', form);
+    const queryClient = useQueryClient();
 
     // Queries
     const { data: categoryResponse, isLoading: fetching } = Queries.useGetSingleCategory(id);
@@ -36,6 +42,9 @@ const CategoryForm: React.FC = () => {
             onSuccess: (res: any) => {
                 if (res.status === 200 || res.status === 201) {
                     toast.success(`Category ${isEditMode ? 'updated' : 'added'} successfully`);
+                    queryClient.refetchQueries({ queryKey: [KEYS.CATEGORY.ALL] });
+                    queryClient.refetchQueries({ queryKey: [KEYS.CATEGORY.BASE] });
+                    queryClient.refetchQueries({ queryKey: [KEYS.CATEGORY.DROPDOWN] });
                     navigate(ROUTES.CATEGORIES);
                 }
             },
@@ -79,14 +88,7 @@ const CategoryForm: React.FC = () => {
 
             <Card className="rounded-2xl sm:rounded-[32px] shadow-xl border-0 overflow-hidden bg-white dark:bg-slate-900 text-left p-4 sm:p-8">
                 <div className="text-left">
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        onFinish={onFinish}
-                        initialValues={{ isActive: true }}
-                        requiredMark={false}
-                        className="max-w-4xl mx-auto py-2 sm:py-4 text-left"
-                    >
+                    <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ isActive: true }} requiredMark={false} className="max-w-4xl mx-auto py-2 sm:py-4 text-left" >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
                             <div className="col-span-2 text-left">
                                 <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 text-left">
@@ -95,35 +97,45 @@ const CategoryForm: React.FC = () => {
                                 <Divider className="my-2 sm:my-3 border-slate-100 dark:border-slate-800 text-left" />
                             </div>
 
-                            <Form.Item 
-                                label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Category Name</span>} 
-                                name="name" 
-                                rules={[{ required: true, message: 'Please enter category name' }]}
-                                className="col-span-2 md:col-span-1 text-left"
-                            >
-                                <Input 
-                                    size="large" 
-                                    placeholder="e.g. Mens Fashion"
-                                    className="h-12 rounded-xl bg-gray-50/50 dark:bg-slate-800 border-0 px-5 font-bold focus:ring-primary-500 text-left" 
-                                />
+                            <Form.Item  label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Category Name</span>}  name="name"  rules={[{ required: true, message: 'Please enter category name' }]} className="col-span-2 md:col-span-1 text-left" >
+                                <Input  size="large"  placeholder="e.g. Mens Fashion" className="h-12 rounded-xl bg-gray-50/50 dark:bg-slate-800 border-0 px-5 font-bold focus:ring-primary-500 text-left"  />
                             </Form.Item>
 
-                            <Form.Item 
-                                label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Image URL</span>} 
-                                name="image" 
-                                className="col-span-2 md:col-span-1 text-left"
-                            >
-                                <Input 
-                                    size="large" 
-                                    prefix={<Camera size={16} className="mr-2 text-slate-400" />} 
-                                    placeholder="https://example.com/category-image.jpg"
-                                    className="h-12 rounded-xl bg-gray-50/50 dark:bg-slate-800 border-0 px-5 font-bold focus:ring-primary-500 text-left" 
-                                />
+                            <Form.Item  label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Image URL</span>}  name="image"  className="col-span-2 md:col-span-1 text-left" >
+                                <div className="space-y-3">
+                                    {watchedImage ? (
+                                        <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <img
+                                                    src={watchedImage}
+                                                    alt="Category"
+                                                    className="h-12 w-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                                                />
+                                                <span className="text-xs text-slate-600 dark:text-slate-300 truncate">
+                                                    {watchedImage}
+                                                </span>
+                                            </div>
+                                            <button type="button" onClick={() => form.setFieldsValue({ image: '' })} className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600" >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="text-xs text-slate-400 uppercase tracking-widest font-black">
+                                            No image selected
+                                        </div>
+                                    )}
+
+                                    <Button type="button" onClick={() => setIsUploadOpen(true)} className="h-11 px-5 rounded-xl font-bold flex items-center gap-2" variant="secondary" >
+                                        <ImageIcon size={16} /> Choose Image
+                                    </Button>
+                                </div>
                             </Form.Item>
                         </div>
                     </Form>
                 </div>
             </Card>
+
+            <UploadImage isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} multiple={false} onSelect={(items: UploadItem[]) => { const first = items[0]; if (first?.url || first?.path) {     form.setFieldsValue({ image: first.url || first.path }); } }} />
         </div>
     );
 };

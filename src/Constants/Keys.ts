@@ -109,4 +109,10 @@ export const KEYS = {
   SETTINGS: {
     BASE: 'SETTINGS_BASE',
   },
+
+  //******************** Upload *****************
+  UPLOAD: {
+    BASE: 'UPLOAD_BASE',
+    ALL: 'UPLOAD_ALL',
+  },
 };

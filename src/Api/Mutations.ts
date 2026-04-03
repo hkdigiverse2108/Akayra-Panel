@@ -12,8 +12,8 @@ export const Mutations = {
   useDeleteUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (id: string) => Delete(`${URL_KEYS.USER.BASE}/${id}`)),
 
   // ************ Category ***********
-  useAddCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Post(URL_KEYS.CATEGORY.ADD, input)),
-  useEditCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Put(URL_KEYS.CATEGORY.EDIT, input)),
+  useAddCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Post(URL_KEYS.CATEGORY.ADD, input), { showSuccessToast: false }),
+  useEditCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (input: any) => Put(URL_KEYS.CATEGORY.EDIT, input), { showSuccessToast: false }),
   useDeleteCategory: () => useMutations([KEYS.CATEGORY.ALL, KEYS.CATEGORY.BASE, KEYS.CATEGORY.DROPDOWN], (id: string) => Delete(`${URL_KEYS.CATEGORY.BASE}/${id}`)),
 
   // ************ Brand ***********
@@ -88,4 +88,8 @@ export const Mutations = {
 
   //************* Settings ***********
   useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input)),
+
+  //************* Upload ***********
+  useUploadImage: () => useMutations([KEYS.UPLOAD.BASE], (input: FormData) =>   Post(URL_KEYS.UPLOAD.IMAGE, input, { "Content-Type": "multipart/form-data" }) ),
+  useDeleteUploadedImage: () =>useMutations([KEYS.UPLOAD.BASE], (pathOrUrl: string) => {  const params = new URLSearchParams();  if (/^https?:\/\//i.test(pathOrUrl)) {    params.set("url", pathOrUrl);  } else {    params.set("path", pathOrUrl);  }  const query = params.toString();  const endpoint = query ? `${URL_KEYS.UPLOAD.IMAGE}?${query}` : URL_KEYS.UPLOAD.IMAGE;  return Delete(endpoint);}),
 };

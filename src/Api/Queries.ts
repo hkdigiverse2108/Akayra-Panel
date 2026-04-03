@@ -58,5 +58,9 @@ export const Queries = {
 
   // ************ Settings ***********
   useGetSettings: (options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.SETTINGS.BASE], () => Get(URL_KEYS.SETTINGS.BASE), options),
+
+  // ************ Upload ***********
+  useGetUploadedImage: (params?: { path?: string; url?: string }, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.UPLOAD.BASE, params], () => Get(URL_KEYS.UPLOAD.IMAGE, params), { enabled: !!params, ...options }),
+  useGetAllUploadImages: (params?: { folder?: string }, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.UPLOAD.ALL, params], () => Get(URL_KEYS.UPLOAD.IMAGES, params), options),
 };
 
