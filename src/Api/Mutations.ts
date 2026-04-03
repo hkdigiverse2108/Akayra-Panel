@@ -47,8 +47,8 @@ export const Mutations = {
   useDeleteBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (id: string) => Delete(`${URL_KEYS.BANNER.BASE}/${id}`)),
 
   // ************ Blog ***********
-  useAddBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Post(URL_KEYS.BLOG.ADD, input)),
-  useEditBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Put(URL_KEYS.BLOG.EDIT, input)),
+  useAddBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Post(URL_KEYS.BLOG.ADD, input), { showSuccessToast: false }),
+  useEditBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (input: any) => Put(URL_KEYS.BLOG.EDIT, input), { showSuccessToast: false }),
   useDeleteBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (id: string) => Delete(`${URL_KEYS.BLOG.BASE}/${id}`)),
 
   // ************ FAQ Category ***********
