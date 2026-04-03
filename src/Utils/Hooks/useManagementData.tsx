@@ -67,9 +67,16 @@ export const useManagementData = ({
     const total = response?.data?.totalData || 0;
 
     // --- Mutations ---
+    const baseUrl = useMemo(() => {
+        if (resourceUrl.endsWith('/all')) {
+            return resourceUrl.replace(/\/all$/, '');
+        }
+        return resourceUrl;
+    }, [resourceUrl]);
+
     const deleteMutation = useMutations(
         [resourceKey],
-        (id: string) => Delete(`${resourceUrl}/${id}`),
+        (id: string) => Delete(`${baseUrl}/${id}`),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: [resourceKey] });
@@ -81,7 +88,7 @@ export const useManagementData = ({
 
     const toggleMutation = useMutations(
         [resourceKey],
-        (payload: any) => Put(`${resourceUrl}/edit`, payload), // Standardized edit endpoint for toggling
+        (payload: any) => Put(`${baseUrl}/edit`, payload), // Standardized edit endpoint for toggling
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: [resourceKey] });
@@ -116,8 +123,10 @@ export const useManagementData = ({
     };
 
     const handleToggleStatus = async (item: any) => {
+        const recordId = item?.[idField] || item?._id || item?.id;
+        if (!recordId) return;
         const payload = {
-            [idField]: item._id,
+            [idField]: recordId,
             isActive: !item.isActive
         };
         toggleMutation.mutate(payload);

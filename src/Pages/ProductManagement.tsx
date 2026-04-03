@@ -2,46 +2,43 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ShoppingCart, TrendingUp, Zap } from 'lucide-react';
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ShoppingCart, TrendingUp, Zap, ImageIcon, X } from 'lucide-react';
 import { useManagementData } from '../Utils/Hooks/useManagementData';
 import TableToolbar from '../Components/TableToolbar';
 import TableFooter from '../Components/TableFooter';
 import ConfirmModal from '../Components/ConfirmModal';
 import { getSrNo } from '../Utils/tableUtils';
 import { cn } from '../Utils/cn';
-import { Image, Tag, Badge, Tooltip } from 'antd';
+import { Image, Tag, Badge, Tooltip, Modal } from 'antd';
 import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const ProductManagement: React.FC = () => {
     const navigate = useNavigate();
     const [viewType, setViewType] = useState<'grid' | 'list'>('list');
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
+    const [activeTitle, setActiveTitle] = useState<string>('');
+    const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
-    const {
-        items: products,
-        loading,
-        total,
-        currentPage,
-        pageSize,
-        searchTerm,
-        activeFilter,
-        setSearchTerm,
-        setCurrentPage,
-        setPageSize,
-        setActiveFilter,
-        handleDeleteClick,
-        confirmDelete,
-        handleToggleStatus,
-        isDeleteModalOpen,
-        setIsDeleteModalOpen,
-        isActionLoading,
-        toggleSort,
-        getSortIcon
-    } = useManagementData({
+    const { items: products, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, handleDeleteClick, confirmDelete, handleToggleStatus, isDeleteModalOpen, setIsDeleteModalOpen, isActionLoading, toggleSort, getSortIcon } = useManagementData({
         resourceKey: KEYS.PRODUCT.ALL,
         resourceUrl: URL_KEYS.PRODUCT.ALL,
         idField: 'productId',
         dataKey: 'product_data',
     });
+
+    const getCoverImage = (product: any) => product?.thumbnail || product?.image || product?.thumbnailUrl;
+
+    const handleImageError = (id: string | undefined) => {
+        if (!id) return;
+        setBrokenImages((prev) => ({ ...prev, [id]: true }));
+    };
+
+    const openImageModal = (imageUrl: string, title?: string) => {
+        setActiveImage(imageUrl);
+        setActiveTitle(title || 'Product Image');
+        setIsImageModalOpen(true);
+    };
 
     return (
         <div className="space-y-4 sm:space-y-8 animate-in fade-in duration-500">
@@ -56,16 +53,7 @@ const ProductManagement: React.FC = () => {
             </div>
 
             <Card className="!p-0 overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
-                <TableToolbar
-                    searchTerm={searchTerm}
-                    onSearchChange={setSearchTerm}
-                    placeholder="Search products..."
-                    activeFilter={activeFilter}
-                    onActiveFilterChange={setActiveFilter}
-                    showViewToggle
-                    viewType={viewType}
-                    onViewTypeChange={setViewType}
-                />
+                <TableToolbar searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search products..." activeFilter={activeFilter} onActiveFilterChange={setActiveFilter} showViewToggle viewType={viewType} onViewTypeChange={setViewType} />
 
                 {viewType === 'list' ? (
                     <div className="overflow-x-auto scrollbar-hide">
@@ -112,13 +100,16 @@ const ProductManagement: React.FC = () => {
                                             <td className="px-4 sm:px-6 py-4">
                                                 <div className="flex items-center gap-3 sm:gap-4 text-left">
                                                     <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shrink-0">
-                                                        {product.image ? (
-                                                            <Image
-                                                                src={product.image}
-                                                                alt={product.title}
-                                                                className="h-full w-full object-cover"
-                                                                preview={false}
-                                                            />
+                                                        {getCoverImage(product) && !brokenImages[product._id] ? (
+                                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title)} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
+                                                                <Image src={getCoverImage(product)} alt={product.title} className="h-full w-full object-cover" preview={false} onError={() => handleImageError(product._id)} />
+                                                                <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
+                                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                                                                    <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                                        <ImageIcon size={14} />
+                                                                    </div>
+                                                                </div>
+                                                            </button>
                                                         ) : (
                                                             <ShoppingCart size={20} className="text-slate-300" />
                                                         )}
@@ -147,32 +138,17 @@ const ProductManagement: React.FC = () => {
                                             <td className="px-4 sm:px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                                                     <Tooltip title={product.isActive ? "Deactivate" : "Activate"}>
-                                                        <button
-                                                            onClick={() => handleToggleStatus(product)}
-                                                            disabled={isActionLoading}
-                                                            className={cn(
-                                                                "p-2 rounded-xl transition-all shadow-sm",
-                                                                product.isActive
-                                                                    ? "text-emerald-500 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20"
-                                                                    : "text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
-                                                            )}
-                                                        >
+                                                        <button onClick={() => handleToggleStatus(product)} disabled={isActionLoading} className={cn( "p-2 rounded-xl transition-all shadow-sm", product.isActive ? "text-emerald-500 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20"  : "text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700" )} >
                                                             {product.isActive ? <ToggleRight size={20} className="sm:w-6 sm:h-6" /> : <ToggleLeft size={20} className="sm:w-6 sm:h-6" />}
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
-                                                        <button
-                                                            onClick={() => navigate(`${ROUTES.PRODUCTS}/edit/${product._id}`)}
-                                                            className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
-                                                        >
+                                                        <button onClick={() => navigate(`${ROUTES.PRODUCTS}/edit/${product._id}`)} className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm" >
                                                             <Edit size={18} className="sm:w-5 sm:h-5" />
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Delete">
-                                                        <button
-                                                            onClick={() => handleDeleteClick(product._id)}
-                                                            className="p-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm"
-                                                        >
+                                                        <button onClick={() => handleDeleteClick(product._id)} className="p-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm" >
                                                             <Trash2 size={18} className="sm:w-5 sm:h-5" />
                                                         </button>
                                                     </Tooltip>
@@ -194,13 +170,16 @@ const ProductManagement: React.FC = () => {
                             products.map((product: any) => (
                                 <div key={product._id} className="group bg-gray-50/50 dark:bg-slate-800/30 rounded-[32px] border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col h-full shadow-sm">
                                     <div className="relative aspect-square overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
-                                        {product.image ? (
-                                            <Image
-                                                src={product.image}
-                                                alt={product.title}
-                                                className="h-full w-full object-cover transition-transform group-hover:scale-110"
-                                                preview={false}
-                                            />
+                                        {getCoverImage(product) && !brokenImages[product._id] ? (
+                                            <button type="button" onClick={() => openImageModal(getCoverImage(product), product.title)} className="relative h-full w-full cursor-pointer group/thumb" title="View image" >
+                                                <Image src={getCoverImage(product)} alt={product.title} className="h-full w-full object-cover transition-transform group-hover:scale-110" preview={false} onError={() => handleImageError(product._id)} />
+                                                <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                                                    <div className="h-8 w-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                        <ImageIcon size={16} />
+                                                    </div>
+                                                </div>
+                                            </button>
                                         ) : (
                                             <div className="h-full w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
                                                 <ShoppingCart size={48} className="text-slate-200" />
@@ -230,15 +209,7 @@ const ProductManagement: React.FC = () => {
                                                 <span className="text-lg font-black text-primary-600 tracking-tight">₹{product.sellingPrice}</span>
                                                 <span className="text-[10px] text-slate-400 line-through">₹{product.mrp}</span>
                                             </div>
-                                            <button
-                                                onClick={() => handleToggleStatus(product)}
-                                                disabled={isActionLoading}
-                                                className={cn(
-                                                    "h-10 w-10 rounded-2xl flex items-center justify-center transition-all shadow-sm",
-                                                    product.isActive ? "bg-emerald-50 text-emerald-500 dark:bg-emerald-900/20" : "bg-slate-100 text-slate-400 dark:bg-slate-800"
-                                                )}
-                                                title={product.isActive ? "Deactivate" : "Activate"}
-                                            >
+                                            <button onClick={() => handleToggleStatus(product)} disabled={isActionLoading} className={cn( "h-10 w-10 rounded-2xl flex items-center justify-center transition-all shadow-sm", product.isActive ? "bg-emerald-50 text-emerald-500 dark:bg-emerald-900/20" : "bg-slate-100 text-slate-400 dark:bg-slate-800" )} title={product.isActive ? "Deactivate" : "Activate"} >
                                                 {product.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                                             </button>
                                         </div>
@@ -249,23 +220,25 @@ const ProductManagement: React.FC = () => {
                     </div>
                 )}
 
-                <TableFooter
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    total={total}
-                    onPageChange={setCurrentPage}
-                    onPageSizeChange={setPageSize}
-                    resourceName="products"
-                />
+                <TableFooter currentPage={currentPage} pageSize={pageSize} total={total} onPageChange={setCurrentPage} onPageSizeChange={setPageSize} resourceName="products" />
             </Card>
 
-            <ConfirmModal 
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={confirmDelete}
-                loading={isActionLoading}
-                message="Are you sure you want to delete this product? This action cannot be undone."
-            />
+            <ConfirmModal  isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} loading={isActionLoading} message="Are you sure you want to delete this product? This action cannot be undone." />
+
+            <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+                <div className="space-y-3">
+                    <div className="text-base font-black text-slate-900">{activeTitle}</div>
+                    {activeImage ? (
+                        <div className="flex justify-center">
+                            <Image  src={activeImage}  alt={activeTitle}  preview={false}  className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        </div>
+                    ) : (
+                        <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                            No image available.
+                        </div>
+                    )}
+                </div>
+            </Modal>
         </div>
     );
 };

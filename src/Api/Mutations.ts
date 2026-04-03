@@ -32,8 +32,8 @@ export const Mutations = {
   useDeleteColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (id: string) => Delete(`${URL_KEYS.COLOR.BASE}/${id}`)),
 
   // ************ Product ***********
-  useAddProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Post(URL_KEYS.PRODUCT.ADD, input)),
-  useEditProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Put(URL_KEYS.PRODUCT.EDIT, input)),
+  useAddProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Post(URL_KEYS.PRODUCT.ADD, input), { showSuccessToast: false }),
+  useEditProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (input: any) => Put(URL_KEYS.PRODUCT.EDIT, input), { showSuccessToast: false }),
   useDeleteProduct: () => useMutations([KEYS.PRODUCT.ALL, KEYS.PRODUCT.BASE], (id: string) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
   // ************ Review ***********
