@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
@@ -10,6 +10,8 @@ import ConfirmModal from '../Components/ConfirmModal';
 import { getSrNo } from '../Utils/tableUtils';
 import { cn } from '../Utils/cn';
 import { Image, Tag, Badge, Tooltip, Modal } from 'antd';
+import ProductFilters, { type ProductFilterValues } from '../Components/ProductFilters';
+import { Queries } from '../Api/Queries';
 import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const ProductManagement: React.FC = () => {
@@ -21,12 +23,34 @@ const ProductManagement: React.FC = () => {
     const [activeImages, setActiveImages] = useState<string[]>([]);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
+    const [filterValues, setFilterValues] = useState<ProductFilterValues>({});
 
-    const { items: products, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, handleDeleteClick, confirmDelete, handleToggleStatus, isDeleteModalOpen, setIsDeleteModalOpen, isActionLoading, toggleSort, getSortIcon } = useManagementData({
+    const { data: catRes } = Queries.useGetCategory();
+    const { data: brandRes } = Queries.useGetBrand();
+    const { data: sizeRes } = Queries.useGetSize();
+    const { data: colorRes } = Queries.useGetColor();
+
+    const categories = useMemo(() => catRes?.data?.category_data || [], [catRes]);
+    const brands = useMemo(() => brandRes?.data?.brand_data || [], [brandRes]);
+    const sizes = useMemo(() => sizeRes?.data?.size_data || [], [sizeRes]);
+    const colors = useMemo(() => colorRes?.data?.color_data || [], [colorRes]);
+
+    const { items: products, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, setSortFilter, handleDeleteClick, confirmDelete, handleToggleStatus, isDeleteModalOpen, setIsDeleteModalOpen, isActionLoading, toggleSort, getSortIcon } = useManagementData({
         resourceKey: KEYS.PRODUCT.ALL,
         resourceUrl: URL_KEYS.PRODUCT.ALL,
         idField: 'productId',
         dataKey: 'product_data',
+        extraParams: {
+            categoryId: filterValues.categoryId,
+            brandId: filterValues.brandId,
+            sizeIds: filterValues.sizeIds,
+            colorIds: filterValues.colorIds,
+            minPrice: filterValues.minPrice,
+            maxPrice: filterValues.maxPrice,
+            inStockOnly: filterValues.inStock ? 1 : undefined,
+            isTrending: filterValues.isTrending ? 1 : undefined,
+            isDealOfDay: filterValues.isDealOfDay ? 1 : undefined,
+        },
     });
 
     const getCoverImage = (product: any) => product?.thumbnail || product?.image || product?.thumbnailUrl;
@@ -77,6 +101,24 @@ const ProductManagement: React.FC = () => {
                 </Button>
             </div>
 
+            <ProductFilters
+                value={filterValues}
+                onApply={(next) => {
+                    setFilterValues(next);
+                    setSortFilter(next.sortFilter || '');
+                    setCurrentPage(1);
+                }}
+                onClear={() => {
+                    setFilterValues({});
+                    setSortFilter('');
+                    setCurrentPage(1);
+                }}
+                categories={categories}
+                brands={brands}
+                sizes={sizes}
+                colors={colors}
+            />
+
             <Card className="!p-0 overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
                 <TableToolbar searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search products..." activeFilter={activeFilter} onActiveFilterChange={setActiveFilter} showViewToggle viewType={viewType} onViewTypeChange={setViewType} />
 
@@ -97,13 +139,13 @@ const ProductManagement: React.FC = () => {
                                     <th className="px-4 sm:px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden lg:table-cell">SKU</th>
                                     <th className="px-4 sm:px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Stock</th>
                                     <th className="px-4 sm:px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
-                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('sellingPrice')}>
-                                            Price
-                                            <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
-                                                {getSortIcon('sellingPrice')}
+                                            <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('price')}>
+                                                Price
+                                                <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
+                                                {getSortIcon('price')}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </th>
+                                        </th>
                                     <th className="px-4 sm:px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
                             </thead>

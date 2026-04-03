@@ -2,12 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Input, InputNumber, Select, Switch, Breadcrumb, Tabs } from 'antd';
+import { Form, Input, InputNumber, Select, Switch, Breadcrumb, Tabs, Image, Modal } from 'antd';
 import { Queries } from '../Api/Queries';
 import { Mutations } from '../Api/Mutations';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
 import ProductPreview from '../Components/ProductPreview';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
 import { ArrowLeft, Save, ShoppingBag, IndianRupee, Layers, Package, ImageIcon, Zap, X } from 'lucide-react';
 import { ROUTES } from '../Constants';
 import { toast } from 'react-toastify';
@@ -20,8 +22,10 @@ const ProductForm: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const isEditMode = !!id;
-    const [imageUrlInput, setImageUrlInput] = useState('');
-    const [imageUrlError, setImageUrlError] = useState('');
+    const [isCoverUploadOpen, setIsCoverUploadOpen] = useState(false);
+    const [isGalleryUploadOpen, setIsGalleryUploadOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
 
     // Queries for Dropdowns
     const { data: catRes } = Queries.useGetCategory();
@@ -60,6 +64,7 @@ const ProductForm: React.FC = () => {
     const brandName = brands.find((b: any) => b._id === watchedBrandId)?.name || brands.find((b: any) => b._id === watchedBrandId)?.title;
     const sizeNames = sizes.filter((s: any) => (watchedSizeIds || []).includes(s._id)).map((s: any) => s.name);
     const colorMeta = colors.filter((c: any) => (watchedColorIds || []).includes(c._id)).map((c: any) => ({ name: c.name, hexCode: c.hexCode }));
+    const galleryImages = useMemo(() => (Array.isArray(watchedImages) ? watchedImages : watchedImages ? [watchedImages] : []), [watchedImages]);
 
     const toolbarModules = useMemo( () => ({
             toolbar: [
@@ -129,28 +134,9 @@ const ProductForm: React.FC = () => {
         </Card>
     );
 
-    const addImageUrl = () => {
-        const raw = imageUrlInput.trim();
-        if (!raw) {return};
-        const urls = raw.split(/[\s,;]+/).map((item) => item.trim()).filter(Boolean);
-        const currentImages = (form.getFieldValue('images') || []) as string[];
-        const nextImages = [...currentImages];
-        let hasDuplicate = false;
-        urls.forEach((url) => {
-            if (!nextImages.includes(url)) {
-                nextImages.push(url);
-            } else {
-                hasDuplicate = true;
-            }
-        });
-        form.setFieldsValue({ images: nextImages });
-        setImageUrlInput('');
-        setImageUrlError(hasDuplicate ? 'Image URL already exists' : '');
-    };
-
-    const removeImageUrl = (urlToRemove: string) => {
-        const currentImages = (form.getFieldValue('images') || []) as string[];
-        form.setFieldsValue({ images: currentImages.filter((img) => img !== urlToRemove) });
+    const openImageModal = (imageUrl: string) => {
+        setActiveImage(imageUrl);
+        setIsImageModalOpen(true);
     };
 
     const mediaCard = (
@@ -163,59 +149,89 @@ const ProductForm: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                <Form.Item name="thumbnail" label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">PRODUCT THUMBNAIL</span>} extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">Recommended: 1000x1000px JPG/PNG</span>} className="text-left" >
-                    <Input size="large" placeholder="Enter image URL" className="h-12 rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700" />
+                <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">PRODUCT COVER</span>} extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">Recommended: 1000x1000px JPG/PNG</span>} className="text-left" >
+                    <div className="space-y-3">
+                        <Form.Item name="thumbnail" hidden>
+                            <Input type="hidden" />
+                        </Form.Item>
+                        <Button type="button" onClick={() => setIsCoverUploadOpen(true)} className="h-11 px-5 rounded-xl font-bold flex items-center gap-2" variant="secondary" >
+                            <ImageIcon size={16} /> Choose Cover
+                        </Button>
+
+                        <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4 overflow-visible">
+                            {watchedThumbnail ? (
+                                <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden relative group/cover">
+                                    <button type="button" onClick={() => openImageModal(watchedThumbnail)} className="relative h-full w-full cursor-pointer" title="View image" >
+                                        <Image src={watchedThumbnail} alt="Product cover" preview={false} className="h-full w-full object-cover" fallback="" />
+                                        <div className="absolute inset-0 bg-black/0 group-hover/cover:bg-black/30 transition-colors" />
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cover:opacity-100 transition-opacity">
+                                            <div className="h-9 w-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                <ImageIcon size={18} />
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => form.setFieldsValue({ thumbnail: '' })}
+                                        className="absolute -top-0 -right-0 h-7 w-7 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-red-600 flex items-center justify-center shadow-md"
+                                        aria-label="Remove cover"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    No cover selected
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </Form.Item>
 
-                <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">PRODUCT IMAGES</span>} extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">Add multiple image URLs</span>} className="text-left" >
+                <Form.Item label={<span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">PRODUCT THUMBS</span>} extra={<span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block italic text-left">Select multiple images.</span>} className="text-left" >
                     <div className="space-y-3">
                         <Form.Item name="images" hidden>
                             <Input type="hidden" />
                         </Form.Item>
-                        <div className="flex gap-2">
-                                <Input size="large" placeholder="Paste image URL and click Add" value={imageUrlInput} onChange={(e) => { setImageUrlInput(e.target.value);
-                                        if (imageUrlError) {
-                                            setImageUrlError('');
-                                        }
-                                    }}
-                                    onPressEnter={(e) => {
-                                        e.preventDefault();
-                                        addImageUrl();
-                                    }}
-                                    className="h-12 rounded-xl focus:ring-primary-500 text-left dark:bg-slate-800 dark:text-white dark:border-slate-700"
-                                />
-                            <Button type="button" onClick={addImageUrl} className="h-12 px-4 rounded-xl font-bold" > Add </Button>
-                        </div>
-                        {imageUrlError && (
-                            <div className="text-xs text-red-500 font-bold">{imageUrlError}</div>
-                        )}
 
-                        <Form.Item shouldUpdate={(prev, next) => prev.images !== next.images} noStyle>
-                            {() => {
-                                const imageList = (form.getFieldValue('images') || []) as string[];
-                                if (!imageList.length) {
-                                    return (
-                                        <div className="text-xs text-slate-400 uppercase tracking-widest font-black">
-                                            No images added yet
+                        <Button type="button" onClick={() => setIsGalleryUploadOpen(true)} className="h-11 px-5 rounded-xl font-bold flex items-center gap-2" variant="secondary" >
+                            <ImageIcon size={16} /> Choose Images
+                        </Button>
+
+                        <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4 overflow-visible">
+                            {galleryImages.length > 0 ? (
+                                <div className="flex flex-wrap gap-4">
+                                    {galleryImages.map((imageUrl: string, index: number) => (
+                                        <div key={`${imageUrl}-${index}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden relative group/gallery">
+                                            <button type="button" onClick={() => openImageModal(imageUrl)} className="relative h-full w-full cursor-pointer" title="View image" >
+                                                <Image src={imageUrl} alt="Product image" preview={false} className="h-full w-full object-cover" fallback="" />
+                                                <div className="absolute inset-0 bg-black/0 group-hover/gallery:bg-black/30 transition-colors" />
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/gallery:opacity-100 transition-opacity">
+                                                    <div className="h-9 w-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                        <ImageIcon size={18} />
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const next = galleryImages.filter((_: string, i: number) => i !== index);
+                                                    form.setFieldsValue({ images: next });
+                                                }}
+                                                className="absolute -top-0 -right-0 h-7 w-7 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-red-600 flex items-center justify-center shadow-md"
+                                                aria-label="Remove image"
+                                            >
+                                                <X size={16} />
+                                            </button>
                                         </div>
-                                    );
-                                }
-                                return (
-                                    <div className="space-y-2">
-                                        {imageList.map((url) => (
-                                            <div key={url} className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" >
-                                                <span className="text-xs text-slate-600 dark:text-slate-300 truncate">
-                                                    {url}
-                                                </span>
-                                                <button type="button" onClick={() => removeImageUrl(url)} className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-700 dark:hover:text-red-700" >
-                                                    <X size={14} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                );
-                            }}
-                        </Form.Item>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    No images selected
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </Form.Item>
             </div>
@@ -323,7 +339,7 @@ const ProductForm: React.FC = () => {
                 sizeIds: product.sizeIds?.map((s: any) => s._id || s),
                 colorIds: product.colorIds?.map((c: any) => c._id || c),
                 thumbnail: product.thumbnail || product.image || product.thumbnailUrl,
-                images: product.images || [],
+                images: Array.isArray(product.images) ? product.images : product.images ? [product.images] : [],
             });
         }
     }, [isEditMode, productResponse, form]);
@@ -366,8 +382,7 @@ const ProductForm: React.FC = () => {
                         <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                     </button>
                     <div className="text-left overflow-hidden">
-                        <Breadcrumb 
-                            className="mb-0.5 text-left text-[10px] sm:text-xs"
+                        <Breadcrumb  className="mb-0.5 text-left text-[10px] sm:text-xs"
                             items={[
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.DASHBOARD)}>Dashboard</span> },
                                 { title: <span className="cursor-pointer hover:text-primary-500 transition-colors" onClick={() => navigate(ROUTES.PRODUCTS)}>Products</span> },
@@ -390,10 +405,7 @@ const ProductForm: React.FC = () => {
             <Form  form={form}  layout="vertical"  onFinish={onFinish}  className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 text-left"  initialValues={{ isActive: true, isTrending: false, isDealOfDay: false, longDescription: '' }}  requiredMark={false} >
                 {/* Left Column: Main Info */}
                 <div className="lg:col-span-2 pb-10 text-left">
-                    <Tabs
-                        defaultActiveKey="general"
-                        destroyInactiveTabPane={false}
-                        className="rounded-2xl"
+                    <Tabs defaultActiveKey="general" destroyInactiveTabPane={false} className="rounded-2xl"
                         items={[
                             { key: 'general', label: <span className="text-sm font-semibold">General</span>, forceRender: true, children: <div className="space-y-6">{generalInfoCard}</div> },
                             { key: 'pricing', label: <span className="text-sm font-semibold">Pricing</span>, forceRender: true, children: <div className="space-y-6">{pricingCard}</div> },
@@ -406,10 +418,28 @@ const ProductForm: React.FC = () => {
                 </div>
 
                 {/* Right Column: Preview */}
-                <div className="space-y-8 text-left">
+                <div className="space-y-8 text-left sticky self-start h-fit">
                     <ProductPreview title={watchedTitle} thumbnail={watchedThumbnail} images={watchedImages} mrp={watchedMrp} sellingPrice={watchedSellingPrice} sku={watchedSku} categoryName={categoryName} brandName={brandName} sizes={sizeNames} colors={colorMeta} longDescription={watchedLongDescription} isTrending={watchedIsTrending} isDealOfDay={watchedIsDealOfDay} isActive={watchedIsActive} />
                 </div>
             </Form>
+
+            <UploadImage isOpen={isCoverUploadOpen} onClose={() => setIsCoverUploadOpen(false)} multiple={false} onSelect={(items: UploadItem[]) => { const first = items[0]; if (first?.url || first?.path) {     form.setFieldsValue({ thumbnail: first.url || first.path }); } }} />
+            <UploadImage isOpen={isGalleryUploadOpen} onClose={() => setIsGalleryUploadOpen(false)} multiple={true} onSelect={(items: UploadItem[]) => { const urls = items.map((item) => item?.url || item?.path).filter(Boolean) as string[]; if (!urls.length) return; const merged = Array.from(new Set([...galleryImages, ...urls])); form.setFieldsValue({ images: merged }); }} />
+
+            <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+                <div className="space-y-3">
+                    <div className="text-base font-black text-slate-900 dark:text-white">Product Image</div>
+                    {activeImage ? (
+                        <div className="flex justify-center">
+                            <Image src={activeImage} alt="Product image" preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        </div>
+                    ) : (
+                        <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                            No image available.
+                        </div>
+                    )}
+                </div>
+            </Modal>
         </div>
     );
 };
