@@ -1,39 +1,68 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Input, Switch, Image, Breadcrumb } from 'antd';
+import { Form, Input, Switch, Image, Breadcrumb, DatePicker, InputNumber, Select, Modal } from 'antd';
 import { Queries } from '../Api/Queries';
 import { Mutations } from '../Api/Mutations';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { ArrowLeft, Save, ImageIcon, Link as LinkIcon, Layers } from 'lucide-react';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
+import { ArrowLeft, Save, ImageIcon, Link as LinkIcon, Layers, Calendar, Hash, X, Type, AlignLeft, MousePointerClick } from 'lucide-react';
 import { ROUTES } from '../Constants';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 const BannerForm: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const isEditMode = !!id;
+    const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
 
-    // To watch image for real-time preview
     const imageUrl = Form.useWatch('image', form);
     const titleValue = Form.useWatch('title', form);
+    const subtitleValue = Form.useWatch('subtitle', form);
+    const ctaValue = Form.useWatch('ctaButton', form);
+    const typeValue = Form.useWatch('type', form);
 
-    // Queries
     const { data: bannerResponse, isLoading: fetching } = Queries.useGetSingleBanner(id);
-    
-    // Mutations
+
     const addBanner = Mutations.useAddBanner();
     const editBanner = Mutations.useEditBanner();
 
     useEffect(() => {
         if (isEditMode && bannerResponse?.data) {
-            form.setFieldsValue(bannerResponse.data);
+            const data = bannerResponse.data;
+            form.setFieldsValue({
+                ...data,
+                image: data?.image || '',
+                endDate: data?.endDate ? dayjs(data.endDate) : undefined,
+            });
         }
     }, [isEditMode, bannerResponse, form]);
 
+    const validateUrlOrPath = (_: any, value: string) => {
+        if (!value) return Promise.resolve();
+        const isUrl = /^https?:\/\//i.test(value);
+        const isPath = value.startsWith('/') || value.startsWith('#');
+        return isUrl || isPath
+            ? Promise.resolve()
+            : Promise.reject(new Error('Enter a valid URL or path'));
+    };
+
     const onFinish = async (values: any) => {
-        const payload = isEditMode ? { ...values, bannerId: id } : values;
+        const payload: any = {
+            ...values,
+            endDate: values.endDate ? dayjs(values.endDate).toISOString() : undefined,
+            ...(isEditMode ? { bannerId: id } : {}),
+        };
+
+        Object.keys(payload).forEach((key) => {
+            if (payload[key] === undefined || payload[key] === '') delete payload[key];
+        });
+
         const mutation = isEditMode ? editBanner : addBanner;
 
         mutation.mutate(payload, {
@@ -59,13 +88,10 @@ const BannerForm: React.FC = () => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 sm:px-0 pb-12 sm:pb-0">
+        <div className="max-w-6xl mx-auto space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 sm:px-0 pb-12 sm:pb-0">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
                 <div className="flex items-center gap-3 sm:gap-4 text-left">
-                    <button 
-                        onClick={() => navigate(ROUTES.BANNERS)}
-                        className="p-2 sm:p-3 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl transition-all shadow-sm hover:shadow text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border border-gray-100 dark:border-slate-800"
-                    >
+                    <button  onClick={() => navigate(ROUTES.BANNERS)} className="p-2 sm:p-3 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl transition-all shadow-sm hover:shadow text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border border-gray-100 dark:border-slate-800" >
                         <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                     </button>
                     <div className="text-left overflow-hidden">
@@ -84,112 +110,129 @@ const BannerForm: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                <div className="space-y-6 sm:space-y-8">
+            <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ isActive: true, priority: 0 }} requiredMark={false} className="text-left" >
+                <div className="space-y-6 sm:space-y-8 text-left">
                     <Card className="rounded-[24px] sm:rounded-[32px] border-0 shadow-xl overflow-hidden p-5 sm:p-8 text-left bg-white dark:bg-slate-900">
                         <div className="flex items-center gap-3 mb-6 sm:mb-8 text-left">
                             <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-600">
                                 <Layers size={18} className="sm:w-5 sm:h-5" />
                             </div>
-                            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Composition</h2>
+                            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Banner Details</h2>
                         </div>
 
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            onFinish={onFinish}
-                            initialValues={{ isActive: true }}
-                            requiredMark={false}
-                            className="text-left"
-                        >
-                            <Form.Item
-                                name="title"
-                                label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Banner Title</span>}
-                                rules={[{ required: true, message: 'Title is required' }]}
-                                className="text-left mb-4 sm:mb-6"
-                            >
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left">
+                            <Form.Item name="type" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Banner Type</span>} rules={[{ required: true, message: 'Type is required' }]} className="text-left" >
+                                <Select size="large" placeholder="Select banner type" className="custom-select h-12 sm:h-14 rounded-xl sm:rounded-2xl overflow-hidden [&_.ant-select-selector]:!rounded-xl [&_.ant-select-selector]:!h-12 sm:[&_.ant-select-selector]:!h-14 [&_.ant-select-selector]:!bg-gray-50 dark:[&_.ant-select-selector]:!bg-slate-800 [&_.ant-select-selector]:!border-0" options={[
+                                        { label: 'Hero', value: 'hero' },
+                                        { label: 'Discount', value: 'discount' },
+                                    ]}
+                                    suffixIcon={<Type size={14} className="text-slate-400" />}
+                                />
+                            </Form.Item>
+
+                            <Form.Item name="priority" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Priority</span>} className="text-left" >
+                                <InputNumber<number> min={0} controls={false} parser={(value) => Number((value || '').toString().replace(/[^\d]/g, ''))} className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left [&_.ant-input-number-input]:!h-12 sm:[&_.ant-input-number-input]:!h-14" prefix={<Hash size={14} className="text-slate-400" />} />
+                            </Form.Item>
+
+                            <Form.Item name="title" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Banner Title</span>} rules={[{ required: true, message: 'Title is required' }]} className="text-left" >
                                 <Input placeholder="e.g. Summer Collection 2024" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
                             </Form.Item>
 
-                            <Form.Item
-                                name="url"
-                                label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Click-through Destination (URL)</span>}
-                                rules={[{ required: true, message: 'URL is required' }]}
-                                className="text-left mb-4 sm:mb-6"
-                            >
+                            <Form.Item name="subtitle" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Subtitle</span>} className="text-left" >
+                                <Input prefix={<AlignLeft size={14} className="text-slate-400 mr-2" />} placeholder="Optional supporting line" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
+                            </Form.Item>
+
+                            <Form.Item name="ctaButton" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">CTA Button Text</span>} className="text-left" >
+                                <Input prefix={<MousePointerClick size={14} className="text-slate-400 mr-2" />} placeholder="e.g. Shop Now" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
+                            </Form.Item>
+
+                            <Form.Item name="ctaButtonRedirection" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">CTA Button Link</span>} rules={[{ validator: validateUrlOrPath }]} className="text-left" >
                                 <Input prefix={<LinkIcon size={14} className="text-slate-400 mr-2 sm:w-4 sm:h-4" />} placeholder="e.g. /products/new-arrivals" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
                             </Form.Item>
 
-                            <Form.Item
-                                name="image"
-                                label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Banner Image Asset URL</span>}
-                                rules={[{ required: true, message: 'Image URL is required' }]}
-                                className="text-left mb-4 sm:mb-6"
-                            >
-                                <Input prefix={<ImageIcon size={14} className="text-slate-400 mr-2 sm:w-4 sm:h-4" />} placeholder="Enter high-res image URL" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
+                            <Form.Item name="pageRedirection" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">Page Redirection</span>} rules={[{ validator: validateUrlOrPath }]} className="text-left" >
+                                <Input prefix={<LinkIcon size={14} className="text-slate-400 mr-2 sm:w-4 sm:h-4" />} placeholder="Optional landing page route" className="h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left" />
                             </Form.Item>
 
-                            <div className="flex items-center justify-between p-4 sm:p-6 bg-gray-50 dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-gray-100 dark:border-slate-700 mb-6 sm:mb-8 mt-2 text-left">
-                                <div className="flex items-center gap-3 text-left">
-                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight text-left">Active Visibility</span>
-                                </div>
-                                <Form.Item name="isActive" valuePropName="checked" noStyle>
-                                    <Switch size="small" className="sm:scale-110" />
-                                </Form.Item>
-                            </div>
+                            <Form.Item name="endDate" label={<span className="text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-widest text-left">End Date</span>} className="sm:col-span-2 text-left" >
+                                <DatePicker format="DD-MM-YYYY" className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl sm:rounded-2xl px-4 sm:px-5 font-bold focus:ring-primary-500 text-left [&_.ant-picker-input>input]:!h-12 sm:[&_.ant-picker-input>input]:!h-14" suffixIcon={<Calendar size={14} className="text-slate-400" />} />
+                            </Form.Item>
 
-                            <Button onClick={() => form.submit()} loading={addBanner.isPending || editBanner.isPending} className="w-full h-14 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 sm:text-lg bg-primary-600 hover:bg-primary-700 text-white font-black">
-                                <Save size={18} className="sm:w-5 sm:h-5" /> {isEditMode ? 'Update' : 'Deploy'} Banner
-                            </Button>
-                        </Form>
-                    </Card>
-                </div>
-
-                <div className="space-y-6 sm:space-y-8">
-                    <Card className="rounded-[24px] sm:rounded-[32px] border shadow-xl overflow-hidden p-6 sm:p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 min-h-[300px] sm:min-h-[400px] flex flex-col text-left">
-                        <div className="flex items-center gap-3 mb-6 sm:mb-8 text-left">
-                            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-white">
-                                <ImageIcon size={18} className="sm:w-5 sm:h-5" />
-                            </div>
-                            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Vantage Preview</h2>
-                        </div>
-                        
-                        <div className="flex-1 flex flex-col justify-center text-left">
-                            {imageUrl ? (
-                                <div className="space-y-4 sm:space-y-6 text-left">
-                                    <div className="aspect-[21/9] rounded-[24px] sm:rounded-[40px] overflow-hidden border-2 sm:border-4 border-gray-100 dark:border-white/10 shadow-2xl relative group">
-                                        <Image 
-                                            src={imageUrl} 
-                                            alt="Banner Preview" 
-                                            className="h-full w-full object-cover"
-                                            preview={false}
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                        <div className="absolute bottom-4 sm:bottom-6 left-5 sm:left-8 text-left pr-4">
-                                            <p className="text-[8px] sm:text-[10px] font-black text-white/60 uppercase tracking-[0.2em] mb-0.5 sm:mb-1 text-left">PROMOTION PREVIEW</p>
-                                            <h3 className="text-sm sm:text-lg font-black text-white uppercase tracking-tight line-clamp-1 text-left">{titleValue || 'UNTITLED BANNER'}</h3>
+                            <Form.Item name="image" label={<span className="font-bold text-slate-600 dark:text-slate-400 text-left">Image</span>} rules={[{ required: true, message: 'Image is required' }]} className="sm:col-span-2 text-left mb-0" >
+                                <div className="space-y-3">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                        <div>
+                                            <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Selected Image</p>
+                                            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Choose a single banner image.</p>
                                         </div>
+                                        <Button type="button" onClick={() => setIsUploadOpen(true)} className="h-11 px-5 rounded-xl font-bold flex items-center gap-2" variant="secondary" >
+                                            <ImageIcon size={16} /> Choose Image
+                                        </Button>
                                     </div>
-                                    <div className="p-3 sm:p-4 bg-gray-50 dark:bg-white/5 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 text-center">
-                                        <p className="text-[8px] sm:text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-widest leading-relaxed text-center">
-                                            Responsive asset rendering check.
-                                        </p>
+
+                                    <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4 overflow-visible">
+                                        {imageUrl ? (
+                                            <div className="relative h-44 sm:h-52 w-full rounded-3xl overflow-hidden bg-white dark:bg-slate-900 group shadow-lg shadow-black/10">
+                                                <button  type="button"  onClick={() => {  setActiveImage(imageUrl);  setIsImageModalOpen(true);  }}  className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity" >
+                                                    <div className="absolute inset-0 bg-black/20" />
+                                                    <div className="absolute inset-0 flex items-center justify-center">
+                                                        <div className="h-11 w-11 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                            <ImageIcon size={18} />
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                                <img src={imageUrl} alt="Selected banner" className="h-full w-full object-cover" />
+                                                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                                                <div className="absolute left-4 bottom-4 right-4 text-left text-white">
+                                                    <p className="text-[10px] uppercase tracking-[0.3em] font-black text-white/70">Banner preview</p>
+                                                    {titleValue ? (
+                                                        <h3 className="text-sm sm:text-base font-black uppercase tracking-tight line-clamp-1">{titleValue}</h3>
+                                                    ) : null}
+                                                    {subtitleValue ? (
+                                                        <p className="text-[11px] text-white/80 line-clamp-1 mt-1">{subtitleValue}</p>
+                                                    ) : null}
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => form.setFieldsValue({ image: '' })}
+                                                    className="absolute -top-0 -right-[-2px] z-20 h-8 w-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-red-600 flex items-center justify-center shadow"
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="text-xs text-slate-400 uppercase tracking-widest font-black">
+                                                No image selected
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 border-2 sm:border-4 border-dashed border-gray-200 dark:border-white/10 rounded-[24px] sm:rounded-[40px] text-center">
-                                    <div className="h-12 w-12 sm:h-20 sm:w-20 rounded-xl sm:rounded-[32px] flex items-center justify-center mb-3 sm:mb-4 bg-slate-100 text-slate-400 dark:bg-white/5 dark:text-white/20 animate-bounce">
-                                        <ImageIcon size={30} className="sm:w-10 sm:h-10" />
-                                    </div>
-                                    <h3 className="text-sm sm:text-lg font-black text-slate-400 dark:text-white/40 uppercase tracking-widest text-center">Asset Required</h3>
-                                    <p className="text-slate-400/80 dark:text-white/20 font-medium text-[10px] sm:text-sm max-w-[180px] sm:max-w-[200px] mt-1 sm:mt-2 text-center">Enter a valid URL to visualize composition.</p>
-                                </div>
-                            )}
+                            </Form.Item>
                         </div>
+
+                        <Button onClick={() => form.submit()} loading={addBanner.isPending || editBanner.isPending} className="w-full h-14 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 sm:text-lg bg-primary-600 hover:bg-primary-700 text-white font-black mt-6">
+                            <Save size={18} className="sm:w-5 sm:h-5" /> {isEditMode ? 'Update' : 'Deploy'} Banner
+                        </Button>
                     </Card>
                 </div>
-            </div>
+            </Form>
+
+            <UploadImage isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} multiple={false} onSelect={(items: UploadItem[]) => { const first = items[0]; if (first?.url || first?.path) {     form.setFieldsValue({ image: first.url || first.path }); } }} />
+
+            <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+                <div className="space-y-3">
+                    <div className="text-base font-black text-slate-900 dark:text-white">Banner Image</div>
+                    {activeImage ? (
+                        <div className="flex justify-center">
+                            <Image src={activeImage} alt="Banner image preview" preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        </div>
+                    ) : (
+                        <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                            No image available.
+                        </div>
+                    )}
+                </div>
+            </Modal>
         </div>
     );
 };
