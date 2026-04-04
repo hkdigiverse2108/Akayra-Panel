@@ -52,8 +52,8 @@ export const Mutations = {
   useDeleteBlog: () => useMutations([KEYS.BLOG.ALL, KEYS.BLOG.BASE], (id: string) => Delete(`${URL_KEYS.BLOG.BASE}/${id}`)),
 
   // ************ FAQ Category ***********
-  useAddFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Post(URL_KEYS.FAQ_CATEGORY.ADD, input)),
-  useEditFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Put(URL_KEYS.FAQ_CATEGORY.EDIT, input)),
+  useAddFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Post(URL_KEYS.FAQ_CATEGORY.ADD, input), { showSuccessToast: false }),
+  useEditFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (input: any) => Put(URL_KEYS.FAQ_CATEGORY.EDIT, input), { showSuccessToast: false }),
   useDeleteFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (id: string) => Delete(`${URL_KEYS.FAQ_CATEGORY.BASE}/${id}`)),
 
   // ************ FAQ ***********

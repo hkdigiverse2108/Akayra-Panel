@@ -74,10 +74,10 @@ const FAQCategoryManagement: React.FC = () => {
                                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16 hidden sm:table-cell">Sr. No.</th>
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
-                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('name')}>
+                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('title')}>
                                             Category Name
                                             <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
-                                                {getSortIcon('name')}
+                                                {getSortIcon('title')}
                                             </div>
                                         </div>
                                     </th>
@@ -104,19 +104,19 @@ const FAQCategoryManagement: React.FC = () => {
                                                     <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 font-black text-xs text-slate-400 shadow-sm transition-transform group-hover:scale-110 shrink-0">
                                                         <FolderTree size={16} className="sm:w-[18px] sm:h-[18px]" />
                                                     </div>
-                                                    <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize truncate max-w-[150px] sm:max-w-xs">{category.name}</p>
+                                                    <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize truncate max-w-[150px] sm:max-w-xs">{category.title}</p>
                                                 </div>
                                             </td>
-                                             <td className="px-4 sm:px-8 py-5 text-right">
+                                            <td className="px-4 sm:px-8 py-5 text-right">
                                                 <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                                                     <Tooltip title={category.isActive ? "Deactivate" : "Activate"}>
-                                                        <button 
-                                                            onClick={() => handleToggleStatus(category)} 
+                                                        <button
+                                                            onClick={() => handleToggleStatus(category)}
                                                             disabled={isActionLoading}
                                                             className={cn(
                                                                 "p-2 rounded-xl transition-all shadow-sm",
-                                                                category.isActive 
-                                                                    ? "text-emerald-500 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20" 
+                                                                category.isActive
+                                                                    ? "text-emerald-500 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20"
                                                                     : "text-slate-300 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
                                                             )}
                                                         >
@@ -124,16 +124,16 @@ const FAQCategoryManagement: React.FC = () => {
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
-                                                        <button 
-                                                            onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`)} 
+                                                        <button
+                                                            onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`, { state: { category } })}
                                                             className="p-2 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/10 dark:hover:bg-primary-500/20 text-primary-600 dark:text-primary-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Edit size={18} className="sm:w-5 sm:h-5" />
                                                         </button>
                                                     </Tooltip>
                                                     <Tooltip title="Delete">
-                                                        <button 
-                                                            onClick={() => handleDeleteClick(category._id)} 
+                                                        <button
+                                                            onClick={() => handleDeleteClick(category._id)}
                                                             className="p-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm"
                                                         >
                                                             <Trash2 size={18} className="sm:w-5 sm:h-5" />
@@ -159,11 +159,11 @@ const FAQCategoryManagement: React.FC = () => {
                                     <div className="h-16 w-16 mb-4 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 flex items-center justify-center text-primary-500 shadow-sm transition-transform group-hover:scale-110">
                                         <FolderTree size={24} />
                                     </div>
-                                    <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tighter mb-6">{category.name}</h3>
-                                    
+                                    <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tighter mb-6">{category.title}</h3>
+
                                     <div className="mt-auto flex items-center gap-2">
-                                        <button 
-                                            onClick={() => handleToggleStatus(category)} 
+                                        <button
+                                            onClick={() => handleToggleStatus(category)}
                                             disabled={isActionLoading}
                                             className={cn(
                                                 "h-10 w-10 rounded-xl flex items-center justify-center transition-all shadow-sm",
@@ -172,7 +172,7 @@ const FAQCategoryManagement: React.FC = () => {
                                         >
                                             {category.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                                         </button>
-                                        <button onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`)} className="h-10 w-10 bg-white dark:bg-slate-900 text-primary-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
+                                        <button onClick={() => navigate(`${ROUTES.FAQ_CATEGORIES}/edit/${category._id}`, { state: { category } })} className="h-10 w-10 bg-white dark:bg-slate-900 text-primary-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-primary-600 hover:text-white transition-all"><Edit size={16} /></button>
                                         <button onClick={() => handleDeleteClick(category._id)} className="h-10 w-10 bg-white dark:bg-slate-900 text-red-600 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-slate-800 hover:bg-red-600 hover:text-white transition-all"><Trash2 size={16} /></button>
                                     </div>
                                 </div>
@@ -191,7 +191,7 @@ const FAQCategoryManagement: React.FC = () => {
                 />
             </Card>
 
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
