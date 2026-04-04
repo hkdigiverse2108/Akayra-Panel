@@ -74,14 +74,15 @@ const ReviewManagement: React.FC = () => {
                                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16 hidden sm:table-cell">Sr. No.</th>
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
-                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('userId.fullName')}>
+                                        <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort('personName')}>
                                             User
                                             <div className="p-1 rounded-md bg-gray-100 dark:bg-slate-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
-                                                {getSortIcon('userId.fullName')}
+                                                {getSortIcon('personName')}
                                             </div>
                                         </div>
                                     </th>
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Product</th>
+                                    <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden lg:table-cell">Date</th>
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden xs:table-cell">Rating</th>
                                     <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 text-right">Actions</th>
                                 </tr>
@@ -89,11 +90,11 @@ const ReviewManagement: React.FC = () => {
                             <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-left">
                                 {loading && reviews.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading reviews...</td>
+                                        <td colSpan={6} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider animate-pulse">Loading reviews...</td>
                                     </tr>
                                 ) : reviews.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No reviews found.</td>
+                                        <td colSpan={6} className="px-8 py-20 text-center text-slate-400 font-bold italic tracking-wider">No reviews found.</td>
                                     </tr>
                                 ) : (
                                     reviews.map((review: any, index: number) => (
@@ -105,13 +106,15 @@ const ReviewManagement: React.FC = () => {
                                                 <div className="flex items-center gap-3 text-left">
                                                     <Avatar icon={<UserIcon size={14} />} className="bg-primary-50 dark:bg-primary-900/30 text-primary-600 shrink-0" />
                                                     <div className="text-left overflow-hidden">
-                                                        <p className="text-sm font-black text-slate-900 dark:text-white capitalize truncate max-w-[120px] sm:max-w-none">{review.userId?.fullName || 'Anonymous'}</p>
-                                                        <p className="text-[10px] font-bold text-slate-400 md:hidden truncate max-w-[120px]">{review.productId?.title || 'Unknown Product'}</p>
+                                                        <p className="text-sm font-black text-slate-900 dark:text-white capitalize truncate max-w-[120px] sm:max-w-none leading-none mb-1">{review.personName || 'Anonymous'}</p>
+                                                        <p className="text-[10px] font-bold text-slate-400 truncate max-w-[150px]">{review.email || 'No email provided'}</p>
+                                                        <p className="text-[10px] font-bold text-slate-400 md:hidden truncate max-w-[120px] mt-1">{review.productId?.title || 'Unknown Product'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 sm:px-8 py-5 text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-tighter truncate max-w-[150px] hidden md:table-cell">{review.productId?.title || 'Unknown Product'}</td>
-                                            <td className="px-4 sm:px-8 py-5 hidden xs:table-cell"><Rate disabled defaultValue={review.rating} className="text-yellow-500 scale-75 origin-left" /></td>
+                                            <td className="px-4 sm:px-8 py-5 text-[10px] sm:text-xs font-black text-slate-900 dark:text-white hidden lg:table-cell italic">{review.date ? new Date(review.date).toLocaleDateString('en-GB') : 'N/A'}</td>
+                                            <td className="px-4 sm:px-8 py-5 hidden xs:table-cell"><Rate disabled value={review.rating} className="text-yellow-500 scale-75 origin-left" /></td>
                                              <td className="px-4 sm:px-8 py-5 text-right">
                                                 <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                                                     <Tooltip title={review.isActive ? "Deactivate" : "Activate"}>
@@ -165,8 +168,9 @@ const ReviewManagement: React.FC = () => {
                                         <div className="flex items-center gap-3 text-left">
                                             <Avatar size={48} icon={<UserIcon size={24} />} className="bg-white dark:bg-slate-900 text-primary-600 shadow-sm ring-4 ring-primary-500/5 text-xs font-black uppercase tracking-widest text-[10px]" />
                                             <div className="text-left">
-                                                <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize leading-tight">{review.userId?.fullName || 'Anonymous'}</h3>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest line-clamp-1">{review.productId?.title || 'Verified Order'}</p>
+                                                <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize leading-tight">{review.personName || 'Anonymous'}</h3>
+                                                <p className="text-[10px] font-medium text-slate-500 truncate max-w-[120px] lowercase">{review.email}</p>
+                                                <p className="text-[9px] font-black text-primary-500 uppercase tracking-widest mt-0.5">{review.date ? new Date(review.date).toLocaleDateString('en-GB') : ''}</p>
                                             </div>
                                         </div>
                                         <button 
@@ -185,11 +189,11 @@ const ReviewManagement: React.FC = () => {
 
                                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-gray-50 dark:border-slate-700/50 flex flex-col flex-1 text-left">
                                         <div className="flex items-center gap-1 mb-3">
-                                            <Rate disabled defaultValue={review.rating} className="text-yellow-500 scale-75 origin-left" />
+                                            <Rate disabled value={review.rating} className="text-yellow-500 scale-75 origin-left" />
                                             <span className="text-xs font-black text-slate-300 ml-1">/ 5.0</span>
                                         </div>
                                         <p className="text-xs font-medium text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed italic flex-1 text-left">
-                                            "{review.comment || 'No textual feedback provided.'}"
+                                            "{review.description || review.comment || 'No textual feedback provided.'}"
                                         </p>
                                     </div>
 
