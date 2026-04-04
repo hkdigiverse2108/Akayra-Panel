@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, Shield } from 'lucide-react';
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, Shield, ImageIcon, X } from 'lucide-react';
 import { useManagementData } from '../Utils/Hooks/useManagementData';
 import TableToolbar from '../Components/TableToolbar';
 import TableFooter from '../Components/TableFooter';
 import ConfirmModal from '../Components/ConfirmModal';
 import { getSrNo } from '../Utils/tableUtils';
 import { cn } from '../Utils/cn';
-import { Image, Tooltip } from 'antd';
+import { Image, Tooltip, Modal } from 'antd';
 import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const BrandManagement: React.FC = () => {
     const navigate = useNavigate();
     const [viewType, setViewType] = useState<'grid' | 'list'>('list');
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
+    const [activeTitle, setActiveTitle] = useState<string>('');
+    const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
     const {
         items: brands,
@@ -42,6 +46,17 @@ const BrandManagement: React.FC = () => {
         idField: 'brandId',
         dataKey: 'brand_data',
     });
+
+    const handleImageError = (id: string | undefined) => {
+        if (!id) return;
+        setBrokenImages((prev) => ({ ...prev, [id]: true }));
+    };
+
+    const openImageModal = (imageUrl: string, title?: string) => {
+        setActiveImage(imageUrl);
+        setActiveTitle(title || 'Brand Logo');
+        setIsImageModalOpen(true);
+    };
 
     return (
         <div className="space-y-4 sm:space-y-8 animate-in fade-in duration-500">
@@ -102,8 +117,27 @@ const BrandManagement: React.FC = () => {
                                             <td className="px-4 sm:px-8 py-5">
                                                 <div className="flex items-center gap-3 sm:gap-4 text-left">
                                                     <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-110 shrink-0">
-                                                        {brand.image ? (
-                                                            <Image src={brand.image} alt={brand.name} className="h-full w-full object-contain p-1" preview={false} />
+                                                        {brand.image && !brokenImages[brand._id] ? (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => openImageModal(brand.image, brand.name || brand.title)}
+                                                                className="relative h-full w-full cursor-pointer group/thumb"
+                                                                title="View image"
+                                                            >
+                                                                <Image
+                                                                    src={brand.image}
+                                                                    alt={brand.name || brand.title}
+                                                                    className="h-full w-full object-contain p-1"
+                                                                    preview={false}
+                                                                    onError={() => handleImageError(brand._id)}
+                                                                />
+                                                                <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
+                                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                                                                    <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                                        <ImageIcon size={14} />
+                                                                    </div>
+                                                                </div>
+                                                            </button>
                                                         ) : (
                                                             <Shield className="text-slate-300" size={20} />
                                                         )}
@@ -161,8 +195,27 @@ const BrandManagement: React.FC = () => {
                             brands.map((brand: any) => (
                                 <div key={brand._id} className="group relative bg-gray-50/50 dark:bg-slate-800/30 rounded-3xl border border-gray-100 dark:border-slate-800 overflow-hidden hover:border-primary-500/30 transition-all flex flex-col items-center p-6 text-center shadow-sm">
                                     <div className="h-20 w-20 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center shadow-sm mb-4 transition-transform group-hover:scale-110 border border-gray-50 dark:border-slate-700">
-                                        {brand.image ? (
-                                            <Image src={brand.image} alt={brand.name} preview={false} className="h-full w-full object-contain p-2" />
+                                        {brand.image && !brokenImages[brand._id] ? (
+                                            <button
+                                                type="button"
+                                                onClick={() => openImageModal(brand.image, brand.name || brand.title)}
+                                                className="relative h-full w-full cursor-pointer group/thumb"
+                                                title="View image"
+                                            >
+                                                <Image
+                                                    src={brand.image}
+                                                    alt={brand.name || brand.title}
+                                                    preview={false}
+                                                    className="h-full w-full object-contain p-2"
+                                                    onError={() => handleImageError(brand._id)}
+                                                />
+                                                <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors" />
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
+                                                    <div className="h-8 w-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                        <ImageIcon size={16} />
+                                                    </div>
+                                                </div>
+                                            </button>
                                         ) : (
                                             <Shield className="text-slate-200" size={32} />
                                         )}
@@ -208,6 +261,21 @@ const BrandManagement: React.FC = () => {
                 loading={isActionLoading}
                 message="Are you sure you want to delete this brand?"
             />
+
+            <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose className="product-image-modal" >
+                <div className="space-y-3">
+                    <div className="text-base font-black text-slate-900 dark:text-white">{activeTitle}</div>
+                    {activeImage ? (
+                        <div className="flex justify-center">
+                            <Image src={activeImage} alt={activeTitle} preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        </div>
+                    ) : (
+                        <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                            No image available.
+                        </div>
+                    )}
+                </div>
+            </Modal>
         </div>
     );
 };

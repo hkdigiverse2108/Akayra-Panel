@@ -147,18 +147,18 @@ const BannerForm: React.FC = () => {
                 </div>
 
                 <div className="space-y-6 sm:space-y-8">
-                    <Card className="rounded-[24px] sm:rounded-[32px] border-0 shadow-xl overflow-hidden p-6 sm:p-8 bg-slate-950 text-white min-h-[300px] sm:min-h-[400px] flex flex-col text-left">
+                    <Card className="rounded-[24px] sm:rounded-[32px] border shadow-xl overflow-hidden p-6 sm:p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 min-h-[300px] sm:min-h-[400px] flex flex-col text-left">
                         <div className="flex items-center gap-3 mb-6 sm:mb-8 text-left">
-                            <div className="h-8 w-8 sm:h-10 sm:w-10 bg-white/10 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
+                            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-white">
                                 <ImageIcon size={18} className="sm:w-5 sm:h-5" />
                             </div>
-                            <h2 className="text-lg sm:text-xl font-black text-white tracking-tight text-left">Vantage Preview</h2>
+                            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight text-left">Vantage Preview</h2>
                         </div>
                         
                         <div className="flex-1 flex flex-col justify-center text-left">
                             {imageUrl ? (
                                 <div className="space-y-4 sm:space-y-6 text-left">
-                                    <div className="aspect-[21/9] rounded-[24px] sm:rounded-[40px] overflow-hidden border-2 sm:border-4 border-white/10 shadow-2xl relative group">
+                                    <div className="aspect-[21/9] rounded-[24px] sm:rounded-[40px] overflow-hidden border-2 sm:border-4 border-gray-100 dark:border-white/10 shadow-2xl relative group">
                                         <Image 
                                             src={imageUrl} 
                                             alt="Banner Preview" 
@@ -171,19 +171,19 @@ const BannerForm: React.FC = () => {
                                             <h3 className="text-sm sm:text-lg font-black text-white uppercase tracking-tight line-clamp-1 text-left">{titleValue || 'UNTITLED BANNER'}</h3>
                                         </div>
                                     </div>
-                                    <div className="p-3 sm:p-4 bg-white/5 rounded-xl sm:rounded-2xl border border-white/10 text-center">
-                                        <p className="text-[8px] sm:text-[10px] font-black text-white/40 uppercase tracking-widest leading-relaxed text-center">
+                                    <div className="p-3 sm:p-4 bg-gray-50 dark:bg-white/5 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 text-center">
+                                        <p className="text-[8px] sm:text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-widest leading-relaxed text-center">
                                             Responsive asset rendering check.
                                         </p>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 border-2 sm:border-4 border-dashed border-white/10 rounded-[24px] sm:rounded-[40px] text-center">
-                                    <div className="h-12 w-12 sm:h-20 sm:w-20 bg-white/5 rounded-xl sm:rounded-[32px] flex items-center justify-center text-white/20 mb-3 sm:mb-4 animate-bounce">
+                                <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 border-2 sm:border-4 border-dashed border-gray-200 dark:border-white/10 rounded-[24px] sm:rounded-[40px] text-center">
+                                    <div className="h-12 w-12 sm:h-20 sm:w-20 rounded-xl sm:rounded-[32px] flex items-center justify-center mb-3 sm:mb-4 bg-slate-100 text-slate-400 dark:bg-white/5 dark:text-white/20 animate-bounce">
                                         <ImageIcon size={30} className="sm:w-10 sm:h-10" />
                                     </div>
-                                    <h3 className="text-sm sm:text-lg font-black text-white/40 uppercase tracking-widest text-center">Asset Required</h3>
-                                    <p className="text-white/20 font-medium text-[10px] sm:text-sm max-w-[180px] sm:max-w-[200px] mt-1 sm:mt-2 text-center">Enter a valid URL to visualize composition.</p>
+                                    <h3 className="text-sm sm:text-lg font-black text-slate-400 dark:text-white/40 uppercase tracking-widest text-center">Asset Required</h3>
+                                    <p className="text-slate-400/80 dark:text-white/20 font-medium text-[10px] sm:text-sm max-w-[180px] sm:max-w-[200px] mt-1 sm:mt-2 text-center">Enter a valid URL to visualize composition.</p>
                                 </div>
                             )}
                         </div>

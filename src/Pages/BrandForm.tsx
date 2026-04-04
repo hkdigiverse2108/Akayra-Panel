@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Input, Divider, Breadcrumb } from 'antd';
 import { Queries } from '../Api/Queries';
 import { Mutations } from '../Api/Mutations';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Tag, Camera, Save, ArrowLeft } from 'lucide-react';
+import UploadImage from '../Components/UploadImage';
+import type { UploadItem } from '../Utils/Hooks/useUpload';
+import { Tag, Save, ArrowLeft, ImageIcon, X } from 'lucide-react';
 import { ROUTES } from '../Constants';
 import { toast } from 'react-toastify';
 
@@ -14,6 +16,8 @@ const BrandForm: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const isEditMode = !!id;
+    const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const watchedImage = Form.useWatch('image', form);
 
     // Queries
     const { data: brandResponse, isLoading: fetching } = Queries.useGetSingleBrand(id);
@@ -111,12 +115,42 @@ const BrandForm: React.FC = () => {
                                 name="image" 
                                 className="col-span-2 md:col-span-1 text-left mb-4 sm:mb-6"
                             >
-                                <Input 
-                                    size="large" 
-                                    prefix={<Camera size={16} className="mr-1 sm:mr-2 text-slate-400" />} 
-                                    placeholder="https://example.com/logo.jpg"
-                                    className="h-10 sm:h-12 rounded-lg sm:rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-primary-500 text-left" 
-                                />
+                                <div className="space-y-3">
+                                    {watchedImage ? (
+                                        <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <img
+                                                    src={watchedImage}
+                                                    alt="Brand"
+                                                    className="h-12 w-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700"
+                                                />
+                                                <span className="text-xs text-slate-600 dark:text-slate-300 truncate">
+                                                    {watchedImage}
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => form.setFieldsValue({ image: '' })}
+                                                className="h-8 w-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="text-xs text-slate-400 uppercase tracking-widest font-black">
+                                            No image selected
+                                        </div>
+                                    )}
+
+                                    <Button
+                                        type="button"
+                                        onClick={() => setIsUploadOpen(true)}
+                                        className="h-11 px-5 rounded-xl font-bold flex items-center gap-2"
+                                        variant="secondary"
+                                    >
+                                        <ImageIcon size={16} /> Choose Image
+                                    </Button>
+                                </div>
                             </Form.Item>
                         </div>
 
@@ -139,6 +173,8 @@ const BrandForm: React.FC = () => {
                     </Form>
                 </div>
             </Card>
+
+            <UploadImage isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} multiple={false} onSelect={(items: UploadItem[]) => { const first = items[0]; if (first?.url || first?.path) {     form.setFieldsValue({ image: first.url || first.path }); } }} />
         </div>
     );
 };

@@ -161,23 +161,23 @@ const ReviewForm: React.FC = () => {
                 </div>
 
                 <div className="space-y-8">
-                    <Card className="rounded-[32px] border-0 shadow-xl overflow-hidden p-8 bg-slate-950 text-white min-h-[400px]">
+                    <Card className="rounded-[32px] border shadow-xl overflow-hidden p-8 bg-white text-slate-900 dark:bg-slate-950 dark:text-white border-gray-100 dark:border-white/10 min-h-[400px]">
                         <div className="flex items-center gap-3 mb-12">
-                            <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
+                            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-white">
                                 <User size={20} />
                             </div>
-                            <h2 className="text-xl font-black text-white tracking-tight">Contextual Linkage</h2>
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Contextual Linkage</h2>
                         </div>
 
                         <div className="space-y-10">
                             <Form.Item
                                 name="userId"
-                                label={<div className="flex items-center gap-2 mb-2"><User size={14} className="text-white/40" /><span className="text-xs font-black text-white/40 uppercase tracking-widest">Reviewing User</span></div>}
+                                label={<div className="flex items-center gap-2 mb-2"><User size={14} className="text-slate-400 dark:text-white/40" /><span className="text-xs font-black text-slate-400 dark:text-white/40 uppercase tracking-widest">Reviewing User</span></div>}
                                 rules={[{ required: true, message: 'User is required' }]}
                             >
                                 <Select 
                                     placeholder="Select User" 
-                                    className="custom-select-dark h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-white/20"
+                                    className="custom-select h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-gray-50 [&_.ant-select-selector]:!border-gray-200 dark:[&_.ant-select-selector]:!bg-white/5 dark:[&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-slate-700 dark:[&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-slate-400 dark:[&_.ant-select-selection-placeholder]:text-white/20"
                                     showSearch
                                     filterOption={(input, option) => 
                                         (option?.label as string || '').toLowerCase().includes(input.toLowerCase())
@@ -196,12 +196,12 @@ const ReviewForm: React.FC = () => {
 
                             <Form.Item
                                 name="productId"
-                                label={<div className="flex items-center gap-2 mb-2"><ShoppingBag size={14} className="text-white/40" /><span className="text-xs font-black text-white/40 uppercase tracking-widest">Subject Product</span></div>}
+                                label={<div className="flex items-center gap-2 mb-2"><ShoppingBag size={14} className="text-slate-400 dark:text-white/40" /><span className="text-xs font-black text-slate-400 dark:text-white/40 uppercase tracking-widest">Subject Product</span></div>}
                                 rules={[{ required: true, message: 'Product is required' }]}
                             >
                                 <Select 
                                     placeholder="Select Product" 
-                                    className="custom-select-dark h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-white/20"
+                                    className="custom-select h-12 [&_.ant-select-selector]:!rounded-2xl [&_.ant-select-selector]:!bg-gray-50 [&_.ant-select-selector]:!border-gray-200 dark:[&_.ant-select-selector]:!bg-white/5 dark:[&_.ant-select-selector]:!border-white/10 [&_.ant-select-selection-item]:text-slate-700 dark:[&_.ant-select-selection-item]:text-white [&_.ant-select-selection-placeholder]:text-slate-400 dark:[&_.ant-select-selection-placeholder]:text-white/20"
                                     showSearch
                                     filterOption={(input, option) => 
                                         (option?.label as string || '').toLowerCase().includes(input.toLowerCase())
@@ -218,8 +218,8 @@ const ReviewForm: React.FC = () => {
                                 </Select>
                             </Form.Item>
 
-                            <div className="p-8 bg-white/5 rounded-[40px] border border-white/10 text-center mt-auto">
-                                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] leading-relaxed">
+                            <div className="p-8 bg-gray-50 dark:bg-white/5 rounded-[40px] border border-gray-100 dark:border-white/10 text-center mt-auto">
+                                <p className="text-[10px] font-black text-slate-400 dark:text-white/30 uppercase tracking-[0.2em] leading-relaxed">
                                     Linking internal entities ensures data integrity across the customer feedback ecosystem.
                                 </p>
                             </div>

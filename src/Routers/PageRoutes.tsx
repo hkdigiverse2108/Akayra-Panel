@@ -44,6 +44,26 @@ const FaqForm = lazy(() => import("../Pages/FaqForm"));
 const FaqCategoryManagement = lazy(() => import("../Pages/FaqCategoryManagement"));
 const FaqCategoryForm = lazy(() => import("../Pages/FaqCategoryForm"));
 
+//contact inquiry 
+const ContactManagement = lazy(() => import("../Pages/ContactManagement"));
+const NewsletterManagement = lazy(() => import("../Pages/NewsletterManagement"));
+
+//Coupons
+const CouponManagement = lazy(() => import("../Pages/CouponManagement"));
+const CouponForm = lazy(() => import("../Pages/CouponForm"));
+
+// IG Posts
+const IgPostManagement = lazy(() => import("../Pages/IgPostManagement"));
+const IgPostForm = lazy(() => import("../Pages/IgPostForm"));
+
+// About Management
+const AboutManagement = lazy(() => import("../Pages/AboutManagement"));
+const AboutForm = lazy(() => import("../Pages/AboutForm"));
+
+//Policy Management
+const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
+const SettingsManagement = lazy(() => import("../Pages/SettingsManagement"));
+
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
     <div className="relative">
@@ -116,27 +136,29 @@ const PageRoutes: React.FC = () => {
           <Route path={`${ROUTES.COLORS}/add`} element={<ColorForm />} />
           <Route path={`${ROUTES.COLORS}/edit/:id`} element={<ColorForm />} />
 
-          {/* General Management (Coming Soon placeholders) */}
-          {[
-            { path: ROUTES.NEWSLETTER, label: "Newsletter Management" },
-            { path: ROUTES.CONTACT, label: "Contact Inquiries" },
-            { path: ROUTES.COUPONS, label: "Coupon Management" },
-            { path: ROUTES.POLICIES, label: "Policy Management" },
-            { path: ROUTES.ABOUT, label: "About Us Content" },
-            { path: ROUTES.IG_POSTS, label: "Instagram Posts" },
-            { path: ROUTES.SETTINGS, label: "Account Settings" },
-          ].map((item) => (
-            <Route
-              key={item.path}
-              path={item.path}
-              element={
-                <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-3xl shadow-xl min-h-[400px] flex flex-col items-center justify-center">
-                  <h2 className="text-2xl font-black mb-2">{item.label}</h2>
-                  <p className="text-slate-500">Coming Soon: Standardizing this module with TanStack Query.</p>
-                </div>
-              }
-            />
-          ))}
+          {/*Contact Inquiries*/}
+          <Route path={ROUTES.CONTACT} element={<ContactManagement />} />
+          <Route path={ROUTES.NEWSLETTER} element={<NewsletterManagement />} />
+          <Route path={ROUTES.COUPONS} element={<CouponManagement />} />
+          <Route path={`${ROUTES.COUPONS}/add`} element={<CouponForm />} />
+          <Route path={`${ROUTES.COUPONS}/edit/:id`} element={<CouponForm />} />
+
+          {/* IG Posts */}
+          <Route path={ROUTES.IG_POSTS} element={<IgPostManagement />} />
+          <Route path={`${ROUTES.IG_POSTS}/add`} element={<IgPostForm />} />
+          <Route path={`${ROUTES.IG_POSTS}/edit/:id`} element={<IgPostForm />} />
+
+          {/* About Management */}
+          <Route path={ROUTES.ABOUT} element={<AboutManagement />} />
+          <Route path={`${ROUTES.ABOUT}/add`} element={<AboutForm />} />
+          <Route path={`${ROUTES.ABOUT}/edit/:id`} element={<AboutForm />} />
+
+          {/* Policy Management */}
+          <Route path={ROUTES.POLICIES} element={<PolicyMangement />} />
+          <Route path={`${ROUTES.POLICIES}/edit/:id`} element={<PolicyMangement />} />
+
+          {/* Settings */}
+          <Route path={ROUTES.SETTINGS} element={<SettingsManagement />} />
         </Route>
       </Route>
 
