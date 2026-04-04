@@ -6,7 +6,7 @@ import { getAuthHeader, Storage } from "../../Utils";
 let isRedirecting = false;
 
 export async function Get<T>(url: string, params?: any, headers?: Record<string, string>): Promise<T> {
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/'; // Default backup
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/"; // Default backup
   const config: AxiosRequestConfig = {
     method: "GET",
     headers: {

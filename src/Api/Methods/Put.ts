@@ -25,8 +25,6 @@ export async function Put<T>(url: string, data?: any, headers?: Record<string, s
       isRedirecting = true;
       window.location.href = ROUTES.LOGIN;
       setTimeout(() => (isRedirecting = false), 1000);
-    } else {
-      ShowNotification(ErrorMessage(error), "error");
     }
     throw error;
   }

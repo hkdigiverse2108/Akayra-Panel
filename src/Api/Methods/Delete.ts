@@ -25,8 +25,6 @@ export async function Delete<T>(url: string, headers?: Record<string, string>): 
       isRedirecting = true;
       window.location.href = ROUTES.LOGIN;
       setTimeout(() => (isRedirecting = false), 1000);
-    } else {
-      ShowNotification(ErrorMessage(error), "error");
     }
     throw error;
   }
