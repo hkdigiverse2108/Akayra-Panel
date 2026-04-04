@@ -84,10 +84,6 @@ const PolicyMangement: React.FC = () => {
           navigate(ROUTES.POLICIES);
         }
       },
-      onError: (err: any) => {
-        // error toast already handled globally in useMutations
-        console.error(err);
-      },
     });
   };
 

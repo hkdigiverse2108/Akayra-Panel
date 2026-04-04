@@ -57,9 +57,6 @@ const UserForm: React.FC = () => {
                     navigate(ROUTES.USERS);
                 }
             },
-            onError: (err: any) => {
-                toast.error(err?.response?.data?.message || 'Something went wrong');
-            }
         });
     };
 

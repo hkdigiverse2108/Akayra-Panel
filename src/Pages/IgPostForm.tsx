@@ -54,9 +54,6 @@ const IgPostForm: React.FC = () => {
           navigate(ROUTES.IG_POSTS);
         }
       },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} IG post`);
-      }
     });
   };
 

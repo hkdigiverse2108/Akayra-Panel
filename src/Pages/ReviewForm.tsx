@@ -56,9 +56,6 @@ const ReviewForm: React.FC = () => {
                     navigate(ROUTES.REVIEWS);
                 }
             },
-            onError: (err: any) => {
-                toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} review`);
-            }
         });
     };
 

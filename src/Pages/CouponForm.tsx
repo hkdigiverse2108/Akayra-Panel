@@ -76,9 +76,6 @@ const CouponForm: React.FC = () => {
           navigate(ROUTES.COUPONS);
         }
       },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} coupon`);
-      }
     });
   };
 

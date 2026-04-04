@@ -57,9 +57,7 @@ const BlogForm: React.FC = () => {
                     navigate(ROUTES.BLOGS);
                 }
             },
-            onError: (err: any) => {
-                toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} blog`);
-            }
+
         });
     };
 

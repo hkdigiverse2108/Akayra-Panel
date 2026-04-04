@@ -56,9 +56,6 @@ const AboutForm: React.FC = () => {
           navigate(ROUTES.ABOUT);
         }
       },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} about section`);
-      }
     });
   };
 

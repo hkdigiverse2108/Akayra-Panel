@@ -39,9 +39,6 @@ const SizeForm: React.FC = () => {
                     navigate(ROUTES.SIZES);
                 }
             },
-            onError: (err: any) => {
-                toast.error(err?.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'add'} size`);
-            }
         });
     };
 
