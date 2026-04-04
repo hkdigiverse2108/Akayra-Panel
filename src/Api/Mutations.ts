@@ -42,8 +42,8 @@ export const Mutations = {
   useDeleteReview: () =>  useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (id: string) => Delete(`${URL_KEYS.REVIEW.BASE}/${id}`)),
 
   // ************ Banner ***********
-  useAddBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input)),
-  useEditBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Put(URL_KEYS.BANNER.EDIT, input)),
+  useAddBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input) , { showSuccessToast: false }),
+  useEditBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Put(URL_KEYS.BANNER.EDIT, input), { showSuccessToast: false }),
   useDeleteBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (id: string) => Delete(`${URL_KEYS.BANNER.BASE}/${id}`)),
 
   // ************ Blog ***********

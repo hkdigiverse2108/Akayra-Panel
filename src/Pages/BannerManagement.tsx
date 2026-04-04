@@ -2,41 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../Components/Card';
 import Button from '../Components/Button';
-import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ImageIcon } from 'lucide-react';
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, ImageIcon, X } from 'lucide-react';
 import { useManagementData } from '../Utils/Hooks/useManagementData';
 import TableToolbar from '../Components/TableToolbar';
 import TableFooter from '../Components/TableFooter';
 import ConfirmModal from '../Components/ConfirmModal';
 import { getSrNo } from '../Utils/tableUtils';
 import { cn } from '../Utils/cn';
-import { Image, Tooltip } from 'antd';
+import { Image, Tooltip, Modal } from 'antd';
 import { KEYS, URL_KEYS, ROUTES } from '../Constants';
 
 const BannerManagement: React.FC = () => {
     const navigate = useNavigate();
     const [viewType, setViewType] = useState<'grid' | 'list'>('list');
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
 
-    const {
-        items: banners,
-        loading,
-        total,
-        currentPage,
-        pageSize,
-        searchTerm,
-        activeFilter,
-        setSearchTerm,
-        setCurrentPage,
-        setPageSize,
-        setActiveFilter,
-        handleDeleteClick,
-        confirmDelete,
-        handleToggleStatus,
-        isDeleteModalOpen,
-        setIsDeleteModalOpen,
-        isActionLoading,
-        toggleSort,
-        getSortIcon
-    } = useManagementData({
+    const { items: banners, loading, total, currentPage, pageSize, searchTerm, activeFilter, setSearchTerm, setCurrentPage, setPageSize, setActiveFilter, handleDeleteClick, confirmDelete, handleToggleStatus, isDeleteModalOpen, setIsDeleteModalOpen, isActionLoading, toggleSort, getSortIcon } = useManagementData({
         resourceKey: KEYS.BANNER.ALL,
         resourceUrl: URL_KEYS.BANNER.ALL,
         idField: 'bannerId',
@@ -56,16 +38,7 @@ const BannerManagement: React.FC = () => {
             </div>
 
             <Card className="!p-0 overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl border-0 bg-white dark:bg-slate-900">
-                <TableToolbar
-                    searchTerm={searchTerm}
-                    onSearchChange={setSearchTerm}
-                    placeholder="Search banners..."
-                    activeFilter={activeFilter}
-                    onActiveFilterChange={setActiveFilter}
-                    showViewToggle
-                    viewType={viewType}
-                    onViewTypeChange={setViewType}
-                />
+                <TableToolbar searchTerm={searchTerm} onSearchChange={setSearchTerm} placeholder="Search banners..." activeFilter={activeFilter} onActiveFilterChange={setActiveFilter} showViewToggle viewType={viewType} onViewTypeChange={setViewType} />
 
                 {viewType === 'list' ? (
                     <div className="overflow-x-auto scrollbar-hide">
@@ -102,21 +75,36 @@ const BannerManagement: React.FC = () => {
                                             </td>
                                             <td className="px-4 sm:px-8 py-5">
                                                 <div className="flex items-center gap-3 sm:gap-4 text-left">
-                                                    <div className="h-10 w-20 sm:h-12 sm:w-24 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-105 shrink-0">
+                                                    <div className="relative h-10 w-20 sm:h-12 sm:w-24 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-gray-100 dark:border-slate-700 shadow-sm transition-transform group-hover:scale-105 shrink-0 group/image">
                                                         {banner.image ? (
-                                                            <Image src={banner.image} alt={banner.title} className="h-full w-full object-cover" preview={false} />
+                                                            <>
+                                                                <Image src={banner.image} alt={banner.title} className="h-full w-full object-cover" preview={false} />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setActiveImage(banner.image);
+                                                                        setIsImageModalOpen(true);
+                                                                    }}
+                                                                    className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity group-hover/image:bg-black/30 group-hover/image:opacity-100"
+                                                                    aria-label="View image"
+                                                                >
+                                                                    <div className="h-9 w-9 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow">
+                                                                        <ImageIcon size={18} />
+                                                                    </div>
+                                                                </button>
+                                                            </>
                                                         ) : (
                                                             <ImageIcon className="text-slate-300" size={20} />
                                                         )}
                                                     </div>
                                                     <div className="text-left overflow-hidden">
                                                         <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize truncate max-w-[150px] sm:max-w-xs">{banner.title}</p>
-                                                        <p className="text-[10px] font-bold text-slate-400 truncate mt-1 md:hidden max-w-[150px]">{banner.url || 'Promotion'}</p>
+                                                        <p className="text-[10px] font-bold text-slate-400 truncate mt-1 md:hidden max-w-[150px]">{banner.pageRedirection || banner.ctaButtonRedirection || 'Promotion'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 sm:px-8 py-5 text-[10px] sm:text-xs font-bold text-slate-400 truncate max-w-[150px] italic underline hidden md:table-cell">
-                                                {banner.url || 'Promotion'}
+                                                {banner.pageRedirection || banner.ctaButtonRedirection || 'Promotion'}
                                             </td>
                                              <td className="px-4 sm:px-8 py-5 text-right">
                                                 <div className="flex items-center justify-end gap-1.5 sm:gap-2">
@@ -177,7 +165,7 @@ const BannerManagement: React.FC = () => {
                                     <div className="flex items-center justify-between gap-4 text-left">
                                         <div className="text-left">
                                             <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tight line-clamp-1">{banner.title}</h3>
-                                            <p className="text-[10px] font-bold text-slate-400 truncate max-w-[150px]">{banner.url || 'Promotion'}</p>
+                                            <p className="text-[10px] font-bold text-slate-400 truncate max-w-[150px]">{banner.pageRedirection || banner.ctaButtonRedirection || 'Promotion'}</p>
                                         </div>
                                         
                                          <div className="flex items-center gap-1 shrink-0">
@@ -203,23 +191,25 @@ const BannerManagement: React.FC = () => {
                     </div>
                 )}
 
-                <TableFooter
-                    currentPage={currentPage}
-                    pageSize={pageSize}
-                    total={total}
-                    onPageChange={setCurrentPage}
-                    onPageSizeChange={setPageSize}
-                    resourceName="banners"
-                />
+                <TableFooter currentPage={currentPage} pageSize={pageSize} total={total} onPageChange={setCurrentPage} onPageSizeChange={setPageSize} resourceName="banners" />
             </Card>
 
-            <ConfirmModal 
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={confirmDelete}
-                loading={isActionLoading}
-                message="Are you sure you want to delete this banner?"
-            />
+            <Modal open={isImageModalOpen} onCancel={() => setIsImageModalOpen(false)} footer={null} centered closable closeIcon={<X size={16} />} width={520} destroyOnClose >
+                <div className="space-y-3">
+                    <div className="text-base font-black text-slate-900 dark:text-white">Banner Image</div>
+                    {activeImage ? (
+                        <div className="flex justify-center">
+                            <Image src={activeImage} alt="Banner image preview" preview={false} className="rounded-2xl object-contain max-h-[60vh] max-w-full" />
+                        </div>
+                    ) : (
+                        <div className="h-48 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                            No image available.
+                        </div>
+                    )}
+                </div>
+            </Modal>
+
+            <ConfirmModal  isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} loading={isActionLoading} message="Are you sure you want to delete this banner? This action cannot be undone." />
         </div>
     );
 };
