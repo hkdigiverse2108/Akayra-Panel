@@ -107,13 +107,13 @@ const FAQManagement: React.FC = () => {
                                                     </div>
                                                     <div className="text-left overflow-hidden">
                                                         <p className="text-sm font-black text-slate-900 dark:text-white leading-none capitalize truncate max-w-[200px] sm:max-w-xs">{faq.question}</p>
-                                                        <p className="text-[10px] font-bold text-primary-500 xs:hidden mt-1">{faq.faqCategoryId?.name || 'General'}</p>
+                                                        <p className="text-[10px] font-bold text-primary-500 xs:hidden mt-1">{faq.faqCategoryId?.title || 'General'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 sm:px-8 py-5 hidden xs:table-cell">
                                                 <Tag className="border-0 bg-primary-50 dark:bg-primary-900/20 text-[10px] font-black text-primary-600 uppercase tracking-widest px-3 rounded-full">
-                                                    {faq.faqCategoryId?.name || 'General'}
+                                                    {faq.faqCategoryId?.title || 'General'}
                                                 </Tag>
                                             </td>
                                             <td className="px-4 sm:px-8 py-5 text-right">
@@ -173,7 +173,7 @@ const FAQManagement: React.FC = () => {
                                             <div className="flex items-center gap-3 text-left">
                                                 <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tight leading-tight">{faq.question}</h3>
                                                 <Tag className="border-0 bg-primary-50 dark:bg-primary-900/20 text-[10px] font-black text-primary-600 uppercase tracking-widest px-3 rounded-full">
-                                                    {faq.faqCategoryId?.name || 'General'}
+                                                    {faq.faqCategoryId?.title || 'General'}
                                                 </Tag>
                                             </div>
                                             <p className="text-xs font-medium text-slate-500 dark:text-slate-400 italic leading-relaxed flex-1 text-left">"{faq.answer}"</p>

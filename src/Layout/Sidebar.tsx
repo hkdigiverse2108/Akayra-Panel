@@ -10,58 +10,8 @@ import { useTheme } from '../Context/ThemeContext';
 import { cn } from '../Utils/cn';
 import ConfirmModal from '../Components/ConfirmModal';
 
-interface SubMenuItem {
-  label: string;
-  path: string;
-  icon: React.ReactNode;
-}
+import { menuItems, MenuItem, SubMenuItem } from './MenuItems';
 
-interface MenuItem {
-  label: string;
-  icon: React.ReactNode;
-  path?: string; // Optional if it has subItems
-  subItems?: SubMenuItem[];
-}
-
-const menuItems: MenuItem[] = [
-  { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/dashboard' },
-  { icon: <Users size={20} />, label: 'Users', path: '/users' },
-  {
-    icon: <Package size={20} />,
-    label: 'Inventory',
-    subItems: [
-      { label: 'Products', path: '/products', icon: <Package size={16} /> },
-      { label: 'Categories', path: '/categories', icon: <Layers size={16} /> },
-      { label: 'Brands', path: '/brands', icon: <Tag size={16} /> },
-      { label: 'Sizes', path: '/sizes', icon: <Ruler size={16} /> },
-      { label: 'Colors', path: '/colors', icon: <Palette size={16} /> },
-    ]
-  },
-  { icon: <Image size={20} />, label: 'Banners', path: '/banners' },
-  { icon: <FileText size={20} />, label: 'Blogs', path: '/blogs' },
-  { icon: <MessageSquare size={20} />, label: 'Reviews', path: '/reviews' },
-  {
-    icon: <HelpCircle size={20} />,
-    label: 'Support',
-    subItems: [
-      { label: 'FAQs', path: '/faqs', icon: <HelpCircle size={16} /> },
-      { label: 'FAQ Categories', path: '/faq-categories', icon: <ListTree size={16} /> },
-      { label: 'Contact Inquiries', path: '/contact', icon: <Mail size={16} /> },
-      { label: 'Newsletter', path: '/newsletter', icon: <Send size={16} /> },
-    ]
-  },
-  {
-    icon: <TrendingUp size={20} />,
-    label: 'Marketing',
-    subItems: [
-      { label: 'Coupons', path: '/coupons', icon: <Ticket size={16} /> },
-      { label: 'IG Posts', path: '/ig-posts', icon: <Instagram size={16} /> },
-    ]
-  },
-  { icon: <ShieldCheck size={20} />, label: 'Policies', path: '/policies' },
-  { icon: <Info size={20} />, label: 'About Us', path: '/about' },
-  { icon: <Settings size={20} />, label: 'Settings', path: '/settings' },
-];
 
 const Sidebar: React.FC = () => {
   const { logout } = useAuth();

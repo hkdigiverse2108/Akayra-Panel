@@ -12,7 +12,7 @@ import { STORAGE_KEYS } from '../Constants/StorageKeys';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
-  const { mode, toggleMode, toggleSidebarMobile } = useTheme();
+  const { mode, toggleMode, toggleSidebarMobile, layout } = useTheme();
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
@@ -45,6 +45,18 @@ const Header: React.FC = () => {
         <button  onClick={toggleSidebarMobile} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg lg:hidden" >
           <Menu className="text-gray-600 dark:text-slate-400" size={20} />
         </button>
+
+        {/* Logo for Horizontal Layout */}
+        {layout === 'horizontal' && (
+          <div className="flex items-center gap-3 mr-4 cursor-pointer hidden lg:flex" onClick={() => navigate(ROUTES.DASHBOARD)}>
+            <div className="h-8 w-8 rounded-lg bg-primary-500 flex items-center justify-center text-white font-bold shrink-0">
+              A
+            </div>
+            <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight whitespace-nowrap">
+              Akayra Panel
+            </span>
+          </div>
+        )}
         
         <div className="relative max-w-md w-full hidden md:block">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -150,3 +162,6 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+
+

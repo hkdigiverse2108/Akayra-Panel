@@ -27,13 +27,13 @@ export const Mutations = {
   useDeleteBrand: () => useMutations([KEYS.BRAND.ALL, KEYS.BRAND.BASE], (id: string) => Delete(`${URL_KEYS.BRAND.BASE}/${id}`)),
 
   // ************ Size ***********
-  useAddSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Post(URL_KEYS.SIZE.ADD, input)),
-  useEditSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Put(URL_KEYS.SIZE.EDIT, input)),
+  useAddSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Post(URL_KEYS.SIZE.ADD, input), { showSuccessToast: false }),
+  useEditSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (input: any) => Put(URL_KEYS.SIZE.EDIT, input), { showSuccessToast: false }),
   useDeleteSize: () => useMutations([KEYS.SIZE.ALL, KEYS.SIZE.BASE], (id: string) => Delete(`${URL_KEYS.SIZE.BASE}/${id}`)),
 
   // ************ Color ***********
-  useAddColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Post(URL_KEYS.COLOR.ADD, input)),
-  useEditColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Put(URL_KEYS.COLOR.EDIT, input)),
+  useAddColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Post(URL_KEYS.COLOR.ADD, input), { showSuccessToast: false }),
+  useEditColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (input: any) => Put(URL_KEYS.COLOR.EDIT, input), { showSuccessToast: false }),
   useDeleteColor: () => useMutations([KEYS.COLOR.ALL, KEYS.COLOR.BASE], (id: string) => Delete(`${URL_KEYS.COLOR.BASE}/${id}`)),
 
   // ************ Product ***********
@@ -88,11 +88,11 @@ export const Mutations = {
   useAddAboutSection: () => useMutations([KEYS.ABOUT.ALL, KEYS.ABOUT.BASE], (input: any) => Post(URL_KEYS.ABOUT.ADD, input), { showSuccessToast: false }),
 
   //************* Policy ***********
-  useAddPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Post(URL_KEYS.POLICY.ADD, input)),
-  useEditPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Put(URL_KEYS.POLICY.EDIT, input)),
+  useAddPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Post(URL_KEYS.POLICY.ADD, input), { showSuccessToast: false }),
+  useEditPolicy: () => useMutations([KEYS.POLICY.ALL, KEYS.POLICY.BASE, KEYS.POLICY.BY_TYPE], (input: any) => Put(URL_KEYS.POLICY.EDIT, input), { showSuccessToast: false }),
 
   //************* Settings ***********
-  useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input)),
+  useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input), { showSuccessToast: false }),
 
   //************* Upload ***********
   useUploadImage: () => useMutations([KEYS.UPLOAD.BASE], (input: FormData) =>   Post(URL_KEYS.UPLOAD.IMAGE, input, { "Content-Type": "multipart/form-data" }) ),

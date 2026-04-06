@@ -41,6 +41,7 @@ const FAQCategoryManagement: React.FC = () => {
         resourceUrl: URL_KEYS.FAQ_CATEGORY.ALL,
         idField: 'faqCategoryId',
         dataKey: 'faq_category_data',
+        useActiveFilter: false,
     });
 
     return (
