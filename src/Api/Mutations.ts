@@ -8,6 +8,8 @@ export const Mutations = {
   // ************ Auth ***********
   useLogin: () =>  useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
   useChangePassword: () => {const queryClient = useQueryClient();return useMutation<any, CombinedErrorResponse, any>({  mutationFn: (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input),  onSuccess: () => {    queryClient.invalidateQueries({ queryKey: [KEYS.USER.BASE] });  },});},
+  useForgotPassword: () => useMutations([], (input: any) => Post(URL_KEYS.AUTH.FORGOT_PASSWORD, input), { showSuccessToast: false, showErrorToast: false, retry: 0 }),
+  useResetPassword: () => useMutations([], (input: any) => Post(URL_KEYS.AUTH.RESET_PASSWORD, input), { showSuccessToast: false, showErrorToast: false, retry: 0 }),
 
   // ************ User ***********
   useAddUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input)),

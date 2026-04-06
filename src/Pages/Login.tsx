@@ -52,29 +52,17 @@ const Login: React.FC = () => {
                         <div className="space-y-4">
                             <div className="space-y-1.5">
                                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1">Email Address</label>
-                                <Input
-                                    size="large"
-                                    placeholder="admin@akayra.com"
-                                    prefix={<Mail className="text-gray-400 mr-2" size={18} />}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium"
-                                />
+                                <Input size="large" placeholder="admin@akayra.com" prefix={<Mail className="text-gray-400 mr-2" size={18} />} value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium" />
                             </div>
 
                             <div className="space-y-1.5">
                                 <div className="flex items-center justify-between mb-1">
                                     <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1">Password</label>
-                                    <a href="#" className="text-xs font-bold text-primary-500 hover:text-primary-600 transition-colors">Forgot Password?</a>
+                                    <button type="button" onClick={() => navigate(ROUTES.FORGOT_PASSWORD)} className="text-xs font-bold text-primary-500 hover:text-primary-600 transition-colors" >
+                                        Forgot Password?
+                                    </button>
                                 </div>
-                                <Input.Password
-                                    size="large"
-                                    placeholder="••••••••"
-                                    prefix={<Lock className="text-gray-400 mr-2" size={18} />}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium"
-                                />
+                                <Input.Password size="large" placeholder="••••••••" prefix={<Lock className="text-gray-400 mr-2" size={18} />} value={password} onChange={(e) => setPassword(e.target.value)} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium" />
                             </div>
                         </div>
 

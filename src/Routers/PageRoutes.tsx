@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import PrivateRoutes from "./PrivateRoutes";
@@ -6,6 +6,7 @@ import { ROUTES } from "../Constants";
 
 // Lazy Load Pages
 const Login = lazy(() => import("../Pages/Login"));
+const ForgotPassword = lazy(() => import("../Pages/ForgotPassword"));
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 
 // User Management
@@ -78,9 +79,11 @@ const LoadingFallback = () => (
 
 const PageRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path={ROUTES.LOGIN} element={<Login />} />
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        {/* Public Routes */}
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
 
       {/* Protected Routes */}
       <Route element={<PrivateRoutes />}>
@@ -169,8 +172,9 @@ const PageRoutes: React.FC = () => {
       </Route>
 
       {/* Catch all */}
-      <Route path="*" element={<div className="flex items-center justify-center h-screen bg-slate-950 text-white font-bold text-3xl">404 - Page Not Found</div>} />
-    </Routes>
+        <Route path="*" element={<div className="flex items-center justify-center h-screen bg-slate-950 text-white font-bold text-3xl">404 - Page Not Found</div>} />
+      </Routes>
+    </Suspense>
   );
 };
 
