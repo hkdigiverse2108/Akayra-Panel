@@ -64,6 +64,7 @@ const FAQManagement: React.FC = () => {
               <thead>
                 <tr className="bg-gray-50/50 dark:bg-slate-800/30">
                   <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 w-16 hidden sm:table-cell">Sr. No.</th>
+                  <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 hidden md:table-cell">Priority</th>
                   <th className="px-4 sm:px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800">
                     <div className="flex items-center gap-2 group cursor-pointer select-none" onClick={() => toggleSort("question")}>
                       Question Details
@@ -91,6 +92,13 @@ const FAQManagement: React.FC = () => {
                   faqs.map((faq: any, index: number) => (
                     <tr key={faq._id} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
                       <td className="px-4 sm:px-8 py-5 font-black text-slate-400 text-sm hidden sm:table-cell">{getSrNo(currentPage, pageSize, index)}</td>
+                      <td className="px-4 sm:px-8 py-5 hidden md:table-cell">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-1 rounded-lg bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[10px] font-black border border-orange-100 dark:border-orange-500/20">
+                            {faq.priority || 0}
+                          </span>
+                        </div>
+                      </td>
                       <td className="px-4 sm:px-8 py-5">
                         <div className="flex items-center gap-3 sm:gap-4 text-left">
                           <div className="h-8 w-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 shadow-sm transition-transform group-hover:scale-110 shrink-0">
@@ -145,6 +153,7 @@ const FAQManagement: React.FC = () => {
                     </div>
                     <div className="space-y-2 text-left">
                       <div className="flex items-center gap-3 text-left">
+                        <div className="h-5 px-1.5 rounded-md bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400 text-[8px] font-black shrink-0">PRIORITY {faq.priority || 0}</div>
                         <h3 className="text-sm font-black text-slate-900 dark:text-white capitalize tracking-tight leading-tight">{faq.question}</h3>
                         <Tag className="border-0 bg-primary-50 dark:bg-primary-900/20 text-[10px] font-black text-primary-600 uppercase tracking-widest px-3 rounded-full">{faq.faqCategoryId?.title || "General"}</Tag>
                       </div>
