@@ -5,7 +5,7 @@ import type { CombinedErrorResponse } from "../../Types/Api";
 export function useMutations<T, V, C = unknown>(
   queryKey: any[],
   callback: (variables: V) => Promise<T>,
-  options?: UseMutationOptions<T, CombinedErrorResponse, V, C> & { showSuccessToast?: boolean }
+  options?: UseMutationOptions<T, CombinedErrorResponse, V, C> & { showSuccessToast?: boolean; showErrorToast?: boolean }
 ) {
   const queryClient = useQueryClient();
 
@@ -27,7 +27,9 @@ export function useMutations<T, V, C = unknown>(
       }
     },
     onError: (error: CombinedErrorResponse, variables: V, context: C | undefined) => {
-      ShowNotification(ErrorMessage(error), "error");
+      if (options?.showErrorToast !== false) {
+        ShowNotification(ErrorMessage(error), "error");
+      }
       if (options?.onError) {
         (options.onError as any)(error, variables, context);
       }
