@@ -57,8 +57,8 @@ export const Mutations = {
   useDeleteFaqCategory: () => useMutations([KEYS.FAQ_CATEGORY.ALL, KEYS.FAQ_CATEGORY.BASE], (id: string) => Delete(`${URL_KEYS.FAQ_CATEGORY.BASE}/${id}`)),
 
   // ************ FAQ ***********
-  useAddFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Post(URL_KEYS.FAQ.ADD, input)),
-  useEditFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Put(URL_KEYS.FAQ.EDIT, input)),
+  useAddFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Post(URL_KEYS.FAQ.ADD, input), { showSuccessToast: false }),
+  useEditFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (input: any) => Put(URL_KEYS.FAQ.EDIT, input), { showSuccessToast: false }),
   useDeleteFaq: () => useMutations([KEYS.FAQ.ALL, KEYS.FAQ.BASE], (id: string) => Delete(`${URL_KEYS.FAQ.BASE}/${id}`)),
 
   //************* Contact Inquiries ***********
