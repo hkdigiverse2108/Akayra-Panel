@@ -135,7 +135,6 @@ const Sidebar: React.FC = () => {
                     {!isCollapsed && (
                       <span className="text-sm font-medium flex-1">{item.label}</span>
                     )}
-                    {isActive && !isCollapsed && <ChevronRight size={14} className="opacity-50" />}
                   </>
                 )}
               </NavLink>
