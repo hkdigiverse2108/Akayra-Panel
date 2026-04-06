@@ -170,6 +170,84 @@ body {
   background-color: #f59e0b !important; /* amber-500 */
 }
 
+/* Profile Tabs Horizontal Scroll */
+.profile-tabs .ant-tabs-nav-wrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none;
+}
+
+.profile-tabs .ant-tabs-nav-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-tabs .ant-tabs-nav-list {
+  flex-wrap: nowrap !important;
+}
+
+/* React Phone Input (Profile Form) */
+.akayra-phone-input {
+  position: relative !important;
+}
+
+.akayra-phone-input .form-control {
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important; /* gray-200 */
+  background: #ffffff !important;
+  color: #0f172a !important; /* slate-900 */
+  font-size: 14px !important;
+  padding-left: 52px !important;
+  box-shadow: none !important;
+}
+
+.akayra-phone-input .form-control:focus {
+  border-color: #0ea5e9 !important; /* primary-500 */
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25) !important;
+  outline: none !important;
+}
+
+.akayra-phone-input .flag-dropdown {
+  border: 1px solid #e5e7eb !important; /* gray-200 */
+  border-radius: 8px 0 0 8px !important;
+  background: #ffffff !important;
+}
+
+.akayra-phone-input .selected-flag {
+  border-radius: 8px 0 0 8px !important;
+}
+
+.akayra-phone-input .country-list {
+  position: static !important;
+  margin: 8px 0 0 0 !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  max-height: 260px !important;
+  overflow-y: auto !important;
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0 !important; /* slate-200 */
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+.dark .akayra-phone-input .form-control {
+  background: #1e293b !important; /* slate-800 */
+  color: #ffffff !important;
+  border-color: #334155 !important; /* slate-700 */
+}
+
+.dark .akayra-phone-input .flag-dropdown {
+  background: #1e293b !important; /* slate-800 */
+  border-color: #334155 !important;
+}
+
+.dark .akayra-phone-input .country-list {
+  background: #0f172a !important; /* slate-900 */
+  color: #ffffff !important;
+  border-color: #1e293b !important;
+}
+
 /* Contact Message Modal (Ant Design) */
 .message-modal .ant-modal-content {
   background: #ffffff !important;

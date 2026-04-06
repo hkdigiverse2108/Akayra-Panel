@@ -22,4 +22,5 @@ export const ROUTES = {
   ABOUT: '/about',
   IG_POSTS: '/ig-posts',
   SETTINGS: '/settings',
+  PROFILE: '/profile',
 };

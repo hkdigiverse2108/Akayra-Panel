@@ -1,10 +1,13 @@
 import { KEYS, URL_KEYS } from "../Constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
+import type { CombinedErrorResponse } from "../Types/Api";
 
 export const Mutations = {
   // ************ Auth ***********
   useLogin: () =>  useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
+  useChangePassword: () => {const queryClient = useQueryClient();return useMutation<any, CombinedErrorResponse, any>({  mutationFn: (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input),  onSuccess: () => {    queryClient.invalidateQueries({ queryKey: [KEYS.USER.BASE] });  },});},
 
   // ************ User ***********
   useAddUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input)),

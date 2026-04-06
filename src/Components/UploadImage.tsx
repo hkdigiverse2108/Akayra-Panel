@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import { Check, ImageIcon, UploadCloud, X } from "lucide-react";
 import Button from "./Button";
 import { cn } from "../Utils/cn";
-import { useUpload, type UploadItem } from "../Utils/Hooks/useUpload";
+import { normalizeUploadItems, useUpload, type UploadItem } from "../Utils/Hooks/useUpload";
 
 interface UploadImageModalProps {
   isOpen: boolean;
@@ -16,9 +16,9 @@ interface UploadImageModalProps {
   title?: string;
 }
 
-const fileKey = (item: UploadItem) => item.url || item.path || item.fileName;
+const fileKey = (item: UploadItem) => item.url || item.path || item.fileName || "";
 
-const formatBytes = (bytes: number) => {
+const formatBytes = (bytes?: number) => {
   if (!bytes && bytes !== 0) return "";
   const sizes = ["B", "KB", "MB", "GB"];
   const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), sizes.length - 1);
@@ -36,9 +36,11 @@ const UploadImage: React.FC<UploadImageModalProps> = ({ isOpen, onClose, onSelec
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadImage, deleteImage, useGetAllImages } = useUpload();
-  const { data: allImagesResponse, isLoading: loadingAllImages } = useGetAllImages(folder, {enabled: isOpen,});
+  const { data: allImagesResponse, isLoading: loadingAllImages, refetch: refetchAllImages } = useGetAllImages(folder, {enabled: isOpen,});
 
-  const fetchedImages = (allImagesResponse as any)?.data || [];
+  const fetchedImages = normalizeUploadItems((allImagesResponse as any)?.data);
+
+  const normalizedExistingImages = useMemo(() => normalizeUploadItems(existingImages), [existingImages]);
 
   const selectedKeys = useMemo(() => {
     return new Set(selectedItems.map(fileKey));
@@ -46,7 +48,7 @@ const UploadImage: React.FC<UploadImageModalProps> = ({ isOpen, onClose, onSelec
 
   const combinedExistingImages = useMemo(() => {
     const map = new Map<string, UploadItem>();
-    const sources = [...existingImages, ...fetchedImages];
+    const sources = [...normalizedExistingImages, ...fetchedImages];
     sources.forEach((item) => map.set(fileKey(item), item));
     uploadedItems.forEach((item) => map.set(fileKey(item), item));
     return Array.from(map.values());
@@ -94,14 +96,12 @@ const UploadImage: React.FC<UploadImageModalProps> = ({ isOpen, onClose, onSelec
     setIsUploading(true);
 
     try {
-      const results = await Promise.allSettled(
-        selectedFiles.map((file) => {
-          const formData = new FormData();
-          formData.append("image", file);
-          return uploadImage.mutateAsync(formData);
-        })
-      );
-      const uploaded = results.filter((result) => result.status === "fulfilled").map((result) => (result as PromiseFulfilledResult<any>).value?.data).filter(Boolean) as UploadItem[];
+      const formData = new FormData();
+      selectedFiles.forEach((file) => {
+        formData.append("image", file);
+      });
+      const response = (await uploadImage.mutateAsync(formData)) as any;
+      const uploaded = normalizeUploadItems(response?.data?.images ?? response?.data);
 
       if (uploaded.length) {
         setUploadedItems((prev) => {
@@ -124,6 +124,7 @@ const UploadImage: React.FC<UploadImageModalProps> = ({ isOpen, onClose, onSelec
     await deleteImage.mutateAsync(pathOrUrl);
     setUploadedItems((prev) => prev.filter((img) => fileKey(img) !== fileKey(item)));
     setSelectedItems((prev) => prev.filter((img) => fileKey(img) !== fileKey(item)));
+    refetchAllImages();
   };
 
   const handleSave = () => {

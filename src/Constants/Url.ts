@@ -5,6 +5,7 @@ export const URL_KEYS = {
     VERIFY_OTP: '/auth/verify-otp',
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
+    CHANGE_PASSWORD: '/auth/change-password',
   },
 
   //******************** User ******************
