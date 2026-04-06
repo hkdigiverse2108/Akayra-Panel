@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../Context/AuthContext';
 import { useTheme } from '../Context/ThemeContext';
 import { cn } from '../Utils/cn';
+import ConfirmModal from '../Components/ConfirmModal';
 
 interface SubMenuItem {
   label: string;
@@ -67,6 +68,7 @@ const Sidebar: React.FC = () => {
   const { sideMenu, isSidebarOpen, setSidebarOpen } = useTheme();
   const location = useLocation();
   const isCollapsed = sideMenu === 'closed' || sideMenu === 'icontext';
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -90,6 +92,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
+    <>
     <aside
       className={cn(
         'fixed top-0 left-0 h-full bg-slate-900 text-slate-300 z-50 transition-all duration-300 border-r border-slate-800 flex flex-col',
@@ -193,18 +196,21 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar Footer */}
       <div className="p-4 border-t border-slate-800 shrink-0">
-        <button
-          onClick={logout}
-          className={cn(
-            'flex items-center justify-center gap-3 w-full py-2.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-500 transition-all group overflow-hidden',
-            isCollapsed ? 'px-0' : 'px-4'
-          )}
-        >
+        <button  onClick={() => setIsLogoutOpen(true)}  className={cn(    'flex items-center justify-center gap-3 w-full py-2.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-500 transition-all group overflow-hidden',    isCollapsed ? 'px-0' : 'px-4'  )} >
           <LogOut size={20} className="shrink-0" />
           {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
         </button>
       </div>
     </aside>
+    <ConfirmModal isOpen={isLogoutOpen} onClose={() => setIsLogoutOpen(false)} onConfirm={() => {   setIsLogoutOpen(false);   logout(); }}
+      title="Logout Confirmation"
+      message="Are you sure you want to logout?"
+      confirmLabel="Logout"
+      cancelLabel="Cancel"
+      variant="warning"
+      icon={<LogOut size={28} />}
+    />
+    </>
   );
 };
 

@@ -64,6 +64,9 @@ const AboutForm = lazy(() => import("../Pages/AboutForm"));
 const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
 const SettingsManagement = lazy(() => import("../Pages/SettingsManagement"));
 
+//Profile
+const Profile = lazy(() => import("../Pages/Profile"));
+
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
     <div className="relative">
@@ -159,6 +162,9 @@ const PageRoutes: React.FC = () => {
 
           {/* Settings */}
           <Route path={ROUTES.SETTINGS} element={<SettingsManagement />} />
+
+          {/*profile*/}
+          <Route path={ROUTES.PROFILE} element={<Profile />} />       
         </Route>
       </Route>
 
