@@ -21,7 +21,6 @@ const ReviewForm: React.FC = () => {
 
   const ratingValue = Form.useWatch("rating", form);
 
-
   // Queries for Dropdowns
   const { data: productRes } = Queries.useGetProduct();
 
@@ -127,11 +126,7 @@ const ReviewForm: React.FC = () => {
 
             <Form.Item name="rating" label={<span className="text-xs font-black text-slate-400 uppercase tracking-widest">Sentiment Score</span>} rules={[{ required: true }]}>
               <div className="flex flex-col items-center p-6 bg-gray-50 dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700">
-                <Rate 
-                  className="text-4xl text-yellow-500 mb-2" 
-                  value={form.getFieldValue("rating") || ratingValue} 
-                  onChange={(val) => form.setFieldsValue({ rating: val })} 
-                />
+                <Rate className="text-4xl text-yellow-500 mb-2" value={form.getFieldValue("rating") || ratingValue} onChange={(val) => form.setFieldsValue({ rating: val })} />
                 <span className="text-sm font-black text-slate-400 uppercase tracking-widest">{ratingValue || 0}.0 Stars</span>
               </div>
             </Form.Item>

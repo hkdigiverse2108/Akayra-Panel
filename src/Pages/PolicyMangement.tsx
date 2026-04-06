@@ -1,46 +1,39 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import Card from '../Components/Card';
-import Button from '../Components/Button';
-import { Save, X, ShieldCheck, Scale, Truck, Ban, RotateCcw } from 'lucide-react';
-import { Queries } from '../Api/Queries';
-import { Mutations } from '../Api/Mutations';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ROUTES } from '../Constants';
+import React, { useMemo, useState, useEffect } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import Card from "../Components/Card";
+import Button from "../Components/Button";
+import { Save, X, ShieldCheck, Scale, Truck, Ban, RotateCcw } from "lucide-react";
+import { Queries } from "../Api/Queries";
+import { Mutations } from "../Api/Mutations";
+import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "../Constants";
 
-type PolicyTabId = 'cancellation' | 'shipping' | 'termsCondition' | 'privacy' | 'returnRefund';
+type PolicyTabId = "cancellation" | "shipping" | "termsCondition" | "privacy" | "returnRefund";
 
 const tabs: { id: PolicyTabId; label: string }[] = [
-  { id: 'privacy', label: 'Privacy' },
-  { id: 'termsCondition', label: 'Terms & Condition' },
-  { id: 'returnRefund', label: 'Return & Refund' },
-  { id: 'shipping', label: 'Shipping' },
-  { id: 'cancellation', label: 'Cancellation' },
+  { id: "privacy", label: "Privacy" },
+  { id: "termsCondition", label: "Terms & Condition" },
+  { id: "returnRefund", label: "Return & Refund" },
+  { id: "shipping", label: "Shipping" },
+  { id: "cancellation", label: "Cancellation" },
 ];
 
-const policyTypeByTab: Record<PolicyTabId, string> = { privacy: 'privacy', termsCondition: 'termsCondition', returnRefund: 'returnRefund', shipping: 'shipping', cancellation: 'cancellation',};
+const policyTypeByTab: Record<PolicyTabId, string> = { privacy: "privacy", termsCondition: "termsCondition", returnRefund: "returnRefund", shipping: "shipping", cancellation: "cancellation" };
 
 const PolicyMangement: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<PolicyTabId>('privacy');
+  const [activeTab, setActiveTab] = useState<PolicyTabId>("privacy");
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
-  const [contentByTab, setContentByTab] = useState<Record<PolicyTabId, string>>({ cancellation: '', shipping: '', termsCondition: '', privacy: '', returnRefund: '',   });
+  const [contentByTab, setContentByTab] = useState<Record<PolicyTabId, string>>({ cancellation: "", shipping: "", termsCondition: "", privacy: "", returnRefund: "" });
 
-  const toolbarModules = useMemo( () => ({
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image'],
-        [{ align: [] }],
-        ['clean'],
-      ],
+  const toolbarModules = useMemo(
+    () => ({
+      toolbar: [[{ header: [1, 2, 3, false] }], ["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], [{ align: [] }], ["clean"]],
     }),
-    []
+    [],
   );
 
-  
   const policyType = policyTypeByTab[activeTab];
   const isEditing = !!id;
   const { data: policyResponse, isLoading: isPolicyLoading } = Queries.useGetPolicyByType(policyType);
@@ -55,7 +48,7 @@ const PolicyMangement: React.FC = () => {
 
   useEffect(() => {
     if (policyRecord?.type && policyRecord.type !== policyType) return;
-    const description = policyRecord?.description ?? '';
+    const description = policyRecord?.description ?? "";
     setContentByTab((prev) => ({ ...prev, [activeTab]: description }));
   }, [policyRecord, activeTab, policyType]);
 
@@ -64,7 +57,7 @@ const PolicyMangement: React.FC = () => {
   };
 
   const handleCancel = () => {
-    const description = policyRecord?.description ?? '';
+    const description = policyRecord?.description ?? "";
     setContentByTab((prev) => ({ ...prev, [activeTab]: description }));
     navigate(ROUTES.POLICIES);
   };
@@ -90,15 +83,15 @@ const PolicyMangement: React.FC = () => {
   const activeTabMeta = tabs.find((tab) => tab.id === activeTab);
   const activeIcon = (() => {
     switch (activeTab) {
-      case 'privacy':
+      case "privacy":
         return ShieldCheck;
-      case 'termsCondition':
+      case "termsCondition":
         return Scale;
-      case 'returnRefund':
+      case "returnRefund":
         return RotateCcw;
-      case 'shipping':
+      case "shipping":
         return Truck;
-      case 'cancellation':
+      case "cancellation":
       default:
         return Ban;
     }
@@ -125,7 +118,15 @@ const PolicyMangement: React.FC = () => {
             {tabs.map((tab) => {
               const isActive = tab.id === activeTab;
               return (
-                <button key={tab.id} onClick={() => { setActiveTab(tab.id); navigate(ROUTES.POLICIES); }} className={`shrink-0 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] transition-all whitespace-nowrap ${ isActive ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30' : 'text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-700' }`} type="button" >
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    navigate(ROUTES.POLICIES);
+                  }}
+                  className={`shrink-0 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] transition-all whitespace-nowrap ${isActive ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30" : "text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-700"}`}
+                  type="button"
+                >
                   {tab.label}
                 </button>
               );
@@ -147,15 +148,15 @@ const PolicyMangement: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
             {!isEditing ? (
-              <Button className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black" onClick={() => navigate(`${ROUTES.POLICIES}/edit/${policyRecord?._id || 'new'}`)}   >
+              <Button className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black" onClick={() => navigate(`${ROUTES.POLICIES}/edit/${policyRecord?._id || "new"}`)}>
                 Edit
               </Button>
             ) : (
               <>
-                <Button variant="ghost" className="h-10 sm:h-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl border-2 font-bold text-slate-600 dark:text-slate-400" onClick={handleCancel} disabled={addPolicy.isPending || editPolicy.isPending} >
+                <Button variant="ghost" className="h-10 sm:h-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl border-2 font-bold text-slate-600 dark:text-slate-400" onClick={handleCancel} disabled={addPolicy.isPending || editPolicy.isPending}>
                   <X size={16} /> Cancel
                 </Button>
-                <Button className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black" onClick={handleSave} loading={addPolicy.isPending || editPolicy.isPending} >
+                <Button className="h-10 sm:h-12 px-4 sm:px-8 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 bg-primary-600 hover:bg-primary-700 text-white font-black" onClick={handleSave} loading={addPolicy.isPending || editPolicy.isPending}>
                   <Save size={16} /> Save Changes
                 </Button>
               </>

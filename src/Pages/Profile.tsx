@@ -1,59 +1,64 @@
-import React, { useMemo } from 'react';
-import { Tooltip } from 'antd';
-import ProfileForm from './ProfileForm';
-import { Queries } from '../Api/Queries';
-import { CheckCircle2, Clock } from 'lucide-react';
-import { ProfileData } from '../Types';
-import Avatar from '../Components/Avatar';
+import React, { useMemo } from "react";
+import { Tooltip } from "antd";
+import ProfileForm from "./ProfileForm";
+import { Queries } from "../Api/Queries";
+import { CheckCircle2, Clock } from "lucide-react";
+import { ProfileData } from "../Types";
+import Avatar from "../Components/Avatar";
 
 const Profile: React.FC = () => {
-  const storedUser = localStorage.getItem('Akayra_Admin_Panel_User');
+  const storedUser = localStorage.getItem("Akayra_Admin_Panel_User");
   const userId = storedUser ? JSON.parse(storedUser)?._id : undefined;
-  
+
   const { data: userData } = Queries.useGetSingleUser(userId);
 
   const profileData: ProfileData = useMemo(() => {
     if (userData?.data) {
       const user = userData.data;
       return {
-        firstName: user.firstName || 'Admin',
-        lastName: user.lastName || 'User',
-        role: user.role || 'Administrator',
-        email: user.email || '',
-        phone: user.contact?.phoneNo || '',
-        countryCode: user.contact?.countryCode || '',
+        firstName: user.firstName || "Admin",
+        lastName: user.lastName || "User",
+        role: user.role || "Administrator",
+        email: user.email || "",
+        phone: user.contact?.phoneNo || "",
+        countryCode: user.contact?.countryCode || "",
       };
     }
     return {
-      firstName: 'Admin', lastName: 'User', role: 'Administrator', email: '', phone: '', countryCode: '',
+      firstName: "Admin",
+      lastName: "User",
+      role: "Administrator",
+      email: "",
+      phone: "",
+      countryCode: "",
     };
   }, [userData]);
 
   // Calculate profile strength
   const profileStrength = useMemo(() => {
     if (!userData?.data) return 0;
-    
+
     const user = userData.data;
     let completedFields = 0;
     let totalFields = 4;
 
     // Check firstName
-    if (user.firstName && user.firstName.trim() !== '') {
+    if (user.firstName && user.firstName.trim() !== "") {
       completedFields++;
     }
 
     // Check lastName
-    if (user.lastName && user.lastName.trim() !== '') {
+    if (user.lastName && user.lastName.trim() !== "") {
       completedFields++;
     }
 
     // Check email
-    if (user.email && user.email.trim() !== '') {
+    if (user.email && user.email.trim() !== "") {
       completedFields++;
     }
 
     // Check contact (phone)
-    if (user.contact?.phoneNo && user.contact.phoneNo.trim() !== '') {
+    if (user.contact?.phoneNo && user.contact.phoneNo.trim() !== "") {
       completedFields++;
     }
 

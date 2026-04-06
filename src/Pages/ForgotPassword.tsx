@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Input } from 'antd';
-import { Mail, Lock, KeyRound, ArrowRight } from 'lucide-react';
-import Button from '../Components/Button';
-import OtpInput from '../Components/OtpInput';
-import { Mutations } from '../Api/Mutations';
-import { ROUTES } from '../Constants';
-import { toast } from 'react-toastify';
-import loginBg from '../assets/login-bg.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Input } from "antd";
+import { Mail, Lock, KeyRound, ArrowRight } from "lucide-react";
+import Button from "../Components/Button";
+import OtpInput from "../Components/OtpInput";
+import { Mutations } from "../Api/Mutations";
+import { ROUTES } from "../Constants";
+import { toast } from "react-toastify";
+import loginBg from "../assets/login-bg.png";
 
-type Step = 'email' | 'otp' | 'password';
+type Step = "email" | "otp" | "password";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('email');
-  const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [step, setStep] = useState<Step>("email");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [timer, setTimer] = useState(0);
   const [canResend, setCanResend] = useState(false);
 
@@ -31,7 +31,7 @@ const ForgotPassword: React.FC = () => {
       interval = setInterval(() => {
         setTimer((t) => t - 1);
       }, 1000);
-    } else if (timer === 0 && step === 'otp' && !canResend) {
+    } else if (timer === 0 && step === "otp" && !canResend) {
       setCanResend(true);
     }
     return () => clearInterval(interval);
@@ -41,12 +41,12 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.error('Please enter your email');
+      toast.error("Please enter your email");
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error('Please enter a valid email');
+      toast.error("Please enter a valid email");
       return;
     }
 
@@ -55,16 +55,16 @@ const ForgotPassword: React.FC = () => {
       {
         onSuccess: (response: any) => {
           if (response?.status === 200 || response?.status === 201) {
-            toast.success('OTP sent to your email');
-            setStep('otp');
+            toast.success("OTP sent to your email");
+            setStep("otp");
             setTimer(120); // 2 minutes
             setCanResend(false);
           }
         },
         onError: (error: any) => {
-          toast.error(error?.response?.data?.message || 'Failed to send OTP');
+          toast.error(error?.response?.data?.message || "Failed to send OTP");
         },
-      }
+      },
     );
   };
 
@@ -72,11 +72,11 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
 
     if (otp.length !== 6) {
-      toast.error('Please enter a valid 6-digit OTP');
+      toast.error("Please enter a valid 6-digit OTP");
       return;
     }
 
-    setStep('password');
+    setStep("password");
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -88,59 +88,61 @@ const ForgotPassword: React.FC = () => {
     }
 
     if (!password.trim()) {
-      toast.error('Please enter a new password');
+      toast.error("Please enter a new password");
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
-    resetPasswordMutation.mutate({ email, otp, password,},
+    resetPasswordMutation.mutate(
+      { email, otp, password },
       {
         onSuccess: (response: any) => {
           if (response?.status === 200 || response?.status === 201) {
-            toast.success('Password reset successfully. Please login with your new password.');
+            toast.success("Password reset successfully. Please login with your new password.");
             navigate(ROUTES.LOGIN);
           } else {
-            toast.error('Failed to reset password');
+            toast.error("Failed to reset password");
           }
         },
         onError: (error: any) => {
-          const errorMsg = error?.response?.data?.message || error?.message || 'Failed to reset password';
+          const errorMsg = error?.response?.data?.message || error?.message || "Failed to reset password";
           toast.error(errorMsg);
         },
-      }
+      },
     );
   };
 
   const handleResendOtp = () => {
-    forgotPasswordMutation.mutate({ email },
+    forgotPasswordMutation.mutate(
+      { email },
       {
         onSuccess: (response: any) => {
           if (response?.status === 200 || response?.status === 201) {
-            toast.success('OTP resent successfully');
+            toast.success("OTP resent successfully");
             setTimer(120);
             setCanResend(false);
           }
         },
         onError: (error: any) => {
-          toast.error(error?.response?.data?.message || 'Failed to resend OTP');
+          toast.error(error?.response?.data?.message || "Failed to resend OTP");
         },
-      }
+      },
     );
   };
 
   const formatTimer = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   return (
@@ -157,39 +159,36 @@ const ForgotPassword: React.FC = () => {
               Reset Your <span className="text-primary-500">Password</span>
             </h1>
             <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
-              {step === 'email' && 'Enter your email to receive an OTP'}
-              {step === 'otp' && 'Enter the 6-digit code sent to your email'}
-              {step === 'password' && 'Create your new secure password'}
+              {step === "email" && "Enter your email to receive an OTP"}
+              {step === "otp" && "Enter the 6-digit code sent to your email"}
+              {step === "password" && "Create your new secure password"}
             </p>
           </div>
 
           {/* Progress Steps */}
           <div className="flex gap-4 justify-center">
-            {(['email', 'otp', 'password'] as const).map((s, idx) => (
+            {(["email", "otp", "password"] as const).map((s, idx) => (
               <div key={s} className="flex items-center gap-4">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${ step === s   ? 'bg-primary-500 text-white'   : ['email', 'otp', 'password'].indexOf(step) > idx   ? 'bg-emerald-500 text-white'   : 'bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-400'}`}>
-                  {idx + 1}
-                </div>
-                {idx < 2 && <div className={`w-8 h-1 ${['email', 'otp', 'password'].indexOf(step) > idx ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-slate-700'}`} />}
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all ${step === s ? "bg-primary-500 text-white" : ["email", "otp", "password"].indexOf(step) > idx ? "bg-emerald-500 text-white" : "bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-400"}`}>{idx + 1}</div>
+                {idx < 2 && <div className={`w-8 h-1 ${["email", "otp", "password"].indexOf(step) > idx ? "bg-emerald-500" : "bg-gray-200 dark:bg-slate-700"}`} />}
               </div>
             ))}
           </div>
 
           {/* Email Step */}
-          {step === 'email' && (
+          {step === "email" && (
             <form onSubmit={handleEmailSubmit} className="space-y-6">
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1">Email Address</label>
                 <Input size="large" type="email" placeholder="admin@akayra.com" prefix={<Mail className="text-gray-400 mr-2" size={18} />} value={email} onChange={(e) => setEmail(e.target.value)} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium" />
               </div>
 
-              <Button type="submit" isLoading={forgotPasswordMutation.isPending} className="w-full h-14 text-lg rounded-2xl font-black tracking-wide"   >
+              <Button type="submit" isLoading={forgotPasswordMutation.isPending} className="w-full h-14 text-lg rounded-2xl font-black tracking-wide">
                 <Mail size={20} /> Send OTP
               </Button>
 
               <div className="text-center">
-                <a onClick={() => navigate(ROUTES.LOGIN)} className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors cursor-pointer" >
+                <a onClick={() => navigate(ROUTES.LOGIN)} className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors cursor-pointer">
                   Back to Login
                 </a>
               </div>
@@ -197,7 +196,7 @@ const ForgotPassword: React.FC = () => {
           )}
 
           {/* OTP Step */}
-          {step === 'otp' && (
+          {step === "otp" && (
             <form onSubmit={handleOtpSubmit} className="space-y-6">
               <div className="space-y-4">
                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1 block">Enter OTP Code</label>
@@ -208,10 +207,10 @@ const ForgotPassword: React.FC = () => {
               </div>
 
               <div className="flex gap-3">
-                <Button type="button" onClick={() => setStep('email')} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700" >
+                <Button type="button" onClick={() => setStep("email")} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700">
                   Back
                 </Button>
-                <Button type="submit" isLoading={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide" >
+                <Button type="submit" isLoading={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide">
                   <ArrowRight size={20} /> Verify
                 </Button>
               </div>
@@ -222,7 +221,7 @@ const ForgotPassword: React.FC = () => {
                     Resend OTP in <span className="font-bold text-primary-500">{formatTimer(timer)}</span>
                   </p>
                 ) : (
-                  <button type="button" onClick={handleResendOtp} disabled={forgotPasswordMutation.isPending} className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors disabled:opacity-50"   >
+                  <button type="button" onClick={handleResendOtp} disabled={forgotPasswordMutation.isPending} className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors disabled:opacity-50">
                     Resend OTP
                   </button>
                 )}
@@ -231,32 +230,39 @@ const ForgotPassword: React.FC = () => {
           )}
 
           {/* Password Step */}
-          {step === 'password' && (
+          {step === "password" && (
             <form onSubmit={handlePasswordSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1">New Password</label>
-                  <Input.Password size="large" placeholder="••••••••" prefix={<Lock className="text-gray-400 mr-2" size={18} />} value={password} onChange={(e) => setPassword(e.target.value)} disabled={resetPasswordMutation.isPending} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"   />
+                  <Input.Password size="large" placeholder="••••••••" prefix={<Lock className="text-gray-400 mr-2" size={18} />} value={password} onChange={(e) => setPassword(e.target.value)} disabled={resetPasswordMutation.isPending} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed" />
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">At least 6 characters</p>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-slate-300 ml-1">Confirm Password</label>
-                  <Input.Password size="large" placeholder="••••••••" prefix={<Lock className="text-gray-400 mr-2" size={18} />} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={resetPasswordMutation.isPending} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"   />
+                  <Input.Password size="large" placeholder="••••••••" prefix={<Lock className="text-gray-400 mr-2" size={18} />} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={resetPasswordMutation.isPending} className="h-14 rounded-2xl border-2 border-gray-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white hover:border-primary-500 focus:border-primary-500 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed" />
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Button type="button" onClick={() => setStep('otp')} disabled={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed" >
+                <Button type="button" onClick={() => setStep("otp")} disabled={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed">
                   Back
                 </Button>
-                <Button type="submit" isLoading={resetPasswordMutation.isPending} disabled={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide" >
+                <Button type="submit" isLoading={resetPasswordMutation.isPending} disabled={resetPasswordMutation.isPending} className="flex-1 h-14 text-base rounded-2xl font-black tracking-wide">
                   <KeyRound size={20} /> Reset Password
                 </Button>
               </div>
 
               <div className="text-center">
-                <a onClick={() => { if (!resetPasswordMutation.isPending) {   navigate(ROUTES.LOGIN); } }} className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors cursor-pointer" >
+                <a
+                  onClick={() => {
+                    if (!resetPasswordMutation.isPending) {
+                      navigate(ROUTES.LOGIN);
+                    }
+                  }}
+                  className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors cursor-pointer"
+                >
                   Back to Login
                 </a>
               </div>
