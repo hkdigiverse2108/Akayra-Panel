@@ -16,6 +16,12 @@ export const URL_KEYS = {
     EDIT: '/user/edit',
   },
 
+  //******************** Order ******************
+  ORDER: {
+    ALL: '/order/all',
+    BASE: '/order',
+  },
+
   //******************** Category ****************
   CATEGORY: {
     ALL: '/category/all',

@@ -7,6 +7,12 @@ export const KEYS = {
     DROPDOWN: 'USER_DROPDOWN',
   },
 
+  //******************** Order ******************
+  ORDER: {
+    ALL: 'ORDER_ALL',
+    BASE: 'ORDER_BASE',
+  },
+
   //******************** Category ****************
   CATEGORY: {
     ALL: 'CATEGORY_ALL',

@@ -35,6 +35,9 @@ export const Queries = {
   useGetReview: (params?: any) =>  useQueries<ResponseParserWrapper<any>>([KEYS.REVIEW.ALL, params], () => Get(URL_KEYS.REVIEW.ALL, params)),
   useGetSingleReview: (id?: string) => useQueries<ResponseParserWrapper<any>>([KEYS.REVIEW.BASE, id], () => Get(`${URL_KEYS.REVIEW.BASE}/${id}`), { enabled: !!id }),
 
+  // ************ Orders ***********
+  useGetOrders: (params?: any, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.ORDER.ALL, params], () => Get(URL_KEYS.ORDER.ALL, params), options),
+
   // ************ FAQ ***********
   useGetFaq: (params?: any) => useQueries<ResponseParserWrapper<any>>([KEYS.FAQ.ALL, params], () => Get(URL_KEYS.FAQ.ALL, params)),
   useGetSingleFaq: (id?: string) => useQueries<ResponseParserWrapper<any>>([KEYS.FAQ.BASE, id], () => Get(`${URL_KEYS.FAQ.BASE}/${id}`), { enabled: !!id }),

@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Users, ChevronRight, Package, Tag, Layers,
   MessageSquare, Image, HelpCircle, FileText, Info, LogOut, ChevronDown, TrendingUp,
-  ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Instagram, Ticket, Send
+  ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Instagram, Ticket, Send, ShoppingCart
 } from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
 import { useTheme } from '../Context/ThemeContext';
@@ -26,6 +26,7 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/dashboard' },
   { icon: <Users size={20} />, label: 'Users', path: '/users' },
+  { icon: <ShoppingCart size={20} />, label: 'Orders', path: '/orders' },
   {
     icon: <Package size={20} />,
     label: 'Inventory',

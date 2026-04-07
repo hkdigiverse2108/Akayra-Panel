@@ -12,6 +12,7 @@ const Dashboard = lazy(() => import("../Pages/Dashboard"));
 // User Management
 const UserManagement = lazy(() => import("../Pages/UserManagement"));
 const UserForm = lazy(() => import("../Pages/UserForm"));
+const OrderManagement = lazy(() => import("../Pages/OrderManagement"));
 
 // Product Management
 const ProductManagement = lazy(() => import("../Pages/ProductManagement"));
@@ -95,6 +96,7 @@ const PageRoutes: React.FC = () => {
           <Route path={ROUTES.USERS} element={<UserManagement />} />
           <Route path={`${ROUTES.USERS}/add`} element={<UserForm />} />
           <Route path={`${ROUTES.USERS}/edit/:id`} element={<UserForm />} />
+          <Route path={ROUTES.ORDERS} element={<OrderManagement />} />
 
           {/* Product Management */}
           <Route path={ROUTES.PRODUCTS} element={<ProductManagement />} />
