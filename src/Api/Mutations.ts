@@ -6,14 +6,22 @@ import type { CombinedErrorResponse } from "../Types/Api";
 
 export const Mutations = {
   // ************ Auth ***********
-  useLogin: () =>  useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
-  useChangePassword: () => {const queryClient = useQueryClient();return useMutation<any, CombinedErrorResponse, any>({  mutationFn: (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input),  onSuccess: () => {    queryClient.invalidateQueries({ queryKey: [KEYS.USER.BASE] });  },});},
+  useLogin: () => useMutations([KEYS.USER.BASE], (input: any) => Post(URL_KEYS.AUTH.LOGIN, input)),
+  useChangePassword: () => {
+    const queryClient = useQueryClient();
+    return useMutation<any, CombinedErrorResponse, any>({
+      mutationFn: (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [KEYS.USER.BASE] });
+      },
+    });
+  },
   useForgotPassword: () => useMutations([], (input: any) => Post(URL_KEYS.AUTH.FORGOT_PASSWORD, input), { showSuccessToast: false, showErrorToast: false, retry: 0 }),
   useResetPassword: () => useMutations([], (input: any) => Post(URL_KEYS.AUTH.RESET_PASSWORD, input), { showSuccessToast: false, showErrorToast: false, retry: 0 }),
 
   // ************ User ***********
-  useAddUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input)),
-  useEditUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Put(URL_KEYS.USER.EDIT, input)),
+  useAddUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Post(URL_KEYS.USER.ADD, input), { showSuccessToast: false }),
+  useEditUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (input: any) => Put(URL_KEYS.USER.EDIT, input), { showSuccessToast: false }),
   useDeleteUser: () => useMutations([KEYS.USER.ALL, KEYS.USER.BASE], (id: string) => Delete(`${URL_KEYS.USER.BASE}/${id}`)),
 
   // ************ Category ***********
@@ -44,10 +52,10 @@ export const Mutations = {
   // ************ Review ***********
   useAddReview: () => useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Post(URL_KEYS.REVIEW.ADD, input), { showSuccessToast: false }),
   useEditReview: () => useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (input: any) => Put(URL_KEYS.REVIEW.EDIT, input), { showSuccessToast: false }),
-  useDeleteReview: () =>  useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (id: string) => Delete(`${URL_KEYS.REVIEW.BASE}/${id}`)),
+  useDeleteReview: () => useMutations([KEYS.REVIEW.ALL, KEYS.REVIEW.BASE], (id: string) => Delete(`${URL_KEYS.REVIEW.BASE}/${id}`)),
 
   // ************ Banner ***********
-  useAddBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input) , { showSuccessToast: false }),
+  useAddBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Post(URL_KEYS.BANNER.ADD, input), { showSuccessToast: false }),
   useEditBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (input: any) => Put(URL_KEYS.BANNER.EDIT, input), { showSuccessToast: false }),
   useDeleteBanner: () => useMutations([KEYS.BANNER.ALL, KEYS.BANNER.BASE], (id: string) => Delete(`${URL_KEYS.BANNER.BASE}/${id}`)),
 
@@ -95,6 +103,17 @@ export const Mutations = {
   useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input), { showSuccessToast: false }),
 
   //************* Upload ***********
-  useUploadImage: () => useMutations([KEYS.UPLOAD.BASE], (input: FormData) =>   Post(URL_KEYS.UPLOAD.IMAGE, input, { "Content-Type": "multipart/form-data" }) ),
-  useDeleteUploadedImage: () =>useMutations([KEYS.UPLOAD.BASE], (pathOrUrl: string) => {  const params = new URLSearchParams();  if (/^https?:\/\//i.test(pathOrUrl)) {    params.set("url", pathOrUrl);  } else {    params.set("path", pathOrUrl);  }  const query = params.toString();  const endpoint = query ? `${URL_KEYS.UPLOAD.IMAGE}?${query}` : URL_KEYS.UPLOAD.IMAGE;  return Delete(endpoint);}),
+  useUploadImage: () => useMutations([KEYS.UPLOAD.BASE], (input: FormData) => Post(URL_KEYS.UPLOAD.IMAGE, input, { "Content-Type": "multipart/form-data" })),
+  useDeleteUploadedImage: () =>
+    useMutations([KEYS.UPLOAD.BASE], (pathOrUrl: string) => {
+      const params = new URLSearchParams();
+      if (/^https?:\/\//i.test(pathOrUrl)) {
+        params.set("url", pathOrUrl);
+      } else {
+        params.set("path", pathOrUrl);
+      }
+      const query = params.toString();
+      const endpoint = query ? `${URL_KEYS.UPLOAD.IMAGE}?${query}` : URL_KEYS.UPLOAD.IMAGE;
+      return Delete(endpoint);
+    }),
 };
