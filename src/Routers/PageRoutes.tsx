@@ -5,68 +5,68 @@ import PrivateRoutes from "./PrivateRoutes";
 import { ROUTES } from "../Constants";
 
 // Lazy Load Pages
-const Login = lazy(() => import("../Pages/Login"));
-const ForgotPassword = lazy(() => import("../Pages/ForgotPassword"));
-const Dashboard = lazy(() => import("../Pages/Dashboard"));
+const Login = lazy(() => import("../Pages/Auth/Login"));
+const ForgotPassword = lazy(() => import("../Pages/Auth/ForgotPassword"));
+const Dashboard = lazy(() => import("../Pages/Dashboard/Dashboard"));
 
 // User Management
-const UserManagement = lazy(() => import("../Pages/UserManagement"));
-const UserForm = lazy(() => import("../Pages/UserForm"));
+const UserManagement = lazy(() => import("../Pages/User/UserManagement"));
+const UserForm = lazy(() => import("../Pages/User/UserForm"));
 
 // Product Management
-const ProductManagement = lazy(() => import("../Pages/ProductManagement"));
-const ProductForm = lazy(() => import("../Pages/ProductForm"));
+const ProductManagement = lazy(() => import("../Pages/Inventory/Product/ProductManagement"));
+const ProductForm = lazy(() => import("../Pages/Inventory/Product/ProductForm"));
 
 // Category Management
-const CategoryManagement = lazy(() => import("../Pages/CategoryManagement"));
-const CategoryForm = lazy(() => import("../Pages/CategoryForm"));
+const CategoryManagement = lazy(() => import("../Pages/Inventory/Category/CategoryManagement"));
+const CategoryForm = lazy(() => import("../Pages/Inventory/Category/CategoryForm"));
 
 // Brand Management
-const BrandManagement = lazy(() => import("../Pages/BrandManagement"));
-const BrandForm = lazy(() => import("../Pages/BrandForm"));
+const BrandManagement = lazy(() => import("../Pages/Inventory/Brand/BrandManagement"));
+const BrandForm = lazy(() => import("../Pages/Inventory/Brand/BrandForm"));
 
 // Variations
-const SizeManagement = lazy(() => import("../Pages/SizeManagement"));
-const SizeForm = lazy(() => import("../Pages/SizeForm"));
-const ColorManagement = lazy(() => import("../Pages/ColorManagement"));
-const ColorForm = lazy(() => import("../Pages/ColorForm"));
+const SizeManagement = lazy(() => import("../Pages/Inventory/Size/SizeManagement"));
+const SizeForm = lazy(() => import("../Pages/Inventory/Size/SizeForm"));
+const ColorManagement = lazy(() => import("../Pages/Inventory/Color/ColorManagement"));
+const ColorForm = lazy(() => import("../Pages/Inventory/Color/ColorForm"));
 
 // Content
-const ReviewManagement = lazy(() => import("../Pages/ReviewManagement"));
-const ReviewForm = lazy(() => import("../Pages/ReviewForm"));
-const BannerManagement = lazy(() => import("../Pages/BannerManagement"));
-const BannerForm = lazy(() => import("../Pages/BannerForm"));
-const BlogManagement = lazy(() => import("../Pages/BlogManagement"));
-const BlogForm = lazy(() => import("../Pages/BlogForm"));
+const ReviewManagement = lazy(() => import("../Pages/Review/ReviewManagement"));
+const ReviewForm = lazy(() => import("../Pages/Review/ReviewForm"));
+const BannerManagement = lazy(() => import("../Pages/Banner/BannerManagement"));
+const BannerForm = lazy(() => import("../Pages/Banner/BannerForm"));
+const BlogManagement = lazy(() => import("../Pages/Blog/BlogManagement"));
+const BlogForm = lazy(() => import("../Pages/Blog/BlogForm"));
 
 // Support
-const FaqManagement = lazy(() => import("../Pages/FaqManagement"));
-const FaqForm = lazy(() => import("../Pages/FaqForm"));
-const FaqCategoryManagement = lazy(() => import("../Pages/FaqCategoryManagement"));
-const FaqCategoryForm = lazy(() => import("../Pages/FaqCategoryForm"));
+const FaqManagement = lazy(() => import("../Pages/Support/Faq/FaqManagement"));
+const FaqForm = lazy(() => import("../Pages/Support/Faq/FaqForm"));
+const FaqCategoryManagement = lazy(() => import("../Pages/Support/FaqCategory/FaqCategoryManagement"));
+const FaqCategoryForm = lazy(() => import("../Pages/Support/FaqCategory/FaqCategoryForm"));
 
 //contact inquiry 
-const ContactManagement = lazy(() => import("../Pages/ContactManagement"));
-const NewsletterManagement = lazy(() => import("../Pages/NewsletterManagement"));
+const ContactManagement = lazy(() => import("../Pages/Support/Contact/ContactManagement"));
+const NewsletterManagement = lazy(() => import("../Pages/Support/NewsLetter/NewsletterManagement"));
 
 //Coupons
-const CouponManagement = lazy(() => import("../Pages/CouponManagement"));
-const CouponForm = lazy(() => import("../Pages/CouponForm"));
+const CouponManagement = lazy(() => import("../Pages/Marketing/Coupon/CouponManagement"));
+const CouponForm = lazy(() => import("../Pages/Marketing/Coupon/CouponForm"));
 
 // IG Posts
-const IgPostManagement = lazy(() => import("../Pages/IgPostManagement"));
-const IgPostForm = lazy(() => import("../Pages/IgPostForm"));
+const IgPostManagement = lazy(() => import("../Pages/Marketing/IgPost/IgPostManagement"));
+const IgPostForm = lazy(() => import("../Pages/Marketing/IgPost/IgPostForm"));
 
 // About Management
-const AboutManagement = lazy(() => import("../Pages/AboutManagement"));
-const AboutForm = lazy(() => import("../Pages/AboutForm"));
+const AboutManagement = lazy(() => import("../Pages/About/AboutManagement"));
+const AboutForm = lazy(() => import("../Pages/About/AboutForm"));
 
 //Policy Management
-const PolicyMangement = lazy(() => import("../Pages/PolicyMangement"));
-const SettingsManagement = lazy(() => import("../Pages/SettingsManagement"));
+const PolicyMangement = lazy(() => import("../Pages/Policies/PolicyMangement"));
+const SettingsManagement = lazy(() => import("../Pages/Settings/SettingsManagement"));
 
 //Profile
-const Profile = lazy(() => import("../Pages/Profile"));
+const Profile = lazy(() => import("../Pages/Profile/Profile"));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-slate-950">
