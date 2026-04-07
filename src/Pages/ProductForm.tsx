@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Input, InputNumber, Select, Switch, Breadcrumb, Tabs, Image, Modal } from "antd";
 import { Queries } from "../Api/Queries";

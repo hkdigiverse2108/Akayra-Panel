@@ -1,9 +1,9 @@
-﻿import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Form, Input, InputNumber, Switch, Breadcrumb, Divider, Image, Select } from "antd";
 import Card from "../Components/Card";
 import Button from "../Components/Button";
-import { Save, ArrowLeft, Instagram, ImageIcon, Link as LinkIcon, Hash, Video } from "lucide-react";
+import { Save, ArrowLeft, Camera, ImageIcon, Link as LinkIcon, Hash, Video } from "lucide-react";
 import { ROUTES } from "../Constants";
 import { Mutations } from "../Api/Mutations";
 import { toast } from "react-toastify";
@@ -103,7 +103,7 @@ const IgPostForm: React.FC = () => {
           <Card className="rounded-2xl sm:rounded-[32px] shadow-xl border-0 overflow-hidden bg-white dark:bg-slate-900 text-left p-4 sm:p-8 self-start">
             <div className="text-left mb-6">
               <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 text-left">
-                <Instagram size={18} className="text-primary-500 sm:w-5 sm:h-5" /> IG Post Details
+                <Camera size={18} className="text-primary-500 sm:w-5 sm:h-5" /> IG Post Details
               </h3>
               <Divider className="my-2 sm:my-3 border-slate-100 dark:border-slate-800 text-left" />
             </div>

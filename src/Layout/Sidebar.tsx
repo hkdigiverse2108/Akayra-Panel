@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, ChevronRight, Package, Tag, Layers, MessageSquare, Image, HelpCircle, FileText, Info, LogOut, ChevronDown, TrendingUp, ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Instagram, Ticket, Send } from "lucide-react";
+import { LayoutDashboard, Users, ChevronRight, Package, Tag, Layers, MessageSquare, Image, HelpCircle, FileText, Info, LogOut, ChevronDown, TrendingUp, ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Camera, Ticket, Send } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
 import { cn } from "../Utils/cn";

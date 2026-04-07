@@ -2,7 +2,7 @@ import React from 'react';
 import {
   LayoutDashboard, Users, Package, Tag, Layers,
   MessageSquare, Image, HelpCircle, FileText, Info, TrendingUp,
-  ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Instagram, Ticket, Send
+  ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Camera, Ticket, Send
 } from 'lucide-react';
 
 export interface SubMenuItem {
@@ -50,7 +50,7 @@ export const menuItems: MenuItem[] = [
     label: 'Marketing',
     subItems: [
       { label: 'Coupons', path: '/coupons', icon: <Ticket size={16} /> },
-      { label: 'IG Posts', path: '/ig-posts', icon: <Instagram size={16} /> },
+      { label: 'IG Posts', path: '/ig-posts', icon: <Camera size={16} /> },
     ]
   },
   { icon: <ShieldCheck size={20} />, label: 'Policies', path: '/policies' },

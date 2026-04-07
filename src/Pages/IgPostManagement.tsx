@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import Card from "../Components/Card";
@@ -8,11 +8,12 @@ import TableFooter from "../Components/TableFooter";
 import ConfirmModal from "../Components/ConfirmModal";
 import { useManagementData } from "../Utils/Hooks/useManagementData";
 import { getSrNo } from "../Utils/tableUtils";
-import { Instagram, ImageIcon, Link as LinkIcon, Hash, Trash2, ToggleLeft, ToggleRight, Edit, Plus, CheckCircle, XCircle, Video } from "lucide-react";
+
 import { Tooltip, Image } from "antd";
 import { KEYS, URL_KEYS, ROUTES } from "../Constants";
 import { Mutations } from "../Api/Mutations";
 import { cn } from "../Utils/cn";
+import { CheckCircle, Camera, Edit, Hash, ImageIcon, LinkIcon, Plus, ToggleLeft, ToggleRight, Trash2, Video, XCircle } from "lucide-react";
 
 const IgPostManagement: React.FC = () => {
   const queryClient = useQueryClient();
@@ -167,7 +168,7 @@ const IgPostManagement: React.FC = () => {
                               <p className="text-sm font-black text-slate-900 dark:text-white leading-snug pb-0.5 truncate max-w-[220px] sm:max-w-xs">{getTitle(igPost)}</p>
                               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 mt-1 truncate max-w-[220px] sm:max-w-xs">
                                 <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest", badgeTone)}>
-                                  <Instagram size={10} /> IG Post
+                                  <Camera size={10} /> IG Post
                                 </span>
                                 <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest", badgeTone)}>
                                   <Hash size={10} /> Priority {getPriority(igPost)}

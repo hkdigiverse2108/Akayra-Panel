@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import Card from "../Components/Card";
 import Button from "../Components/Button";
 import { Save, X, ShieldCheck, Scale, Truck, Ban, RotateCcw } from "lucide-react";
@@ -8,6 +7,7 @@ import { Queries } from "../Api/Queries";
 import { Mutations } from "../Api/Mutations";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "../Constants";
+import ReactQuill from "react-quill-new";
 
 type PolicyTabId = "cancellation" | "shipping" | "termsCondition" | "privacy" | "returnRefund";
 
