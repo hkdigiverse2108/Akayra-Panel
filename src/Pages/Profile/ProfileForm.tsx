@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { Form, Input, Tabs } from "antd";
 import { Mail, KeyRound, Settings } from "lucide-react";
-import PhoneInput, { CountryData } from "react-phone-input-2";
+import PhoneInputImport, { CountryData } from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Button from "../../Components/Button";
 import { ProfileData } from "../../Types";
@@ -12,6 +12,7 @@ type ProfileFormProps = {
   profile: ProfileData;
   userId?: string;
 };
+const PhoneInput = typeof PhoneInputImport === 'object' && PhoneInputImport !== null && 'default' in PhoneInputImport ? (PhoneInputImport as any).default : PhoneInputImport;
 
 const buildPhoneValue = (countryCode?: string, phone?: string) => {
   const cleanCode = (countryCode || "").replace(/\s+/g, "").replace("+", "");
@@ -254,7 +255,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, userId }) => {
     <div className="rounded-2xl sm:rounded-[28px] border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
       <Tabs
         defaultActiveKey="general"
-        destroyInactiveTabPane={false}
+        destroyOnHidden={false}
         className="profile-tabs [&_.ant-tabs-nav]:!m-0 [&_.ant-tabs-nav]:!px-5 sm:[&_.ant-tabs-nav]:!px-6 [&_.ant-tabs-nav]:!pt-4 [&_.ant-tabs-nav]:!pb-0 [&_.ant-tabs-nav]:!border-b [&_.ant-tabs-nav]:!border-gray-100 dark:[&_.ant-tabs-nav]:!border-slate-800 [&_.ant-tabs-content-holder]:!px-5 sm:[&_.ant-tabs-content-holder]:!px-6 [&_.ant-tabs-content-holder]:!py-5 sm:[&_.ant-tabs-content-holder]:!py-6"
         items={[
           { key: "general", label: <span className="text-sm font-semibold">Account Settings</span>, children: generalTab },

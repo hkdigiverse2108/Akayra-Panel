@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactQuill from "react-quill-new";
+import ReactQuillImport from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Input, InputNumber, Select, Switch, Breadcrumb, Tabs, Image, Modal } from "antd";
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 
 const { Option } = Select;
 const { TextArea } = Input;
+const ReactQuill = typeof ReactQuillImport === 'object' && ReactQuillImport !== null && 'default' in ReactQuillImport ? (ReactQuillImport as any).default : ReactQuillImport;
 
 const ProductForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -449,7 +450,7 @@ const ProductForm: React.FC = () => {
         <div className="lg:col-span-2 pb-10 text-left">
           <Tabs
             defaultActiveKey="general"
-            destroyInactiveTabPane={false}
+            destroyOnHidden={false}
             className="rounded-2xl"
             items={[
               { key: "general", label: <span className="text-sm font-semibold">General</span>, forceRender: true, children: <div className="space-y-6">{generalInfoCard}</div> },
