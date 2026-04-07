@@ -18,9 +18,9 @@ const MainLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       {layout === 'vertical' && <Sidebar />}
-      
+
       {isSidebarOpen && layout === 'vertical' && (
-        <div 
+        <div
           className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden transition-all duration-300 animate-in fade-in"
           onClick={() => setSidebarOpen(false)}
         />
@@ -29,7 +29,7 @@ const MainLayout: React.FC = () => {
       {/* Mobile Sidebar overlay for horizontal layout */}
       {isSidebarOpen && layout === 'horizontal' && (
         <div className="lg:hidden">
-          <div 
+          <div
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 transition-all duration-300 animate-in fade-in"
             onClick={() => setSidebarOpen(false)}
           />

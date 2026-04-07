@@ -75,7 +75,7 @@ const Header: React.FC = () => {
           )}
         </button>
 
-        <button onClick={() => setIsSwitcherOpen(true)} className="hidden sm:flex p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 transition-colors" title="Open Switcher" >
+        <button onClick={() => setIsSwitcherOpen(true)} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl text-gray-500 dark:text-slate-400 transition-colors" title="Open Switcher" >
           <Settings size={20} />
         </button>
 
