@@ -64,6 +64,7 @@ const Profile: React.FC = () => {
 
     return Math.round((completedFields / totalFields) * 100);
   }, [userData]);
+  const normalizedStrength = Math.max(0, Math.min(100, profileStrength));
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 sm:px-0 pb-12 sm:pb-0 text-left">
@@ -72,8 +73,16 @@ const Profile: React.FC = () => {
           <div className="space-y-6">
             <div className="rounded-[28px] border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 sm:p-7 text-center shadow-[0_10px_30px_-20px_rgba(15,23,42,0.25)]">
               <div className="rounded-2xl bg-gray-100 dark:bg-slate-800/70 p-4 sm:p-5">
-                <Tooltip title={`Profile Strength: ${profileStrength}%`}>
-                  <Avatar firstName={profileData.firstName} lastName={profileData.lastName} className="mx-auto h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-b from-primary-500 to-primary-600 border-4 border-emerald-500 cursor-pointer" textClassName="text-2xl sm:text-3xl" />
+                <Tooltip title={`Profile Strength: ${normalizedStrength}%`}>
+                  <div className="relative mx-auto h-24 w-24 sm:h-28 sm:w-28">
+                    <div className="absolute inset-0 rounded-full" style={{   background: `conic-gradient(#10b981 ${normalizedStrength * 3.6}deg, rgba(148,163,184,0.35) 0deg)`, }}/>
+                    <div className="absolute inset-[6px] rounded-full bg-gray-100 dark:bg-slate-800/70 flex items-center justify-center">
+                      <Avatar firstName={profileData.firstName} lastName={profileData.lastName} className="h-full w-full rounded-full bg-gradient-to-b from-primary-500 to-primary-600 cursor-pointer" textClassName="text-2xl sm:text-3xl" />
+                    </div>
+                    <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white dark:bg-slate-900 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 shadow-sm border border-emerald-100 dark:border-emerald-500/20">
+                      {normalizedStrength}%
+                    </span>
+                  </div>
                 </Tooltip>
                 <div className="mt-4">
                   <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500 font-bold">Profile</p>
