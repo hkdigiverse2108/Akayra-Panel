@@ -28,13 +28,13 @@ const MainLayout: React.FC = () => {
 
       {/* Mobile Sidebar overlay for horizontal layout */}
       {isSidebarOpen && layout === 'horizontal' && (
-        <>
+        <div className="lg:hidden">
           <div 
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden transition-all duration-300 animate-in fade-in"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 transition-all duration-300 animate-in fade-in"
             onClick={() => setSidebarOpen(false)}
           />
           <Sidebar />
-        </>
+        </div>
       )}
 
       <div className={cn('flex flex-col min-h-screen transition-all duration-300', getSidebarWidth())}>

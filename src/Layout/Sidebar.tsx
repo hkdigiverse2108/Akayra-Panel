@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, ChevronRight, Package, Tag, Layers, MessageSquare, Image, HelpCircle, FileText, Info, LogOut, ChevronDown, TrendingUp, ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Camera, Ticket, Send } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
@@ -16,6 +16,7 @@ const Sidebar: React.FC = () => {
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const prevPathname = useRef(location.pathname);
 
   // Auto-expand submenu if a child is active
   useEffect(() => {
@@ -27,7 +28,10 @@ const Sidebar: React.FC = () => {
 
   // Close sidebar on mobile when route changes
   useEffect(() => {
-    setSidebarOpen(false);
+    if (prevPathname.current !== location.pathname) {
+      setSidebarOpen(false);
+      prevPathname.current = location.pathname;
+    }
   }, [location.pathname, setSidebarOpen]);
 
   const toggleSubmenu = (label: string) => {
