@@ -9,6 +9,22 @@ import ConfirmModal from "../Components/ConfirmModal";
 import Avatar from "../Components/Avatar";
 import { Queries } from "../Api/Queries";
 import { STORAGE_KEYS } from "../Constants/StorageKeys";
+import { menuItems } from "./MenuItems";
+
+const flatMenuItems = menuItems.reduce(
+  (acc, item) => {
+    if (item.path) {
+      acc.push({ label: item.label, path: item.path, icon: item.icon });
+    }
+    if (item.subItems) {
+      item.subItems.forEach((sub) => {
+        acc.push({ label: `${item.label} > ${sub.label}`, path: sub.path, icon: sub.icon });
+      });
+    }
+    return acc;
+  },
+  [] as { label: string; path: string; icon: React.ReactNode }[],
+);
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -16,12 +32,59 @@ const Header: React.FC = () => {
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const profileRef = useRef<HTMLDivElement | null>(null);
+  const searchRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
   const userId = storedUser ? JSON.parse(storedUser)?._id : undefined;
   const { data: userData } = Queries.useGetSingleUser(userId);
+
+  const filteredSearchItems = useMemo(() => {
+    setActiveIndex(-1);
+    if (!searchQuery.trim()) return [];
+    return flatMenuItems.filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [searchQuery]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isSearchFocused || !filteredSearchItems.length) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev < filteredSearchItems.length - 1 ? prev + 1 : prev));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        break;
+      case "Enter":
+        e.preventDefault();
+        const selected = filteredSearchItems[activeIndex];
+        if (selected) {
+          navigate(selected.path);
+          setSearchQuery("");
+          setIsSearchFocused(false);
+        }
+        break;
+      case "Escape":
+        setIsSearchFocused(false);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   const profileUser = useMemo(() => {
     if (userData?.data) return userData.data;
@@ -54,11 +117,47 @@ const Header: React.FC = () => {
           </div>
         )}
 
-        <div className="relative max-w-md w-full hidden md:block">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="text-gray-400" size={18} />
+        <div ref={searchRef} className="relative max-w-md w-full hidden md:block group">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+            <Search className={`transition-colors ${isSearchFocused ? "text-primary-500" : "text-gray-400"}`} size={18} />
           </span>
-          <input type="text" className="block w-full pl-10 pr-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 text-gray-900 dark:text-slate-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent sm:text-sm transition-all" placeholder="Search dashboard..." />
+          <input type="text" className="block w-full pl-10 pr-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 text-gray-900 dark:text-slate-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent sm:text-sm transition-all" placeholder="Search dashboard..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setIsSearchFocused(true)} onKeyDown={handleKeyDown} />
+
+          {isSearchFocused && searchQuery.trim() !== "" && (
+            <div className="absolute top-full mt-2 w-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl max-h-[400px] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-2 overflow-y-auto max-h-[380px]">
+                {filteredSearchItems.length > 0 ? (
+                  <div className="view-list space-y-1">
+                    {filteredSearchItems.map((item, index) => (
+                      <button
+                        key={item.path}
+                        onClick={() => {
+                          navigate(item.path);
+                          setSearchQuery("");
+                          setIsSearchFocused(false);
+                        }}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all group/item ${activeIndex === index ? "bg-primary-50 dark:bg-primary-500/20 ring-1 ring-primary-500/20" : "hover:bg-primary-50 dark:hover:bg-primary-500/10"}`}
+                      >
+                        <span className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors ${activeIndex === index ? "bg-primary-500 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 group-hover/item:bg-primary-500 group-hover/item:text-white"}`}>{item.icon}</span>
+                        <div className="flex-1">
+                          <p className={`text-sm font-medium transition-colors ${activeIndex === index ? "text-primary-600 dark:text-primary-400" : "text-gray-900 dark:text-slate-100"}`}>{item.label}</p>
+                        </div>
+                        {activeIndex === index && <span className="text-[10px] font-bold text-primary-500/50 bg-primary-500/10 px-1.5 py-0.5 rounded uppercase tracking-widest">Enter</span>}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-8 text-center">
+                    <div className="h-12 w-12 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Search size={20} className="text-gray-400" />
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-slate-400">No results for "{searchQuery}"</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
