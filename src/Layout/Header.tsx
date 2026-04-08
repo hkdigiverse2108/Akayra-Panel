@@ -36,7 +36,6 @@ const Header: React.FC = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const profileRef = useRef<HTMLDivElement | null>(null);
-  const searchRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
@@ -76,16 +75,6 @@ const Header: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsSearchFocused(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
   const profileUser = useMemo(() => {
     if (userData?.data) return userData.data;
     return user || {};
@@ -117,11 +106,23 @@ const Header: React.FC = () => {
           </div>
         )}
 
-        <div ref={searchRef} className="relative max-w-md w-full hidden md:block group">
+        <div className="relative max-w-md w-full hidden md:block group">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
             <Search className={`transition-colors ${isSearchFocused ? "text-primary-500" : "text-gray-400"}`} size={18} />
           </span>
-          <input type="text" className="block w-full pl-10 pr-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 text-gray-900 dark:text-slate-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent sm:text-sm transition-all" placeholder="Search dashboard..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setIsSearchFocused(true)} onKeyDown={handleKeyDown} />
+          <input
+            type="text"
+            className="block w-full pl-10 pr-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl leading-5 text-gray-900 dark:text-slate-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent sm:text-sm transition-all"
+            placeholder="Search dashboard..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => {
+              // Delay closure to allow result selection
+              setTimeout(() => setIsSearchFocused(false), 200);
+            }}
+            onKeyDown={handleKeyDown}
+          />
 
           {isSearchFocused && searchQuery.trim() !== "" && (
             <div className="absolute top-full mt-2 w-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl max-h-[400px] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
