@@ -64,6 +64,7 @@ const AboutForm = lazy(() => import("../Pages/About/AboutForm"));
 //Policy Management
 const PolicyMangement = lazy(() => import("../Pages/Policies/PolicyMangement"));
 const SettingsManagement = lazy(() => import("../Pages/Settings/SettingsManagement"));
+const SaleBannerManagement = lazy(() => import("../Pages/Marketing/SaleBanner/SaleBannerManagement"));
 
 //Profile
 const Profile = lazy(() => import("../Pages/Profile/Profile"));
@@ -165,6 +166,7 @@ const PageRoutes: React.FC = () => {
 
           {/* Settings */}
           <Route path={ROUTES.SETTINGS} element={<SettingsManagement />} />
+          <Route path={ROUTES.SALE_BANNER} element={<SaleBannerManagement />} />
 
           {/*profile*/}
           <Route path={ROUTES.PROFILE} element={<Profile />} />       

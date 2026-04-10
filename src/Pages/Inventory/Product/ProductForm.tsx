@@ -59,6 +59,7 @@ const ProductForm: React.FC = () => {
   const watchedLongDescription = Form.useWatch("longDescription", form);
   const watchedIsTrending = Form.useWatch("isTrending", form);
   const watchedIsDealOfDay = Form.useWatch("isDealOfDay", form);
+  const watchedIsSale = Form.useWatch("isSale", form);
   const watchedIsActive = Form.useWatch("isActive", form);
 
   const categoryName = categories.find((c: any) => c._id === watchedCategoryId)?.name;
@@ -358,6 +359,13 @@ const ProductForm: React.FC = () => {
             <Switch />
           </Form.Item>
         </div>
+
+        <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 text-left">
+          <span className="text-xs font-black text-slate-600 dark:text-slate-200 uppercase tracking-widest text-left">Summer Sale Item</span>
+          <Form.Item name="isSale" valuePropName="checked" noStyle>
+            <Switch />
+          </Form.Item>
+        </div>
       </div>
     </Card>
   );
@@ -445,7 +453,7 @@ const ProductForm: React.FC = () => {
         </div>
       </div>
 
-      <Form form={form} layout="vertical" onFinish={onFinish} className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 text-left" initialValues={{ isActive: true, isTrending: false, isDealOfDay: false, longDescription: "" }} requiredMark={false}>
+      <Form form={form} layout="vertical" onFinish={onFinish} className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 text-left" initialValues={{ isActive: true, isTrending: false, isDealOfDay: false, isSale: false, longDescription: "" }} requiredMark={false}>
         {/* Left Column: Main Info */}
         <div className="lg:col-span-2 pb-10 text-left">
           <Tabs

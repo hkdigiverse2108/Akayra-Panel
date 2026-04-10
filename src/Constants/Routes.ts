@@ -23,5 +23,6 @@ export const ROUTES = {
   ABOUT: '/about',
   IG_POSTS: '/ig-posts',
   SETTINGS: '/settings',
+  SALE_BANNER: '/sale-banner',
   PROFILE: '/profile',
 };

@@ -62,5 +62,8 @@ export const Queries = {
   // ************ Upload ***********
   useGetUploadedImage: (params?: { path?: string; url?: string }, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.UPLOAD.BASE, params], () => Get(URL_KEYS.UPLOAD.IMAGE, params), { enabled: !!params, ...options }),
   useGetAllUploadImages: (params?: { folder?: string }, options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.UPLOAD.ALL, params], () => Get(URL_KEYS.UPLOAD.IMAGES, params), options),
+
+  // ************ Sale Banner ***********
+  useGetSaleBanner: (options?: AppQueryOptions<ResponseParserWrapper<any>>) => useQueries<ResponseParserWrapper<any>>([KEYS.SALE_BANNER.BASE], () => Get(URL_KEYS.SALE_BANNER.BASE), options),
 };
 

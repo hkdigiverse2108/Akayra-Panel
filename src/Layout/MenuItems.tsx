@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, Users, Package, Tag, Layers, MessageSquare, Image, HelpCircle, FileText, Info, TrendingUp, ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Camera, Ticket, Send } from "lucide-react";
+import { LayoutDashboard, Users, Package, Tag, Layers, MessageSquare, Image, HelpCircle, FileText, Info, TrendingUp, ShieldCheck, Settings, Ruler, Palette, ListTree, Mail, Camera, Ticket, Send, Layout } from "lucide-react";
 
 export interface SubMenuItem {
   label: string;
@@ -47,6 +47,7 @@ export const menuItems: MenuItem[] = [
     subItems: [
       { label: "Coupons", path: "/coupons", icon: <Ticket size={16} /> },
       { label: "IG Posts", path: "/ig-posts", icon: <Camera size={16} /> },
+      { label: "Sale Banner", path: "/sale-banner", icon: <Layout size={16} /> },
     ],
   },
   { icon: <ShieldCheck size={20} />, label: "Policies", path: "/policies" },

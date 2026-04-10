@@ -144,6 +144,12 @@ export const URL_KEYS = {
     UPDATE: '/settings/update',
   },
 
+  //******************** Sale Banner *****************
+  SALE_BANNER: {
+    BASE: '/sale-banner',
+    UPDATE: '/sale-banner/update',
+  },
+
   //******************** Upload *****************
   UPLOAD: {
     IMAGE: '/upload/image',

@@ -102,6 +102,9 @@ export const Mutations = {
   //************* Settings ***********
   useUpdateSettings: () => useMutations([KEYS.SETTINGS.BASE], (input: any) => Put(URL_KEYS.SETTINGS.UPDATE, input), { showSuccessToast: false }),
 
+  //************* Sale Banner ***********
+  useUpdateSaleBanner: () => useMutations([KEYS.SALE_BANNER.BASE], (input: any) => Post(URL_KEYS.SALE_BANNER.UPDATE, input), { showSuccessToast: false }),
+
   //************* Upload ***********
   useUploadImage: () => useMutations([KEYS.UPLOAD.BASE], (input: FormData) => Post(URL_KEYS.UPLOAD.IMAGE, input, { "Content-Type": "multipart/form-data" })),
   useDeleteUploadedImage: () =>

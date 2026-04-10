@@ -110,6 +110,11 @@ export const KEYS = {
     BASE: 'SETTINGS_BASE',
   },
 
+  //******************** Sale Banner *****************
+  SALE_BANNER: {
+    BASE: 'SALE_BANNER_BASE',
+  },
+
   //******************** Upload *****************
   UPLOAD: {
     BASE: 'UPLOAD_BASE',
